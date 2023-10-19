@@ -1,6 +1,6 @@
-import {BlogModelType} from "../types/types";
+import {BlogModelOutType} from "../types/types";
 
-export const defaultBlog: BlogModelType = {
+export const defaultBlog: BlogModelOutType = {
     id: '1',
     name: 'name',
     description: 'name is name',
