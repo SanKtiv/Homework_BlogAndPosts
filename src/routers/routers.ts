@@ -1,7 +1,18 @@
 import {Request, Response, Router} from 'express';
-import {videosRepository, error, resolutionsFalse} from "../repositories/repository";
+import {videosRepository, blogsRepository, error, resolutionsFalse} from "../repositories/repository";
+import {body, param} from 'express-validator'
 
 export const videosRouter = Router ({})
+
+videosRouter.get( '/blogs', (req: Request, res: Response) => {
+    res.status(200).send(blogsRepository.getAllBlogs())
+})
+
+videosRouter.get( '/blogs/:id', (req: Request, res: Response) => {
+    const blogs = blogsRepository.getBlogById(req.params.id)
+    blogs ? res.status(200).send(blogs) : res.sendStatus(404)
+
+})
 
 videosRouter.delete('/testing/all-data', (req: Request, res: Response) => {
     videosRepository.deleteAllVideo()
@@ -18,8 +29,8 @@ videosRouter.delete('/videos/:videoId', (req: Request, res: Response) => {
 })
 
 videosRouter.get('/videos', (req: Request, res: Response) => {
-    const videos = videosRepository.getVideo()
-    res.status(200).send(videos)
+    // const videos = videosRepository.getVideo()
+    // res.status(200).send(videos)
 })
 
 videosRouter.get('/videos/:videoId', (req: Request, res: Response) => {

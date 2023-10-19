@@ -1,3 +1,17 @@
+import {BlogModelType} from "../types/types";
+import {defaultBlog} from "../variables/variables";
+
+const blogsDataBase: BlogModelType[] = [defaultBlog]
+
+export const blogsRepository = {
+    getAllBlogs(): BlogModelType[] {
+        return blogsDataBase
+    },
+    getBlogById(id: string): BlogModelType | undefined {
+        return  blogsDataBase.find(b => b.id === id)
+    }
+}
+
 type VideoType = {
     id: number,
     title: string,
