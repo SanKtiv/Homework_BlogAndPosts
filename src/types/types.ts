@@ -4,4 +4,7 @@ export type BlogModelType = {
     description: string
     websiteUrl: string
 }
-
+export type ErrorType1 = {
+    message: string
+    field: string
+}

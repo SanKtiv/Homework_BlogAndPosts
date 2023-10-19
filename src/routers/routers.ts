@@ -1,6 +1,7 @@
 import {Request, Response, Router} from 'express';
 import {videosRepository, blogsRepository, error, resolutionsFalse} from "../repositories/repository";
-import {body, param} from 'express-validator'
+import {body, param, validationResult, ResultFactory} from 'express-validator'
+import {ErrorType1} from '../types/types'
 
 export const videosRouter = Router ({})
 
@@ -13,9 +14,16 @@ videosRouter.get( '/blogs/:id', (req: Request, res: Response) => {
     blogs ? res.status(200).send(blogs) : res.sendStatus(404)
 
 })
-
-videosRouter.post( '/blogs', body('name').isLength({min: 1, max: 15}), (req: Request, res: Response) => {
-    res.status(200).send(blogsRepository.getAllBlogs())
+const validBodyName = body('name').isLength({min: 1, max: 15})
+videosRouter.post( '/blogs', validBodyName, (req: Request, res: Response) => {
+    // const myValidationResult: ResultFactory<string> = validationResult.withDefaults({
+    //     formatter: error => error.location as string
+    // })
+    const errorMes = validationResult(req)
+    if (errorMes.isEmpty()) {
+        return res.status(200).send({errorsMessages: errorMes})
+    }
+    res.status(400).send({errorsMessages: errorMes})
 })
 
 ///////////////////////////////////////////////
