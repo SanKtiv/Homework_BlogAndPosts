@@ -14,6 +14,11 @@ videosRouter.get( '/blogs/:id', (req: Request, res: Response) => {
 
 })
 
+videosRouter.post( '/blogs', body('name').isLength({min: 1, max: 15}), (req: Request, res: Response) => {
+    res.status(200).send(blogsRepository.getAllBlogs())
+})
+
+///////////////////////////////////////////////
 videosRouter.delete('/testing/all-data', (req: Request, res: Response) => {
     videosRepository.deleteAllVideo()
     res.sendStatus(204)
