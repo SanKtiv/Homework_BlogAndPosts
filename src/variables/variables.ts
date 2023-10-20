@@ -1,5 +1,5 @@
-import {BlogModelOutType, ErrorType, ErrorMessType} from "../types/types";
-import {Result, ValidationError, validationResult} from "express-validator";
+import {BlogModelOutType, ErrorType, ErrorMessType, PostModelOutType} from "../types/types";
+import {Result, ValidationError} from "express-validator";
 
 export const regexp = new RegExp('\^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$')
 
@@ -12,11 +12,14 @@ export const defaultBlog: BlogModelOutType = {
     websiteUrl: 'https://name'
 }
 
-// export const errorFormatter = ({ location, msg, param, value, nestedErrors}) => {
-//     const err: ErrorMessType = {message: msg, field: param}
-//     return err
-// }
-//const result = validationResult(req).formatWith(errorFormatter)
+export const defaultPost: PostModelOutType = {
+    id: '1',
+    title: 'title',
+    shortDescription: 'string',
+    content: 'string',
+    blogId: '123',
+    blogName: 'name'
+}
 
 export function errorMessage(errors: Result<ValidationError>): ErrorType {
     const errorsMessages: ErrorMessType[] = []

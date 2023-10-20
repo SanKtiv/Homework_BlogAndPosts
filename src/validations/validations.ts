@@ -1,4 +1,4 @@
-import {body, param, validationResult, ResultFactory, Result, header} from 'express-validator'
+import {body, param} from 'express-validator'
 import {regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
 
@@ -23,5 +23,18 @@ export const validAuthorize = (req: Request, res: Response, next: NextFunction) 
         next() :
         res.sendStatus(401)
 }
+///////////////////////////////////////
+export const validTitle = body('title', 'title length is incorrect')
+    .isLength({min: 1, max: 30})
+    .isString()
 
+export const validShortDescription = body('shortDescription', 'shortDescription length is incorrect')
+    .isLength({min: 1, max: 100})
+    .isString()
 
+export const validContent = body('content', 'content length is incorrect')
+    .isLength({min: 1, max: 1000})
+    .isString()
+
+export const validBlogId = body('blogId', 'blogId length is incorrect')
+    .isString()

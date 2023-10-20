@@ -5,10 +5,13 @@ export type BlogModelOutType = {
     websiteUrl: string
 }
 
-export type BlogModelInType = {
-    name: string
-    description: string
-    websiteUrl: string
+export type PostModelOutType = {
+    id: string
+    title: string
+    shortDescription: string
+    content: string
+    blogId: string
+    blogName: string
 }
 
 export type ErrorType = {
