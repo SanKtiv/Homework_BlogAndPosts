@@ -6,6 +6,7 @@ import {errorMessage} from "../variables/variables";
 import {validId, validAuthorize} from "../validations/validations";
 
 export const appRouter = Router ({})
+export const postRouter = Router ({})
 //////////////////////////////////////////////////////////////////////////////
 appRouter.get( '/blogs', (req: Request, res: Response) => {
     res.status(200).send(blogsRepository.getAllBlogs())
@@ -45,17 +46,17 @@ appRouter.delete('/testing/all-data', (req: Request, res: Response) => {
     res.sendStatus(204)
 })
 ////////////////////////////////////////////////////////////////////////////////
-appRouter.get( '/posts', (req: Request, res: Response) => {
+postRouter.get( '/posts', (req: Request, res: Response) => {
     res.status(200).send(postsRepository.getAllPosts())
 })
 
-appRouter.get( '/posts/:id', (req: Request, res: Response) => {
+postRouter.get( '/posts/:id', (req: Request, res: Response) => {
     const posts = postsRepository.getPostById(req.params.id)
     posts ? res.status(200).send(posts) : res.sendStatus(404)
 
 })
 
-appRouter.post( '/posts', validAuthorize, (req: Request, res: Response) => {
+postRouter.post( '/posts', validAuthorize, (req: Request, res: Response) => {
     const errore = validationResult(req)
     if (errore.isEmpty()) {
         const postById = postsRepository.createPost(req.body)
@@ -64,13 +65,13 @@ appRouter.post( '/posts', validAuthorize, (req: Request, res: Response) => {
     res.status(400).send(errorMessage(errore))
 })
 
-appRouter.put('/posts/:id', validAuthorize, validId, (req: Request, res: Response) => {
+postRouter.put('/posts/:id', validAuthorize, validId, (req: Request, res: Response) => {
     postsRepository.updatePost(req.params.id, req.body) ?
         res.sendStatus(204) :
         res.sendStatus(404)
 })
 
-appRouter.delete('/blogs/:id', validAuthorize, validId, (req: Request, res: Response) => {
+postRouter.delete('/blogs/:id', validAuthorize, validId, (req: Request, res: Response) => {
     postsRepository.deletePostById(req.params.id) ?
         res.sendStatus(204) :
         res.sendStatus(404)
