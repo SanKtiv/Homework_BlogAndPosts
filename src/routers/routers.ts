@@ -32,11 +32,12 @@ appRouter.put('/blogs/:id', validAuthorize, validId, (req: Request, res: Respons
 })
 
 appRouter.delete('/blogs/:id', validAuthorize, validId, (req: Request, res: Response) => {
-    blogsRepository.delleteBlogById(req.params.id) ?
+    blogsRepository.deleteBlogById(req.params.id) ?
         res.sendStatus(204) :
         res.sendStatus(404)
 })
 
-appRouter.delete('/', (req: Request, res: Response) => {
-
+appRouter.delete('/testing/all-data', (req: Request, res: Response) => {
+    blogsRepository.deleteAll()
+    res.sendStatus(204)
 })

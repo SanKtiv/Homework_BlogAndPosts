@@ -1,4 +1,3 @@
-
 import {BlogModelOutType} from "../types/types";
 import {defaultBlog, idNumber} from "../variables/variables";
 //-----------------------------------------------------//
@@ -31,12 +30,15 @@ export const blogsRepository = {
         }
         return false
     },
-    delleteBlogById(id: string): Boolean {
+    deleteBlogById(id: string): Boolean {
         const indexBlog = blogsDataBase.findIndex(b => b.id === id)
         if (indexBlog !== -1) {
             blogsDataBase.splice(indexBlog, 1)
             return true
         }
         return false
+    },
+    deleteAll(): void {
+        blogsDataBase.splice(0, blogsDataBase.length)
     }
 }
