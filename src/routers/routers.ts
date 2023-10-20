@@ -1,9 +1,9 @@
 import {Request, Response, Router} from 'express';
-import {blogsRepository} from "../repositories/repository";
-import {body, param, validationResult, ResultFactory} from 'express-validator'
+import {blogsRepository} from "../repositories/blogs_db";
+import {validationResult} from 'express-validator'
 import {ErrorType} from '../types/types'
 import {errorMessage} from "../variables/variables";
-import {validId} from "../validations/validations";
+import {validId, validAuthorize} from "../validations/validations";
 
 export const appRouter = Router ({})
 
@@ -17,7 +17,7 @@ appRouter.get( '/blogs/:id', (req: Request, res: Response) => {
 
 })
 
-appRouter.post( '/blogs',(req: Request, res: Response) => {
+appRouter.post( '/blogs', validAuthorize, (req: Request, res: Response) => {
     if (validationResult(req).isEmpty()) {
         const blogById = blogsRepository.createBlog(req.body)
         res.status(201).send(blogById)
@@ -25,13 +25,13 @@ appRouter.post( '/blogs',(req: Request, res: Response) => {
         res.status(400).send(errorMessage(validationResult(req)))
 })
 
-appRouter.put('/blogs/:id', validId, (req: Request, res: Response) => {
+appRouter.put('/blogs/:id', validAuthorize, validId, (req: Request, res: Response) => {
     blogsRepository.updateBlog(req.params.id, req.body) ?
         res.sendStatus(204) :
         res.sendStatus(404)
 })
 
-appRouter.delete('/blogs/:id', validId, (req: Request, res: Response) => {
+appRouter.delete('/blogs/:id', validAuthorize, validId, (req: Request, res: Response) => {
     blogsRepository.delleteBlogById(req.params.id) ?
         res.sendStatus(204) :
         res.sendStatus(404)
