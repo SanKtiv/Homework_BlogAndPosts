@@ -40,5 +40,8 @@ export const postsRepository = {
             return true
         }
         return false
+    },
+    deleteAll(): void {
+        postsDataBase.splice(0, postsDataBase.length)
     }
 }

@@ -41,6 +41,7 @@ appRouter.delete('/blogs/:id', validAuthorize, validId, (req: Request, res: Resp
 
 appRouter.delete('/testing/all-data', (req: Request, res: Response) => {
     blogsRepository.deleteAll()
+    postsRepository.deleteAll()
     res.sendStatus(204)
 })
 ////////////////////////////////////////////////////////////////////////////////
