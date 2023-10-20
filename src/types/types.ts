@@ -14,7 +14,7 @@ export type BlogModelInType = {
 export type ErrorType = {
     errorsMessages: ErrorMessType[]
 }
-type ErrorMessType = {
+export type ErrorMessType = {
     message: string
     field: string
 }
