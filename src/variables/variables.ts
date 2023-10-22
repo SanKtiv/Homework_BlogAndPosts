@@ -25,7 +25,9 @@ export function errorMessage(errors: Result<ValidationError>): ErrorType {
     const errorsMessages: ErrorMessType[] = []
     for (const elem of errors["errors"]) {
         const err: ErrorMessType = {message: elem.msg, field: elem.path}
-        errorsMessages.push(err)
+        if (!errorsMessages.length || errorsMessages.findIndex(e => e.field === err.field) === -1) {
+            errorsMessages.push(err)
+        }
     }
     return {errorsMessages}
 }
