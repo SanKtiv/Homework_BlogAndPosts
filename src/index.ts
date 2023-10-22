@@ -9,7 +9,8 @@ import {
     validTitle,
     validShortDescription,
     validContent,
-    validBlogId} from "./validations/validations";
+    validBlogId
+} from "./validations/validations";
 
 const app = express()
 const port1 = process.env.PORT || 3000
