@@ -5,20 +5,28 @@ import {validationResult} from 'express-validator'
 import {errorMessage} from "../variables/variables";
 import {validId, validAuthorize} from "../validations/validations";
 
-export const appRouter = Router ({})
+export const blogRouter = Router ({})
 export const postRouter = Router ({})
-//////////////////////////////////////////////////////////////////////////////
-appRouter.get( '/blogs', (req: Request, res: Response) => {
+export const dellAllRouter = Router ({})
+
+//////////////////////////////////////////////////////////////////////////////////////////
+dellAllRouter.delete('/testing/all-data', (req: Request, res: Response) => {
+    blogsRepository.deleteAll()
+    postsRepository.deleteAll()
+    res.sendStatus(204)
+})
+//////////////////////////////////////////////////////////////////////////////////////////
+blogRouter.get( '/', (req: Request, res: Response) => {
     res.status(200).send(blogsRepository.getAllBlogs())
 })
 
-appRouter.get( '/blogs/:id', (req: Request, res: Response) => {
+blogRouter.get( '/:id', (req: Request, res: Response) => {
     const blogs = blogsRepository.getBlogById(req.params.id)
     blogs ? res.status(200).send(blogs) : res.sendStatus(404)
 
 })
 
-appRouter.post( '/blogs', validAuthorize, (req: Request, res: Response) => {
+blogRouter.post( '/', validAuthorize, (req: Request, res: Response) => {
     const error = validationResult(req)
     if (error.isEmpty()) {
         const blogById = blogsRepository.createBlog(req.body)
@@ -27,7 +35,7 @@ appRouter.post( '/blogs', validAuthorize, (req: Request, res: Response) => {
         res.status(400).send(errorMessage(error))
 })
 
-appRouter.put('/blogs/:id', validAuthorize, validId, (req: Request, res: Response) => {
+blogRouter.put('/:id', validAuthorize, validId, (req: Request, res: Response) => {
     const error = validationResult(req)
     if (error.isEmpty()) {
         blogsRepository.updateBlog(req.params.id, req.body) ?
@@ -37,29 +45,24 @@ appRouter.put('/blogs/:id', validAuthorize, validId, (req: Request, res: Respons
     res.status(400).send(errorMessage(error))
 })
 
-appRouter.delete('/blogs/:id', validAuthorize, validId, (req: Request, res: Response) => {
+blogRouter.delete('/:id', validAuthorize, validId, (req: Request, res: Response) => {
     blogsRepository.deleteBlogById(req.params.id) ?
         res.sendStatus(204) :
         res.sendStatus(404)
 })
 
-appRouter.delete('/testing/all-data', (req: Request, res: Response) => {
-    blogsRepository.deleteAll()
-    postsRepository.deleteAll()
-    res.sendStatus(204)
-})
-////////////////////////////////////////////////////////////////////////////////
-postRouter.get( '/posts', (req: Request, res: Response) => {
+//////////////////////////////////////////////////////////////////////////////////////////
+postRouter.get( '/', (req: Request, res: Response) => {
     res.status(200).send(postsRepository.getAllPosts())
 })
 
-postRouter.get( '/posts/:id', (req: Request, res: Response) => {
+postRouter.get( '/:id', (req: Request, res: Response) => {
     const posts = postsRepository.getPostById(req.params.id)
     posts ? res.status(200).send(posts) : res.sendStatus(404)
 
 })
 
-postRouter.post( '/posts', validAuthorize, (req: Request, res: Response) => {
+postRouter.post( '/', validAuthorize, (req: Request, res: Response) => {
     const error = validationResult(req)
     if (error.isEmpty()) {
         const postById = postsRepository.createPost(req.body)
@@ -68,7 +71,7 @@ postRouter.post( '/posts', validAuthorize, (req: Request, res: Response) => {
     res.status(400).send(errorMessage(error))
 })
 
-postRouter.put('/posts/:id', validAuthorize, validId, (req: Request, res: Response) => {
+postRouter.put('/:id', validAuthorize, validId, (req: Request, res: Response) => {
     const error = validationResult(req)
     if (error.isEmpty()) {
         postsRepository.updatePost(req.params.id, req.body) ?
@@ -78,7 +81,7 @@ postRouter.put('/posts/:id', validAuthorize, validId, (req: Request, res: Respon
     res.status(400).send(errorMessage(error))
 })
 
-postRouter.delete('/blogs/:id', validAuthorize, validId, (req: Request, res: Response) => {
+postRouter.delete('/:id', validAuthorize, validId, (req: Request, res: Response) => {
     postsRepository.deletePostById(req.params.id) ?
         res.sendStatus(204) :
         res.sendStatus(404)
