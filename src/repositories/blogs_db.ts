@@ -11,12 +11,13 @@ export const blogsRepository = {
         return  blogsDataBase.find(b => b.id === id)
     },
     createBlog(body: any): BlogModelOutType {
-        const newBlog = {
-            id: idNumber(),
-            name: body.name,
-            description: body.description,
-            websiteUrl: body.websiteUrl
-        }
+        // const newBlog = {
+        //     id: idNumber(),
+        //     name: body.name,
+        //     description: body.description,
+        //     websiteUrl: body.websiteUrl
+        // }
+        const newBlog = {id: idNumber(), ...body}
         blogsDataBase.push(newBlog)
         return newBlog
     },
