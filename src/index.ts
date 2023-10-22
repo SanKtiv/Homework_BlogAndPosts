@@ -1,5 +1,7 @@
 import express from 'express'
-import {blogRouter, postRouter, dellAllRouter} from './routers/routers';
+import {blogRouter} from './routers/blogs-routers';
+import {postRouter} from "./routers/posts-routers";
+import {dellAllRouter} from "./routers/all-data-routers";
 import {
     validName,
     validDescription,

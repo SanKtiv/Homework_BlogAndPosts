@@ -11,12 +11,6 @@ export const blogsRepository = {
         return  blogsDataBase.find(b => b.id === id)
     },
     createBlog(body: any): BlogModelOutType {
-        // const newBlog = {
-        //     id: idNumber(),
-        //     name: body.name,
-        //     description: body.description,
-        //     websiteUrl: body.websiteUrl
-        // }
         const newBlog = {id: idNumber(), ...body}
         blogsDataBase.push(newBlog)
         return newBlog
@@ -24,9 +18,7 @@ export const blogsRepository = {
     updateBlog(id: string, body: any): Boolean {
         const foundBlog = blogsDataBase.find(b => b.id === id)
         if (foundBlog) {
-            foundBlog.name = body.name
-            foundBlog.description = body.description
-            foundBlog.websiteUrl = body.websiteUrl
+            Object.assign(foundBlog, body)
             return true
         }
         return false

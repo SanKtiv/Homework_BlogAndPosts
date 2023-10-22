@@ -11,24 +11,14 @@ export const postsRepository = {
         return  postsDataBase.find(b => b.id === id)
     },
     createPost(body: any): PostModelOutType {
-        const newPost = {
-            id: idNumber(),
-            title: body.title,
-            shortDescription: body.shortDescription,
-            content: body.content,
-            blogId: body.blogId,
-            blogName: 'name'
-        }
+        const newPost = {id: idNumber(), blogName: 'name', ...body}
         postsDataBase.push(newPost)
         return newPost
     },
     updatePost(id: string, body: any): Boolean {
         const foundPost = postsDataBase.find(b => b.id === id)
         if (foundPost) {
-            foundPost.title = body.title
-            foundPost.shortDescription = body.shortDescription
-            foundPost.content = body.content
-            foundPost.blogId = body.blogId
+            Object.assign(foundPost, body)
             return true
         }
         return false
