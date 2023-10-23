@@ -12,7 +12,7 @@ import {
     validBlogId
 } from "./validations/validations";
 
-const app = express()
+export const app = express()
 const port1 = process.env.PORT || 3000
 
 const parserMiddleware = express.json()
