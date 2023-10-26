@@ -5,12 +5,8 @@ export const regexp = new RegExp('\^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\
 
 export const idNumber = () => Date.now().toString()
 
-export const defaultBlog: BlogModelOutType = {
-    id: '1',
-    name: 'name',
-    description: 'name is name',
-    websiteUrl: 'https://name'
-}
+export let dateNow = new Date
+
 
 export const defaultPost: PostModelOutType = {
     id: '1',

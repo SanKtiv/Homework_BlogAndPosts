@@ -1,21 +1,21 @@
 import {BlogModelOutType} from "../types/types";
-import {defaultBlog, idNumber} from "../variables/variables";
+import {idNumber} from "../variables/variables";
 //-----------------------------------------------------//
-const blogsDataBase: BlogModelOutType[] = [defaultBlog]
+const blogsDataBase: BlogModelOutType[] = []
 //-----------------------------------------------------//
 export const blogsRepository = {
-    getAllBlogs(): BlogModelOutType[] {
+    async getAllBlogs(): Promise<BlogModelOutType[]> {
         return blogsDataBase
     },
-    getBlogById(id: string): BlogModelOutType | undefined {
+    async getBlogById(id: string): Promise<BlogModelOutType | undefined> {
         return  blogsDataBase.find(b => b.id === id)
     },
-    createBlog(body: any): BlogModelOutType {
+    async createBlog(body: any): Promise<BlogModelOutType> {
         const newBlog = {id: idNumber(), ...body}
         blogsDataBase.push(newBlog)
         return newBlog
     },
-    updateBlog(id: string, body: any): Boolean {
+    async updateBlog(id: string, body: any): Promise<Boolean> {
         const foundBlog = blogsDataBase.find(b => b.id === id)
         if (foundBlog) {
             Object.assign(foundBlog, body)
@@ -23,7 +23,7 @@ export const blogsRepository = {
         }
         return false
     },
-    deleteBlogById(id: string): Boolean {
+    async deleteBlogById(id: string): Promise<Boolean> {
         const indexBlog = blogsDataBase.findIndex(b => b.id === id)
         if (indexBlog !== -1) {
             blogsDataBase.splice(indexBlog, 1)
@@ -31,7 +31,7 @@ export const blogsRepository = {
         }
         return false
     },
-    deleteAll(): void {
+    async deleteAll(): Promise<void> {
         blogsDataBase.splice(0, blogsDataBase.length)
     }
 }
