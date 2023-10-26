@@ -1,7 +1,7 @@
 import {PostModelOutType} from "../types/types";
-import {defaultPost, idNumber} from "../variables/variables";
+import {idNumber} from "../variables/variables";
 //-----------------------------------------------------//
-const postsDataBase: PostModelOutType[] = [defaultPost]
+const postsDataBase: PostModelOutType[] = []
 //-----------------------------------------------------//
 export const postsRepository = {
     getAllPosts(): PostModelOutType[] {
