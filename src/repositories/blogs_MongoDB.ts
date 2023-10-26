@@ -2,7 +2,6 @@ import {BlogModelOutType} from "../types/types";
 import {idNumber} from "../variables/variables";
 import {client} from "./db";
 import {dateNow} from "../variables/variables";
-import {validTitle} from "../validations/validations";
 
 export const blogsRepository = {
     async getAllBlogs(): Promise<BlogModelOutType[]> {
@@ -52,7 +51,9 @@ export const blogsRepository = {
             .deleteOne({id: id})
           return deleteBlog.deletedCount === 1
     },
-    // async deleteAll(): void {
-    //     blogsDataBase.splice(0, blogsDataBase.length)
-    // }
+    async deleteAll(): Promise<void> {
+        await client.db('tube')
+            .collection('blogs')
+            .deleteMany({})
+    }
 }
