@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
-import {blogsRepository} from "../repositories/blogs_memory";
-import {postsRepository} from "../repositories/posts_memory";
+import {blogsRepository} from "../repositories/blogs_MongoDB";
+import {postsRepository} from "../repositories/posts_MongoDB";
 
 export const dellAllRouter = Router ({})
 
