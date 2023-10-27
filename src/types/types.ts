@@ -1,4 +1,5 @@
 export type BlogModelOutType = {
+    _id?: any,
     id: string
     name: string
     description: string
@@ -8,6 +9,7 @@ export type BlogModelOutType = {
 }
 
 export type PostModelOutType = {
+    _id?: any,
     id: string
     title: string
     shortDescription: string

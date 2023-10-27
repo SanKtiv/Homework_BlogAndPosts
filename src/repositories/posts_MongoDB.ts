@@ -28,7 +28,8 @@ export const postsRepository = {
             .db('tube')
             .collection<PostModelOutType>('posts')
             .insertOne(newPost)
-        return newPost
+        let {_id, ...newPostWithout_id} = newPost
+        return newPostWithout_id
     },
     async updatePost(id: string, body: any): Promise<Boolean> {
         const foundPost = await client

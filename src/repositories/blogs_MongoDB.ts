@@ -28,7 +28,8 @@ export const blogsRepository = {
             .db('tube')
             .collection<BlogModelOutType>('blogs')
             .insertOne(newBlog)
-        return newBlog
+        let {_id, ...newBlogWithout_id} = newBlog
+        return newBlogWithout_id
     },
     async updateBlog(id: string, body: any): Promise<Boolean> {
         const foundBlog = await client
