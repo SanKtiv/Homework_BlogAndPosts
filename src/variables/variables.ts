@@ -7,6 +7,8 @@ export const idNumber = () => Date.now().toString()
 
 export let dateNow = new Date
 
+
+
 export function errorMessage(errors: Result<ValidationError>): ErrorType {
     const errorsMessages: ErrorMessType[] = []
     for (const elem of errors["errors"]) {
