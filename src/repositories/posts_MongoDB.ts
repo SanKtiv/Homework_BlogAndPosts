@@ -8,14 +8,14 @@ export const postsRepository = {
         return client
             .db('tube')
             .collection<PostModelOutType>('posts')
-            .find()
+            .find({}, {projection: {_id: 0}})
             .toArray()
     },
     async getPostById(id: string): Promise<PostModelOutType | null> {
         return client
             .db('tube')
             .collection<PostModelOutType>('posts')
-            .findOne({id: id})
+            .findOne({id: id}, {projection: {_id: 0}})
     },
     async createPost(body: any): Promise<PostModelOutType> {
 
