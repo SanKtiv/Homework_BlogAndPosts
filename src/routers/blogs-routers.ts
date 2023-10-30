@@ -2,7 +2,7 @@ import {Request, Response, Router} from 'express';
 import {blogsRepository} from "../repositories/blogs_MongoDB";
 import {validationResult} from 'express-validator'
 import {errorMessage} from "../variables/variables";
-import {validId, validAuthorize} from "../validations/validations";
+import {validId, validAuthorize, errorOfValid} from "../validations/validations";
 
 export const blogRouter = Router ({})
 
@@ -16,17 +16,17 @@ blogRouter.get( '/:id', async (req: Request, res: Response) => {
 
 })
 
-blogRouter.post( '/', validAuthorize, async (req: Request, res: Response) => {
-    const error = validationResult(req)
-    if (error.isEmpty()) {
-        const blogById = await blogsRepository.createBlog(req.body)
-        return res.status(201).send(blogById)
-    }
-        return res.status(400).send(errorMessage(error))
+blogRouter.post( '/', validAuthorize, errorOfValid, async (req: Request, res: Response) => {
+    // const error = validationResult(req)// сделать middleware с проверкой
+    // if (error.isEmpty()) {
+        const blog = await blogsRepository.createBlog(req.body)
+        return res.status(201).send(blog)
+    // }
+    //     return res.status(400).send(errorMessage(error))
 })
 
 blogRouter.put('/:id', validAuthorize, validId, async (req: Request, res: Response) => {
-    const error = validationResult(req)
+    const error = validationResult(req)// сделать middleware с проверкой
     if (error.isEmpty()) {
         return await blogsRepository.updateBlog(req.params.id, req.body) ?
             res.sendStatus(204) :

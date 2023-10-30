@@ -22,7 +22,7 @@ export const blogsRepository = {
         let {_id, ...newBlogWithout_id} = newBlog
         return newBlogWithout_id
     },
-    async updateBlog(id: string, body: any): Promise<Boolean> {
+    async updateBlog(id: string, body: any): Promise<Boolean> {//body типизировать
         const foundBlog = await dbBlogsCollection.updateOne({id: id}, {
                 $set: {
                     name: body.name,

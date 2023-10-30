@@ -17,7 +17,7 @@ postRouter.get( '/:id', async (req: Request, res: Response) => {
 })
 
 postRouter.post( '/', validAuthorize, async (req: Request, res: Response) => {
-    const error = validationResult(req)
+    const error = validationResult(req)// сделать middleware с проверкой
     if (error.isEmpty()) {
         const postById = await postsRepository.createPost(req.body)
         return res.status(201).send(postById)
@@ -26,7 +26,7 @@ postRouter.post( '/', validAuthorize, async (req: Request, res: Response) => {
 })
 
 postRouter.put('/:id', validAuthorize, validId, async (req: Request, res: Response) => {
-    const error = validationResult(req)
+    const error = validationResult(req)// сделать middleware с проверкой
     if (error.isEmpty()) {
         return await postsRepository.updatePost(req.params.id, req.body) ?
             res.sendStatus(204) :

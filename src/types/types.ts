@@ -1,5 +1,5 @@
 export type BlogModelOutType = {
-    _id?: any,
+    _id?: any,//типизировать
     id: string
     name: string
     description: string
@@ -25,7 +25,7 @@ export type BlogModelInType = {
 }
 
 export type PostModelOutType = {
-    _id?: any,
+    _id?: any,//типизировать
     id: string
     title: string
     shortDescription: string

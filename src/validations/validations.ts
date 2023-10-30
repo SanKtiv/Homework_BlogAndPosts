@@ -1,5 +1,5 @@
-import {body, param} from 'express-validator'
-import {regexp} from "../variables/variables"
+import {body, param, validationResult} from 'express-validator'
+import {errorMessage, regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
 import {BlogModelInType} from "../types/types";
 
@@ -9,6 +9,13 @@ const blogFormIn: BlogModelInType = {
     websiteUrl: {field: 'websiteUrl', length: 100, pattern: regexp}
 }
 
+export const errorOfValid = (req: Request, res: Response, next: NextFunction) => {
+    if (validationResult(req).isEmpty()) {
+        next()
+    }
+    res.status(400).send(validationResult(req))
+}
+//валидатоы можно объеденить в массив, создавать через функцию и т.д.
 export const validId = param('id', 'id is incorrect')
     .trim()
     .isString()
@@ -53,4 +60,6 @@ export const validContent = body('content', 'content length is incorrect')
 export const validBlogId = body('blogId', 'blogId length is incorrect')
     .isString()
     .trim()
-    .isLength({min: 6})
+    .isLength({min: 6})// добавить кастом валидацию: проверить есть ли в базе post с заданным blogId
+
+export const validateBlog = () => [validName, validDescription, validWebsiteUrl]
