@@ -8,6 +8,22 @@ export type BlogModelOutType = {
     isMembership: boolean
 }
 
+export type BlogModelInType = {
+    name: {
+        field: string
+        length: number
+    }
+    description: {
+        field: string
+        length: number
+    }
+    websiteUrl: {
+        field: string
+        length: number
+        pattern: RegExp
+    }
+}
+
 export type PostModelOutType = {
     _id?: any,
     id: string

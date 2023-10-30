@@ -1,26 +1,33 @@
 import {body, param} from 'express-validator'
 import {regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
+import {BlogModelInType} from "../types/types";
+
+const blogFormIn: BlogModelInType = {
+    name: {field: 'name', length: 15},
+    description: {field: 'description', length: 500},
+    websiteUrl: {field: 'websiteUrl', length: 100, pattern: regexp}
+}
 
 export const validId = param('id', 'id is incorrect')
     .trim()
     .isString()
 
-export const validName = body('name', 'name length is incorrect')
+export const validName = body(blogFormIn.name.field, `${blogFormIn.name.field} is incorrect`)
     .isString()
     .trim()
-    .isLength({min: 1, max: 15})
+    .isLength({max: blogFormIn.name.length})
 
-export const validDescription = body('description', 'description length is incorrect')
+export const validDescription = body(blogFormIn.description.field, `${blogFormIn.description.field} is incorrect`)
     .isString()
     .trim()
-    .isLength({min: 1, max: 500})
+    .isLength({max: blogFormIn.description.length})
 
-export const validWebsiteUrl = body('websiteUrl', 'URL adress is incorrect')
+export const validWebsiteUrl = body(blogFormIn.websiteUrl.field, `${blogFormIn.websiteUrl.field} is incorrect`)
     .isString()
     .trim()
-    .isLength({min: 1, max: 100})
-    .matches(regexp)
+    .isLength({max: blogFormIn.websiteUrl.length})
+    .matches(blogFormIn.websiteUrl.pattern)
 
 export const validAuthorize = (req: Request, res: Response, next: NextFunction) => {
     req.headers.authorization === 'Basic YWRtaW46cXdlcnR5' ?
