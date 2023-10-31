@@ -1,20 +1,28 @@
-import {body, param, validationResult} from 'express-validator'
-import {errorMessage, regexp} from "../variables/variables"
+import {body, param, Result, validationResult} from 'express-validator'
+import {regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
-import {BlogModelInType} from "../types/types";
+import {BlogModelInType, ErrorMessType} from "../types/typesForMongoDB";
 
 const blogFormIn: BlogModelInType = {
     name: {field: 'name', length: 15},
     description: {field: 'description', length: 500},
     websiteUrl: {field: 'websiteUrl', length: 100, pattern: regexp}
 }
-
-export const errorOfValid = (req: Request, res: Response, next: NextFunction) => {
-    if (validationResult(req).isEmpty()) {
-        next()
+const customError = ({msg, path}: any): ErrorMessType => {
+    return {
+        message: msg,
+        field: path
     }
-    res.status(400).send(validationResult(req))
 }
+
+export const errorsOfValidation = (req: Request, res: Response, next: NextFunction) => {
+    const result = validationResult(req)
+    if (!result.isEmpty()) {
+        const error = result.array({onlyFirstError: true}).map(error => customError(error))
+        res.status(400).send({errorsMessages: error})
+    } else next()
+}
+
 //валидатоы можно объеденить в массив, создавать через функцию и т.д.
 export const validId = param('id', 'id is incorrect')
     .trim()

@@ -1,16 +1,16 @@
-import {BlogModelOutType} from "../types/types";
+import {BlogModelOutMemoryType} from "../types/typesForMemory";
 import {idNumber} from "../variables/variables";
 //-----------------------------------------------------//
-const blogsDataBase: BlogModelOutType[] = []
+const blogsDataBase: BlogModelOutMemoryType[] = []
 //-----------------------------------------------------//
 export const blogsRepository = {
-    async getAllBlogs(): Promise<BlogModelOutType[]> {
+    async getAllBlogs(): Promise<BlogModelOutMemoryType[]> {
         return blogsDataBase
     },
-    async getBlogById(id: string): Promise<BlogModelOutType | undefined> {
+    async getBlogById(id: string): Promise<BlogModelOutMemoryType | undefined> {
         return  blogsDataBase.find(b => b.id === id)
     },
-    async createBlog(body: any): Promise<BlogModelOutType> {
+    async createBlog(body: any): Promise<BlogModelOutMemoryType> {
         const newBlog = {id: idNumber(), ...body}
         blogsDataBase.push(newBlog)
         return newBlog

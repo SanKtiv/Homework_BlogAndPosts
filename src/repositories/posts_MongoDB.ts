@@ -1,4 +1,4 @@
-import {PostModelOutType} from "../types/types";
+import {PostBodyType, PostModelOutType} from "../types/typesForMongoDB";
 import {idNumber} from "../variables/variables";
 import {dbPostsCollection} from "./db";
 import {dateNow} from "../variables/variables";
@@ -10,7 +10,7 @@ export const postsRepository = {
     async getPostById(id: string): Promise<PostModelOutType | null> {
         return dbPostsCollection.findOne({id: id}, {projection: {_id: 0}})
     },
-    async createPost(body: any): Promise<PostModelOutType> {
+    async createPost(body: PostBodyType): Promise<PostModelOutType> {
 
         const newPost: PostModelOutType = {
             id: idNumber(),
@@ -21,7 +21,7 @@ export const postsRepository = {
         let {_id, ...newPostWithout_id} = newPost
         return newPostWithout_id
     },
-    async updatePost(id: string, body: any): Promise<Boolean> {
+    async updatePost(id: string, body: PostBodyType): Promise<Boolean> {
         const foundPost = await dbPostsCollection.updateOne({id: id}, {
             $set: {
                     title: body.title,

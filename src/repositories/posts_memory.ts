@@ -1,16 +1,16 @@
-import {PostModelOutType} from "../types/types";
+import {PostModelOutMemoryType} from "../types/typesForMemory";
 import {idNumber} from "../variables/variables";
 //-----------------------------------------------------//
-const postsDataBase: PostModelOutType[] = []
+const postsDataBase: PostModelOutMemoryType[] = []
 //-----------------------------------------------------//
 export const postsRepository = {
-    getAllPosts(): PostModelOutType[] {
+    getAllPosts(): PostModelOutMemoryType[] {
         return postsDataBase
     },
-    getPostById(id: string): PostModelOutType | undefined {
+    getPostById(id: string): PostModelOutMemoryType | undefined {
         return  postsDataBase.find(b => b.id === id)
     },
-    createPost(body: any): PostModelOutType {
+    createPost(body: any): PostModelOutMemoryType {
         const newPost = {id: idNumber(), blogName: 'name', ...body}
         postsDataBase.push(newPost)
         return newPost
