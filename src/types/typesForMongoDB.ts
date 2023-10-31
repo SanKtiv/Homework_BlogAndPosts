@@ -1,21 +1,11 @@
-
-export type BlogModelOutType = {
-    //_id?: any,//типизировать
-    _id: ObjectId
+export type BlogType = {
     name: string
     description: string
     websiteUrl: string
     createdAt: string
     isMembership: boolean
 }
-
-export type CreateBlogType = {
-    name: string
-    description: string
-    websiteUrl: string
-    createdAt: string
-    isMembership: boolean
-}
+export type BlogModelOutType = BlogType & {id: string}
 
 export type BlogBodyType = {
     name: string
