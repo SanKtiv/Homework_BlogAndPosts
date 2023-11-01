@@ -1,7 +1,7 @@
 import {BlogBodyType, BlogModelOutType, BlogType} from "../types/typesForMongoDB";
 import {dbBlogsCollection} from "./db";
 import {dateNow} from "../variables/variables";
-import {InsertOneResult, ObjectId, WithId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 
 export const blogsRepository = {
     blogDbInToBlog(blogOutDb: WithId<BlogType>): BlogModelOutType {
@@ -32,7 +32,8 @@ export const blogsRepository = {
         const newBlog: BlogType = {
             createdAt: dateNow.toISOString(),
             isMembership: false,
-            ...body}
+            ...body
+        }
         await dbBlogsCollection.insertOne(newBlog)
         //let {_id, ...newBlogWithout_id} = newBlog
         return this.blogDbInToBlog(newBlog as WithId<BlogType>)
