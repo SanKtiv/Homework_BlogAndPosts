@@ -1,28 +1,37 @@
-import {PostBodyType, PostModelOutType} from "../types/typesForMongoDB";
-import {idNumber} from "../variables/variables";
+import {PostType, PostBodyType, PostModelOutType, BlogType} from "../types/typesForMongoDB";
 import {dbPostsCollection} from "./db";
 import {dateNow} from "../variables/variables";
+import {ObjectId, WithId} from "mongodb";
 
 export const postsRepository = {
-    async getAllPosts(): Promise<PostModelOutType[]> {
-        return dbPostsCollection.find({}, {projection: {_id: 0}}).toArray()
-    },
-    async getPostById(id: string): Promise<PostModelOutType | null> {
-        return dbPostsCollection.findOne({id: id}, {projection: {_id: 0}})
-    },
-    async createPost(body: PostBodyType): Promise<PostModelOutType> {
+    postDbInToBlog(postOutDb: WithId<PostType>): PostModelOutType {
+    const {_id, ...withOutId} = postOutDb
+    return  {id:postOutDb._id.toString(), ...withOutId}
 
-        const newPost: PostModelOutType = {
-            id: idNumber(),
+},
+    async getAllPosts(): Promise<PostModelOutType[]> {
+        const allPosts = await dbPostsCollection.find().toArray()
+        return allPosts.map(postOutDb => this.postDbInToBlog(postOutDb))
+    },
+
+    async getPostById(id: string): Promise<PostModelOutType | null> {
+        const postOutDb = await dbPostsCollection.findOne({_id: new ObjectId(id)})
+        if (postOutDb === null) return null
+        return this.postDbInToBlog(postOutDb)
+    },
+
+    async createPost(body: PostBodyType): Promise<PostModelOutType> {
+        const newPost: PostType = {
             createdAt: dateNow.toISOString(),
             blogName: 'name',
-            ...body}
+            ...body
+        }
         await dbPostsCollection.insertOne(newPost)
-        let {_id, ...newPostWithout_id} = newPost
-        return newPostWithout_id
+        return this.postDbInToBlog(newPost as WithId<PostType>)
     },
+
     async updatePost(id: string, body: PostBodyType): Promise<Boolean> {
-        const foundPost = await dbPostsCollection.updateOne({id: id}, {
+        const foundPost = await dbPostsCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
                     title: body.title,
                     shortDescription: body.shortDescription,
@@ -34,7 +43,7 @@ export const postsRepository = {
     },
     async deletePostById(id: string): Promise<Boolean> {
 
-        const deletePost = await dbPostsCollection.deleteOne({id: id})
+        const deletePost = await dbPostsCollection.deleteOne({_id: new ObjectId(id)})
         return deletePost.deletedCount === 1
     },
     async deleteAll(): Promise<void> {

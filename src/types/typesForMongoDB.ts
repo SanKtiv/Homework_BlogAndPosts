@@ -36,9 +36,7 @@ export type BlogModelInType = {
     }
 }
 
-export type PostModelOutType = {
-    _id?: any,//типизировать
-    id: string
+export type PostType = {
     title: string
     shortDescription: string
     content: string
@@ -46,6 +44,8 @@ export type PostModelOutType = {
     blogName: string
     createdAt: string
 }
+
+export type PostModelOutType = PostType & {id: string}
 
 export type ErrorType = {
     errorsMessages: ErrorMessType[]

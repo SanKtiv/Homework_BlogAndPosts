@@ -2,6 +2,7 @@ import {body, param, Result, validationResult} from 'express-validator'
 import {regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
 import {BlogModelInType, ErrorMessType} from "../types/typesForMongoDB";
+import {blogsRepository} from "../repositories/blogs_MongoDB";
 
 const blogFormIn: BlogModelInType = {
     name: {field: 'name', length: 15},
@@ -68,6 +69,6 @@ export const validContent = body('content', 'content length is incorrect')
 export const validBlogId = body('blogId', 'blogId length is incorrect')
     .isString()
     .trim()
-    .isLength({min: 6})// добавить кастом валидацию: проверить есть ли в базе post с заданным blogId
+    .custom(id => blogsRepository.getBlogById(id)).withMessage('Blog is not exist')
 
 export const validateBlog = () => [validName, validDescription, validWebsiteUrl]
