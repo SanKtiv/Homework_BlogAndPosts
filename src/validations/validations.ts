@@ -1,4 +1,4 @@
-import {body, param, Result, validationResult} from 'express-validator'
+import {body, param, validationResult} from 'express-validator'
 import {regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
 import {BlogModelInType, ErrorMessType} from "../types/typesForMongoDB";
