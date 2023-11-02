@@ -30,7 +30,7 @@ export const blogsRepository = {
 
     async createBlog(body: BlogBodyType): Promise<BlogModelOutType> {
         const newBlog: BlogType = {
-            createdAt: dateNow.toISOString(),
+            createdAt: dateNow().toISOString(),
             isMembership: false,
             ...body
         }

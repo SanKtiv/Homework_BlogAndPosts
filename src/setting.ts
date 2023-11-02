@@ -16,3 +16,5 @@ app.use(parserMiddleware)
 app.use('/', dellAllRouter)
 app.use('/blogs', validateBlog(), blogRouter)
 app.use('/posts', validTitle, validShortDescription, validContent, validBlogId, postRouter)
+
+//app.use('/blogs?', validateBlog(), blogRouterQuery)

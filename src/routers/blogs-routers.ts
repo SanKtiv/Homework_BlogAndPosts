@@ -1,10 +1,15 @@
 import {Request, Response, Router} from 'express';
 import {blogsRepository} from "../repositories/blogs_MongoDB";
 import {validId, validAuthorize, errorsOfValidation} from "../validations/validations";
+import {blogsRepositoryQuery} from "../repositories/blogs_MongoDB_Query";
 
 export const blogRouter = Router ({})
 
 blogRouter.get( '/', async (req: Request, res: Response) => {
+    //console.log(Object.keys(req.query).length)
+    if (Object.keys(req.query).length) {
+        return res.status(200).send(await blogsRepositoryQuery.getBlogsWithPaging(req.query))
+    }
     return res.status(200).send(await blogsRepository.getAllBlogs())
 })
 

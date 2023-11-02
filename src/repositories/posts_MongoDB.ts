@@ -22,7 +22,7 @@ export const postsRepository = {
 
     async createPost(body: PostBodyType): Promise<PostModelOutType> {
         const newPost: PostType = {
-            createdAt: dateNow.toISOString(),
+            createdAt: dateNow().toISOString(),
             blogName: 'name',
             ...body
         }
