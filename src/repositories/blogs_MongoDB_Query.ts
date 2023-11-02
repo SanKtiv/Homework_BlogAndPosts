@@ -22,26 +22,45 @@ export const blogsRepositoryQuery = {
     // },
 
     async getBlogsWithPaging(query: any): Promise<BlogsOutputQueryType | null> {
-        const countBlogs = await dbBlogsCollection.countDocuments()
-        console.log(countBlogs)
 
-        // if (query.searchNameTerm) {
-        //     const regexpSearchName = new RegExp(query.searchNameTerm)
-        //     const blogsItems = await dbBlogsCollectionForQuery.find({name: {$regex: regexpSearchName}}).skip(5).limit(5)
-        // }
+
+        if (query.searchNameTerm !== 'null') {
+            const searchNameToRegExp = new RegExp(query.searchNameTerm)
+            const totalBlogsBySearchName = await dbBlogsCollection.countDocuments({name: {$regex: searchNameToRegExp}})
+
+            const blogsItemsSearchName = await dbBlogsCollection
+                .find({name: {$regex: searchNameToRegExp}},
+                    {skip: +query.pageNumber - 1, limit: +query.pageSize})
+                //.skip(+query.pageNumber - 1)
+                //.limit(+query.pageSize)
+                //.sort({createdAt: 1})
+                .toArray()
+
+            const blogsOutputQuery: BlogsOutputQueryType = {
+                pagesCount: Math.ceil(totalBlogsBySearchName / +query.pageSize),
+                page: +query.pageNumber,
+                pageSize: +query.pageSize,
+                totalCount: totalBlogsBySearchName,
+                items: blogsItemsSearchName.map(blogOutDb => this.blogDbInToBlog(blogOutDb))
+            }
+
+            return blogsOutputQuery
+        }
+
+        const totalBlogs = await dbBlogsCollection.countDocuments()
 
         const blogsItems = await dbBlogsCollection
-            .find()
-            .skip(query.pageNumber - 1)
-            .limit(+query.pageSize)
-            .sort({createdAt: 1})
+            .find({}, {skip: +query.pageNumber - 1, limit: +query.pageSize})
+            //.skip(+query.pageNumber - 1)
+            //.limit(+query.pageSize)
+            .sort({createdAt: query.sortDirection})
             .toArray()
 
         const blogsOutputQuery: BlogsOutputQueryType = {
-            pagesCount: Math.ceil(countBlogs / query.pageSize),
-            page: query.pageNumber,
-            pageSize: query.pageSize,
-            totalCount: countBlogs,
+            pagesCount: Math.ceil(totalBlogs / +query.pageSize),
+            page: +query.pageNumber,
+            pageSize: +query.pageSize,
+            totalCount: totalBlogs,
             items: blogsItems.map(blogOutDb => this.blogDbInToBlog(blogOutDb))
         }
         return blogsOutputQuery
