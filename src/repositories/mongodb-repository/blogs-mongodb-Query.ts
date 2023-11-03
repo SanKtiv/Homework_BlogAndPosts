@@ -1,7 +1,7 @@
 import {BlogType, PostType} from "../../types/typesForMongoDB";
 import {dbBlogsCollection, dbPostsCollection} from "./db";
 import {WithId} from "mongodb";
-import {BlogsOutputQueryType, InputQueryWithSearchNameType, PostsOutputByBlogIdType, InputQueryWithBlogIdType} from "../../types/typesForQuery";
+import {BlogsOutputQueryType, InputQueryWithSearchNameType, PostsOutputQueryType, InputQueryType} from "../../types/typesForQuery";
 import {blogsRepository} from "./blogs-mongodb";
 import {postsRepository} from "./posts-mongodb";
 
@@ -34,7 +34,7 @@ export const blogsRepositoryQuery = {
     postsOutputQuery(
         totalBlogs: number,
         blogsItems: WithId<PostType>[],
-        query: InputQueryWithBlogIdType): PostsOutputByBlogIdType {
+        query: InputQueryType): PostsOutputQueryType {
 
         return {
             pagesCount: Math.ceil(totalBlogs / +query.pageSize),
@@ -74,7 +74,7 @@ export const blogsRepositoryQuery = {
         return this.blogsOutputQuery(totalBlogs, blogsItems, query)
     },
 
-    async getPostsByBlogId(blogId: string, query: any): Promise<PostsOutputByBlogIdType | null> {
+    async getPostsByBlogId(blogId: string, query: any): Promise<PostsOutputQueryType | null> {
 
         const totalPostsByBlogId = await dbPostsCollection.countDocuments({blogId: blogId})
 

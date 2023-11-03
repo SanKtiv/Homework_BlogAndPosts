@@ -17,14 +17,14 @@ export type BlogsOutputQueryType = {
     items: BlogModelOutType[]
 }
 
-export type InputQueryWithBlogIdType = {
+export type InputQueryType = {
     sortBy: string
     sortDirection: 'asc' | 'desc'
     pageNumber: string
     pageSize: string
 }
 
-export type PostsOutputByBlogIdType = {
+export type PostsOutputQueryType = {
     pagesCount: number
     page: number
     pageSize: number
