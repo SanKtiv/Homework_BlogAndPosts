@@ -30,6 +30,16 @@ export const postsRepository = {
         return this.postDbInToBlog(newPost as WithId<PostType>)
     },
 
+    async createPostForBlogId(blogId: string, body: PostBodyType): Promise<PostModelOutType> {
+        const newPost: PostType = {
+            createdAt: dateNow().toISOString(),
+            blogName: 'name',
+            ...body
+        }
+        await dbPostsCollection.insertOne(newPost)
+        return this.postDbInToBlog(newPost as WithId<PostType>)
+    },
+
     async updatePost(id: string, body: PostBodyType): Promise<Boolean> {
         const foundPost = await dbPostsCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {

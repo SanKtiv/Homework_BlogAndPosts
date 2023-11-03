@@ -7,7 +7,7 @@ import {
     validTitle,
     validShortDescription,
     validContent,
-    validBlogId, validateBlog
+    validBlogIdBody, validateBlog
 } from "./validations/validations";
 import {postRouterQuery} from "./routers/posts-routers-Query";
 
@@ -17,6 +17,6 @@ app.use(parserMiddleware)
 
 app.use('/', dellAllRouter)
 app.use('/blogs', validateBlog(), blogRouter, blogRouterQuery)
-app.use('/posts', validTitle, validShortDescription, validContent, validBlogId, postRouter, postRouterQuery)
+app.use('/posts', validTitle, validShortDescription, validContent, validBlogIdBody, postRouter, postRouterQuery)
 
 //app.use('/blogs?', validateBlog(), blogRouterQuery)

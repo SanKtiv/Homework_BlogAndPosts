@@ -66,8 +66,12 @@ export const validContent = body('content', 'content length is incorrect')
     .trim()
     .isLength({min: 1, max: 1000})
 
-export const validBlogId = body('blogId', 'blogId length is incorrect')
+export const validBlogIdBody = body('blogId', 'blogId length is incorrect')
     .isString()
+    .trim()
+    .custom(id => blogsRepository.getBlogById(id)).withMessage('Blog is not exist')
+
+export const validBlogIdParam = param('blogId', 'blogId length is incorrect')
     .trim()
     .custom(id => blogsRepository.getBlogById(id)).withMessage('Blog is not exist')
 
