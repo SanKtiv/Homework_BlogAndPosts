@@ -1,7 +1,6 @@
 import {Request, Response, Router} from 'express';
-import {blogsRepository} from "../repositories/blogs_MongoDB";
+import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
 import {validId, validAuthorize, errorsOfValidation} from "../validations/validations";
-import {blogsRepositoryQuery} from "../repositories/blogs_MongoDB_Query";
 
 export const blogRouter = Router ({})
 

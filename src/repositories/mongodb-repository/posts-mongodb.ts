@@ -1,6 +1,6 @@
-import {PostType, PostBodyType, PostModelOutType} from "../types/typesForMongoDB";
+import {PostType, PostBodyType, PostModelOutType} from "../../types/typesForMongoDB";
 import {dbPostsCollection} from "./db";
-import {dateNow} from "../variables/variables";
+import {dateNow} from "../../variables/variables";
 import {ObjectId, WithId} from "mongodb";
 
 export const postsRepository = {

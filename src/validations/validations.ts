@@ -2,7 +2,7 @@ import {body, param, validationResult} from 'express-validator'
 import {regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
 import {BlogModelInType, ErrorMessType} from "../types/typesForMongoDB";
-import {blogsRepository} from "../repositories/blogs_MongoDB";
+import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
 
 const blogFormIn: BlogModelInType = {
     name: {field: 'name', length: 15},

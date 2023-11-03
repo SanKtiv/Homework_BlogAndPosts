@@ -1,6 +1,6 @@
-import {BlogBodyType, BlogModelOutType, BlogType} from "../types/typesForMongoDB";
+import {BlogBodyType, BlogModelOutType, BlogType} from "../../types/typesForMongoDB";
 import {dbBlogsCollection} from "./db";
-import {dateNow} from "../variables/variables";
+import {dateNow} from "../../variables/variables";
 import {ObjectId, WithId} from "mongodb";
 
 export const blogsRepository = {

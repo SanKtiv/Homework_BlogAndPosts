@@ -1,5 +1,5 @@
 import {Request, Response, Router} from 'express';
-import {postsRepository} from "../repositories/posts_MongoDB";
+import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
 import {validId, validAuthorize, errorsOfValidation} from "../validations/validations";
 
 export const postRouter = Router ({})

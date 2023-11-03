@@ -1,5 +1,5 @@
 import express from 'express'
-import {blogRouterQuery} from "./routers/blogs-query-routers";
+import {blogRouterQuery} from "./routers/blogs-routers-Query";
 import {blogRouter} from './routers/blogs-routers';
 import {postRouter} from "./routers/posts-routers";
 import {dellAllRouter} from "./routers/all-data-routers";

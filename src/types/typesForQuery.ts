@@ -22,7 +22,6 @@ export type InputQueryWithBlogIdType = {
     sortDirection: 'asc' | 'desc'
     pageNumber: string
     pageSize: string
-    blogId: string
 }
 
 export type PostsOutputByBlogIdType = {

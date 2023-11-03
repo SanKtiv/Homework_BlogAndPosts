@@ -1,5 +1,5 @@
-import {PostModelOutMemoryType} from "../types/typesForMemory";
-import {idNumber} from "../variables/variables";
+import {PostModelOutMemoryType} from "../../types/typesForMemory";
+import {idNumber} from "../../variables/variables";
 //-----------------------------------------------------//
 const postsDataBase: PostModelOutMemoryType[] = []
 //-----------------------------------------------------//

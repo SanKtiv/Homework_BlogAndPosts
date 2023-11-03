@@ -1,5 +1,5 @@
-import {BlogModelOutMemoryType} from "../types/typesForMemory";
-import {idNumber} from "../variables/variables";
+import {BlogModelOutMemoryType} from "../../types/typesForMemory";
+import {idNumber} from "../../variables/variables";
 //-----------------------------------------------------//
 const blogsDataBase: BlogModelOutMemoryType[] = []
 //-----------------------------------------------------//
