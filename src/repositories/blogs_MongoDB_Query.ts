@@ -1,100 +1,75 @@
 import {BlogBodyType, BlogModelOutType, BlogType} from "../types/typesForMongoDB";
-import {dbBlogsCollection, dbBlogsCollectionForQuery} from "./db";
+import {dbBlogsCollection, dbBlogsCollectionForQuery, dbPostsCollection} from "./db";
 import {dateNow} from "../variables/variables";
 import {ObjectId, WithId} from "mongodb";
-import {BlogsOutputQueryType, RequestQueryType} from "../types/typesForQuery";
+import {BlogsOutputQueryType, InputQueryWithSearchNameType, PostsOutputByBlogIdType} from "../types/typesForQuery";
+import {ParsedUrlQuery} from "querystring";
+import {blogsRepository} from "./blogs_MongoDB";
+import {postsRepository} from "./posts_MongoDB";
 
 export const blogsRepositoryQuery = {
-    blogDbInToBlog(blogOutDb: WithId<BlogType>): BlogModelOutType {
+    // blogDbInToBlog(blogOutDb: WithId<BlogType>): BlogModelOutType {
+    //     return {
+    //         id: blogOutDb._id.toString(),
+    //         name: blogOutDb.name,
+    //         description: blogOutDb.description,
+    //         websiteUrl: blogOutDb.websiteUrl,
+    //         createdAt: blogOutDb.createdAt,
+    //         isMembership: blogOutDb.isMembership
+    //     }
+    // },
+
+    blogsOutputQuery(totalBlogs: number, blogsItems: WithId<BlogType>[], query: InputQueryWithSearchNameType): BlogsOutputQueryType {
         return {
-            id: blogOutDb._id.toString(),
-            name: blogOutDb.name,
-            description: blogOutDb.description,
-            websiteUrl: blogOutDb.websiteUrl,
-            createdAt: blogOutDb.createdAt,
-            isMembership: blogOutDb.isMembership
+            pagesCount: Math.ceil(totalBlogs / +query.pageSize),
+            page: +query.pageNumber,
+            pageSize: +query.pageSize,
+            totalCount: totalBlogs,
+            items: blogsItems.map(blogOutDb => blogsRepository.blogDbInToBlog(blogOutDb))
         }
     },
 
-    // async getAllBlogs(): Promise<BlogModelOutType[]> {
-    //     const allBlogs = await dbBlogsCollection.find().toArray()
-    //     return allBlogs.map(blogOutDb => this.blogDbInToBlog(blogOutDb))
-    // },
-
     async getBlogsWithPaging(query: any): Promise<BlogsOutputQueryType | null> {
-
 
         if (query.searchNameTerm !== 'null') {
             const searchNameToRegExp = new RegExp(query.searchNameTerm)
-            const totalBlogsBySearchName = await dbBlogsCollection.countDocuments({name: {$regex: searchNameToRegExp}})
+            const totalBlogsBySearchName = await dbBlogsCollection
+                .countDocuments({name: {$regex: searchNameToRegExp}})
 
             const blogsItemsSearchName = await dbBlogsCollection
-                .find({name: {$regex: searchNameToRegExp}},
-                    {skip: +query.pageNumber - 1, limit: +query.pageSize})
-                //.skip(+query.pageNumber - 1)
-                //.limit(+query.pageSize)
-                //.sort({createdAt: 1})
+                .find({name: {$regex: searchNameToRegExp}})
+                .sort({createdAt: query.sortDirection})
+                .skip((+query.pageNumber - 1) * +query.pageSize)
+                .limit(+query.pageSize)
                 .toArray()
 
-            const blogsOutputQuery: BlogsOutputQueryType = {
-                pagesCount: Math.ceil(totalBlogsBySearchName / +query.pageSize),
-                page: +query.pageNumber,
-                pageSize: +query.pageSize,
-                totalCount: totalBlogsBySearchName,
-                items: blogsItemsSearchName.map(blogOutDb => this.blogDbInToBlog(blogOutDb))
-            }
-
-            return blogsOutputQuery
+            return this.blogsOutputQuery(totalBlogsBySearchName, blogsItemsSearchName, query)
         }
 
         const totalBlogs = await dbBlogsCollection.countDocuments()
 
         const blogsItems = await dbBlogsCollection
-            .find({}, {skip: +query.pageNumber - 1, limit: +query.pageSize})
-            //.skip(+query.pageNumber - 1)
-            //.limit(+query.pageSize)
+            .find()
             .sort({createdAt: query.sortDirection})
+            .skip((+query.pageNumber - 1) * +query.pageSize)
+            .limit(+query.pageSize)
             .toArray()
 
-        const blogsOutputQuery: BlogsOutputQueryType = {
-            pagesCount: Math.ceil(totalBlogs / +query.pageSize),
-            page: +query.pageNumber,
-            pageSize: +query.pageSize,
-            totalCount: totalBlogs,
-            items: blogsItems.map(blogOutDb => this.blogDbInToBlog(blogOutDb))
-        }
-        return blogsOutputQuery
+        return this.blogsOutputQuery(totalBlogs, blogsItems, query)
     },
 
-    // async createBlog(body: BlogBodyType): Promise<BlogModelOutType> {
-    //     const newBlog: BlogType = {
-    //         createdAt: dateNow.toISOString(),
-    //         isMembership: false,
-    //         ...body
-    //     }
-    //     await dbBlogsCollection.insertOne(newBlog)
-    //     //let {_id, ...newBlogWithout_id} = newBlog
-    //     return this.blogDbInToBlog(newBlog as WithId<BlogType>)
-    // },
-    //
-    // async updateBlog(id: string, body: BlogBodyType): Promise<Boolean> {
-    //     const foundBlog = await dbBlogsCollection.updateOne({_id: new ObjectId(id)}, {
-    //         $set: {
-    //             name: body.name,
-    //             description: body.description,
-    //             websiteUrl: body.websiteUrl
-    //         }
-    //     })
-    //     return foundBlog.matchedCount === 1
-    // },
-    //
-    // async deleteBlogById(id: string): Promise<Boolean> {
-    //
-    //     const deleteBlog = await dbBlogsCollection.deleteOne({_id: new ObjectId(id)})
-    //     return deleteBlog.deletedCount === 1
-    // },
-    //
-    // async deleteAll(): Promise<void> {
-    //     await dbBlogsCollection.deleteMany({})
-    // }
+    async getPostsByBlogId(blogId: string, query: any): Promise<PostsOutputByBlogIdType | null> {
+        const postsOutputFromDb = await dbPostsCollection
+            .find({blogId: blogId})
+            .sort({createdAt: query.sortDirection})
+            .skip((+query.pageNumber - 1) * +query.pageSize)
+            .limit(+query.pageSize)
+            .toArray()
+
+        if (!postsOutputFromDb.length) return null
+        const totalPostsByBlogId = await dbBlogsCollection
+            .countDocuments({blogId: blogId})
+        return this.blogsOutputQuery()
+        //return postsRepository.postDbInToBlog(postsOutputFromDb)
+    },
 }

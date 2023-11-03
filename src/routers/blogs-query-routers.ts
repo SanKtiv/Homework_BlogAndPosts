@@ -2,18 +2,28 @@ import {Request, Response, Router} from 'express';
 import {blogsRepositoryQuery} from "../repositories/blogs_MongoDB_Query";
 import {validId, validAuthorize, errorsOfValidation} from "../validations/validations";
 import {blogRouter} from "./blogs-routers";
+import {blogsRepository} from "../repositories/blogs_MongoDB";
 
-//export const blogRouterQuery = Router ({})
+export const blogRouterQuery = Router ({})
 
-// blogRouter.get( '/', async (req: Request, res: Response) => {
-//     console.log('error')
-//     if (req.query) {
-//         return res.status(200).send(await blogsRepository.getBlogsWithPaging(req.query))
-//     }
-//     return res.status(200).send(await blogsRepository.getAllBlogs())
-// })
+blogRouterQuery.get( '/', async (req: Request, res: Response) => {
 
+    if (Object.keys(req.query).length) {
+        return res.status(200).send(await blogsRepositoryQuery.getBlogsWithPaging(req.query))
+    }
+    return res.status(200).send(await blogsRepository.getAllBlogs())
+})
 
+blogRouterQuery.get( '/:blogIDd/posts', async (req: Request, res: Response) => {
+
+    return res.sendStatus(404)
+})
+
+blogRouterQuery.get( '/:id', async (req: Request, res: Response) => {
+    const blogs = await blogsRepository.getBlogById(req.params.id)
+    if (blogs) return res.status(200).send(blogs)
+    return res.sendStatus(404)
+})
 // blogRouter.get( '/:id', async (req: Request, res: Response) => {
 //     const blogs = await blogsRepository.getBlogById(req.params.id)
 //     if (blogs) return res.status(200).send(blogs)

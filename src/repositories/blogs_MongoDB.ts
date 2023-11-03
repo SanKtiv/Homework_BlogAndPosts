@@ -5,16 +5,16 @@ import {ObjectId, WithId} from "mongodb";
 
 export const blogsRepository = {
     blogDbInToBlog(blogOutDb: WithId<BlogType>): BlogModelOutType {
-        const {_id, ...withOutId} = blogOutDb
-        return  {id:blogOutDb._id.toString(), ...withOutId}
-        // return {
-        //     id: blogOutDb._id.toString(),
-        //     name: blogOutDb.name,
-        //     description: blogOutDb.description,
-        //     websiteUrl: blogOutDb.websiteUrl,
-        //     createdAt: blogOutDb.createdAt,
-        //     isMembership: blogOutDb.isMembership
-        // }
+        // const {_id, ...withOutId} = blogOutDb
+        // return  {id:blogOutDb._id.toString(), ...withOutId}
+        return {
+            id: blogOutDb._id.toString(),
+            name: blogOutDb.name,
+            description: blogOutDb.description,
+            websiteUrl: blogOutDb.websiteUrl,
+            createdAt: blogOutDb.createdAt,
+            isMembership: blogOutDb.isMembership
+        }
     },
 
     async getAllBlogs(): Promise<BlogModelOutType[]> {

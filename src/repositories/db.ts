@@ -4,7 +4,7 @@ import {PostType, BlogType} from "../types/typesForMongoDB";
 import {BlogsOutputQueryType} from "../types/typesForQuery";
 dotenv.config()
 
-const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+const mongoURI = /*process.env.MONGO_URL || */'mongodb://0.0.0.0:27017'
 
 export const client = new MongoClient(mongoURI)
 
@@ -20,7 +20,7 @@ export const dbBlogsCollectionForQuery = client.db(db).collection<BlogsOutputQue
 export async function runDb() {
     try {
         await client.connect()
-        //await client.db('tube').command({ping: 1})
+        await client.db(db).command({ping: 1})
         console.log('Connect successfully to mongo server')
     } catch {
         await client.close()

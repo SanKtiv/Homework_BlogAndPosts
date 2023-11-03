@@ -5,19 +5,19 @@ import {blogsRepositoryQuery} from "../repositories/blogs_MongoDB_Query";
 
 export const blogRouter = Router ({})
 
-blogRouter.get( '/', async (req: Request, res: Response) => {
-    //console.log(Object.keys(req.query).length)
-    if (Object.keys(req.query).length) {
-        return res.status(200).send(await blogsRepositoryQuery.getBlogsWithPaging(req.query))
-    }
-    return res.status(200).send(await blogsRepository.getAllBlogs())
-})
-
-blogRouter.get( '/:id', async (req: Request, res: Response) => {
-    const blogs = await blogsRepository.getBlogById(req.params.id)
-    if (blogs) return res.status(200).send(blogs)
-    return res.sendStatus(404)
-})
+// blogRouter.get( '/', async (req: Request, res: Response) => {
+//     //console.log(Object.keys(req.query).length)
+//     if (Object.keys(req.query).length) {
+//         return res.status(200).send(await blogsRepositoryQuery.getBlogsWithPaging(req.query))
+//     }
+//     return res.status(200).send(await blogsRepository.getAllBlogs())
+// })
+//
+// blogRouter.get( '/:id', async (req: Request, res: Response) => {
+//     const blogs = await blogsRepository.getBlogById(req.params.id)
+//     if (blogs) return res.status(200).send(blogs)
+//     return res.sendStatus(404)
+// })
 
 blogRouter.post( '/', validAuthorize, errorsOfValidation, async (req: Request, res: Response) => {
     const blog = await blogsRepository.createBlog(req.body)
