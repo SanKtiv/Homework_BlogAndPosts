@@ -4,21 +4,21 @@ import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb"
 
 export const blogRouterQuery = Router ({})
 
-blogRouterQuery.get( '/', async (req: Request, res: Response) => {
+blogRouterQuery.get( '/blogs', async (req: Request, res: Response) => {
     // if (Object.keys(req.query).length) {
         return res.status(200).send(await blogsRepositoryQuery.getBlogsWithPaging(req.query))
     // }
     // return res.status(200).send(await blogsRepository.getAllBlogs())
 })
 
-blogRouterQuery.get( '/:blogId/posts', async (req: Request, res: Response) => {
+blogRouterQuery.get( '/blogs/:blogId/posts', async (req: Request, res: Response) => {
     const postsByBlogId = await blogsRepositoryQuery.getPostsByBlogId(req.params.blogId, req.query)
     if (postsByBlogId) return res.status(200).send(postsByBlogId)
     return res.sendStatus(404)
 
 })
 
-blogRouterQuery.get( '/:id', async (req: Request, res: Response) => {
+blogRouterQuery.get( '/blogs/:id', async (req: Request, res: Response) => {
     const blogs = await blogsRepository.getBlogById(req.params.id)
     if (blogs) return res.status(200).send(blogs)
     return res.sendStatus(404)

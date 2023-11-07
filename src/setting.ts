@@ -16,7 +16,7 @@ const parserMiddleware = express.json()
 app.use(parserMiddleware)
 
 app.use('/', dellAllRouter)
-app.use('/blogs', validateBlog(), blogRouter, blogRouterQuery)
-app.use('/posts', validTitle, validShortDescription, validContent, validBlogIdBody, postRouter, postRouterQuery)
+app.use('/', blogRouter, blogRouterQuery)
+app.use('/', postRouter, postRouterQuery)
 
 //app.use('/blogs?', validateBlog(), blogRouterQuery)

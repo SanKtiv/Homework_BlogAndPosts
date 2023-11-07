@@ -1,6 +1,12 @@
 import {Request, Response, Router} from 'express';
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
-import {validId, validAuthorize, errorsOfValidation} from "../validations/validations";
+import {
+    validId,
+    validAuthorize,
+    errorsOfValidation,
+    validTitle,
+    validShortDescription, validContent, validBlogIdBody
+} from "../validations/validations";
 
 export const postRouter = Router ({})
 
@@ -14,18 +20,18 @@ export const postRouter = Router ({})
 //     return res.sendStatus(404)
 // })
 
-postRouter.post( '/', validAuthorize, errorsOfValidation, async (req: Request, res: Response) => {
+postRouter.post( '/posts', validTitle, validShortDescription, validContent, validBlogIdBody, validAuthorize, errorsOfValidation, async (req: Request, res: Response) => {
     const post = await postsRepository.createPost(req.body)
     return res.status(201).send(post)
 })
 
-postRouter.put('/:id', validAuthorize, validId, errorsOfValidation, async (req: Request, res: Response) => {
+postRouter.put('/posts/:id', validTitle, validShortDescription, validContent, validAuthorize, validId, errorsOfValidation, async (req: Request, res: Response) => {
     const postIsUpdate = await postsRepository.updatePost(req.params.id, req.body)
     if (postIsUpdate) return res.sendStatus(204)
     return res.sendStatus(404)
 })
 
-postRouter.delete('/:id', validAuthorize, validId, async (req: Request, res: Response) => {
+postRouter.delete('/posts/:id', validAuthorize, validId, async (req: Request, res: Response) => {
     const postIsDelete = await postsRepository.deletePostById(req.params.id)
     if (postIsDelete) return res.sendStatus(204)
     return res.sendStatus(404)
