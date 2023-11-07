@@ -4,7 +4,6 @@ import {
     validId,
     validAuthorize,
     errorsOfValidation,
-    validBlogIdParam,
     validateBlog,
     validTitle, validShortDescription, validContent, validBlogIdMiddleWare
 } from "../validations/validations";

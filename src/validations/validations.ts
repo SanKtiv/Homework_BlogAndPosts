@@ -3,7 +3,6 @@ import {regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
 import {BlogModelInType, ErrorMessType} from "../types/typesForMongoDB";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
-//import {error} from "../../../it-incubator_lessons/src/repositories/videos-repository";
 
 const blogFormIn: BlogModelInType = {
     name: {field: 'name', length: 15},
