@@ -6,7 +6,7 @@ import {
     errorsOfValidation,
     validBlogIdParam,
     validateBlog,
-    validTitle, validShortDescription, validContent
+    validTitle, validShortDescription, validContent, validBlogIdMiddleWare
 } from "../validations/validations";
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
 
@@ -31,7 +31,7 @@ blogRouter.post( '/blogs', validateBlog(), validAuthorize, errorsOfValidation, a
     return res.status(201).send(blog)
 })
 
-blogRouter.post( '/blogs/:blogId/posts', validTitle, validShortDescription, validContent, validAuthorize, validBlogIdParam, errorsOfValidation, async (req: Request, res: Response) => {
+blogRouter.post( '/blogs/:blogId/posts', validTitle, validShortDescription, validContent, validAuthorize, validBlogIdMiddleWare, errorsOfValidation, async (req: Request, res: Response) => {
     const post = await postsRepository.createPostForBlogId(req.params.blogId, req.body)
     return res.status(201).send(post)
 })

@@ -76,6 +76,11 @@ export const validBlogIdBody = body('blogId')
         }
     })
 
+export const validBlogIdMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
+    const blog = await blogsRepository.getBlogById(req.params.blogId)
+    if (blog) return  next()
+    return res.sendStatus(404)
+}
 export const validBlogIdParam = param('blogId', 'blogId length is incorrect')
     .trim()
     .custom(async id => {
