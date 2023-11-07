@@ -22,9 +22,9 @@ export const blogsRepository = {
         return allBlogs.map(blogOutDb => this.blogDbInToBlog(blogOutDb))
     },
 
-    async getBlogById(id: string): Promise<BlogModelOutType | null> {
+    async getBlogById(id: string): Promise<BlogModelOutType | boolean> {
         const blogOutDb = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
-        if (blogOutDb === null) return null
+        if (blogOutDb === null) return false
         return this.blogDbInToBlog(blogOutDb)
     },
 

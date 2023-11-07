@@ -20,6 +20,12 @@ export type PostBodyType = {
     blogId: string
 }
 
+export type PostBodyWithoutBlogIdType = {
+    title: string
+    shortDescription: string
+    content: string
+}
+
 export type BlogModelInType = {
     name: {
         field: string

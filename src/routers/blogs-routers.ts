@@ -1,6 +1,13 @@
 import {Request, Response, Router} from 'express';
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
-import {validId, validAuthorize, errorsOfValidation, validBlogIdParam, validateBlog} from "../validations/validations";
+import {
+    validId,
+    validAuthorize,
+    errorsOfValidation,
+    validBlogIdParam,
+    validateBlog,
+    validTitle, validShortDescription, validContent
+} from "../validations/validations";
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
 
 export const blogRouter = Router ({})
@@ -24,7 +31,7 @@ blogRouter.post( '/blogs', validateBlog(), validAuthorize, errorsOfValidation, a
     return res.status(201).send(blog)
 })
 
-blogRouter.post( '/blogs/:blogId/posts', validateBlog(), validAuthorize, validBlogIdParam, errorsOfValidation, async (req: Request, res: Response) => {
+blogRouter.post( '/blogs/:blogId/posts', validTitle, validShortDescription, validContent, validAuthorize, validBlogIdParam, errorsOfValidation, async (req: Request, res: Response) => {
     const post = await postsRepository.createPostForBlogId(req.params.blogId, req.body)
     return res.status(201).send(post)
 })

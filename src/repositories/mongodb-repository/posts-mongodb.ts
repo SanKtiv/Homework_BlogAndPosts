@@ -1,4 +1,4 @@
-import {PostType, PostBodyType, PostModelOutType} from "../../types/typesForMongoDB";
+import {PostType, PostBodyType, PostModelOutType, PostBodyWithoutBlogIdType} from "../../types/typesForMongoDB";
 import {dbPostsCollection} from "./db";
 import {dateNow} from "../../variables/variables";
 import {ObjectId, WithId} from "mongodb";
@@ -30,10 +30,11 @@ export const postsRepository = {
         return this.postDbInToBlog(newPost as WithId<PostType>)
     },
 
-    async createPostForBlogId(blogId: string, body: PostBodyType): Promise<PostModelOutType> {
+    async createPostForBlogId(blogId: string, body: PostBodyWithoutBlogIdType): Promise<PostModelOutType> {
         const newPost: PostType = {
             createdAt: dateNow().toISOString(),
             blogName: 'name',
+            blogId: blogId,
             ...body
         }
         await dbPostsCollection.insertOne(newPost)

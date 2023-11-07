@@ -3,6 +3,7 @@ import {regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
 import {BlogModelInType, ErrorMessType} from "../types/typesForMongoDB";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
+//import {error} from "../../../it-incubator_lessons/src/repositories/videos-repository";
 
 const blogFormIn: BlogModelInType = {
     name: {field: 'name', length: 15},
@@ -66,13 +67,21 @@ export const validContent = body('content', 'content length is incorrect')
     .trim()
     .isLength({min: 1, max: 1000})
 
-export const validBlogIdBody = body('blogId', 'blogId length is incorrect')
-    .isString()
+export const validBlogIdBody = body('blogId')
+    .isString().withMessage('Blog is not string')
     .trim()
-    .custom(id => blogsRepository.getBlogById(id)).withMessage('Blog is not exist')
+    .custom(async id => {
+        if (!await blogsRepository.getBlogById(id)) {
+            throw new Error('Blog is not exist')
+        }
+    })
 
 export const validBlogIdParam = param('blogId', 'blogId length is incorrect')
     .trim()
-    .custom(id => blogsRepository.getBlogById(id)).withMessage('Blog is not exist')
+    .custom(async id => {
+        if (!await blogsRepository.getBlogById(id)) {
+            throw new Error('Blog is not exist')
+        }
+    })
 
 export const validateBlog = () => [validName, validDescription, validWebsiteUrl]

@@ -1,7 +1,7 @@
 import {app} from './setting';
 import {runDb} from "./repositories/mongodb-repository/db";
 
-const port = process.env.PORT || 3000
+const port =/* process.env.PORT ||*/ 3000
 
 const startApp = async () => {
     await runDb()
@@ -9,6 +9,5 @@ const startApp = async () => {
         console.log(`Example app listening on port ${port}`)
     })
 }
-
 
 startApp()
