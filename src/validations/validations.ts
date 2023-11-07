@@ -30,20 +30,20 @@ export const validId = param('id', 'id is incorrect')
     .trim()
     .isString()
 
-export const validName = body(blogFormIn.name.field, `${blogFormIn.name.field} is incorrect`)
+export const validName = body('name', `name is incorrect`)
     .isString()
     .trim()
-    .isLength({max: blogFormIn.name.length})
+    .isLength({min: 1, max: 15})
 
-export const validDescription = body(blogFormIn.description.field, `${blogFormIn.description.field} is incorrect`)
+export const validDescription = body('description', `description is incorrect`)
     .isString()
     .trim()
-    .isLength({max: blogFormIn.description.length})
+    .isLength({min: 1, max: 500})
 
-export const validWebsiteUrl = body(blogFormIn.websiteUrl.field, `${blogFormIn.websiteUrl.field} is incorrect`)
+export const validWebsiteUrl = body('websiteUrl', `websiteUrl is incorrect`)
     .isString()
     .trim()
-    .isLength({max: blogFormIn.websiteUrl.length})
+    .isLength({min: 1, max: 100})
     .matches(blogFormIn.websiteUrl.pattern)
 
 export const validAuthorize = (req: Request, res: Response, next: NextFunction) => {

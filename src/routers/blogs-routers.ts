@@ -36,7 +36,7 @@ blogRouter.post( '/blogs/:blogId/posts', validTitle, validShortDescription, vali
     return res.status(201).send(post)
 })
 
-blogRouter.put('/blogs/:id', validateBlog(), validAuthorize, validId, errorsOfValidation, async (req: Request, res: Response) => {
+blogRouter.put('/blogs/:id', validateBlog(), validAuthorize, validId, validBlogIdParam, errorsOfValidation, async (req: Request, res: Response) => {
     const blogIsUpdate = await blogsRepository.updateBlog(req.params.id, req.body)
     if (blogIsUpdate) return res.sendStatus(204)
     return res.sendStatus(404)
