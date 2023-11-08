@@ -82,7 +82,7 @@ export const blogsRepositoryQuery = {
 
         const postsOutputFromDb = await dbPostsCollection
             .find({blogId: blogId})
-            .sort({createdAt: query.sortDirection})
+            .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()

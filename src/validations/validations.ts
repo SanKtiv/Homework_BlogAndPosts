@@ -3,6 +3,7 @@ import {regexp} from "../variables/variables"
 import {NextFunction, Request, Response} from 'express'
 import {BlogModelInType, ErrorMessType} from "../types/typesForMongoDB";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
+import {defaultQuery} from "../variables/variables";
 
 const blogFormIn: BlogModelInType = {
     name: {field: 'name', length: 15},
@@ -89,3 +90,32 @@ export const validBlogIdParam = param('blogId', 'blogId length is incorrect')
     })
 
 export const validateBlog = () => [validName, validDescription, validWebsiteUrl]
+
+const querySortBy = ['id', 'title', 'blogId', 'blogName', 'createdAt']
+
+const querySortDirection = ['asc', 'desc']
+
+export const queryMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+
+    if (!querySortBy.find(el => el === req.query.sortBy)) {
+        req.query.sortBy = defaultQuery.sortBy
+    }
+
+    if (!querySortDirection.find(el => el === req.query.sortDirection)) {
+        req.query.sortDirection = defaultQuery.sortDirection
+    }
+
+    if (!Number(req.query.pageNumber)) {
+        req.query.pageNumber = defaultQuery.pageNumber
+    } else if (Number(req.query.pageNumber) < 1) {
+        req.query.pageNumber = defaultQuery.pageNumber
+    }
+
+    if (!Number(req.query.pageSize)) {
+        req.query.pageSize = defaultQuery.pageSize
+    } else if (Number(req.query.pageSize) < 1) {
+        req.query.pageSize = defaultQuery.pageSize
+    }
+
+    next()
+}
