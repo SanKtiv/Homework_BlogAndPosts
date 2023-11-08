@@ -95,7 +95,7 @@ const querySortBy = ['id', 'title', 'blogId', 'blogName', 'createdAt']
 
 const querySortDirection = ['asc', 'desc']
 
-export const queryMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+export const queryBlogIdMiddleware = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!querySortBy.find(el => el === req.query.sortBy)) {
         req.query.sortBy = defaultQuery.sortBy
@@ -119,3 +119,11 @@ export const queryMiddleware = async (req: Request, res: Response, next: NextFun
 
     next()
 }
+
+// export const queryAllBlogsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+//     if (req.query.searchNameTerm?.length) {
+//
+//     }
+//     next()
+// }
+
