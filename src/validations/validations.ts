@@ -91,7 +91,7 @@ export const validBlogIdParam = param('blogId', 'blogId length is incorrect')
 
 export const validateBlog = () => [validName, validDescription, validWebsiteUrl]
 
-const querySortBy = ['id', 'title', 'blogId', 'blogName', 'createdAt']
+const querySortBy = ['id', 'title', 'blogId', 'name', 'blogName', 'createdAt']
 
 const querySortDirection = ['asc', 'desc']
 
