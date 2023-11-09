@@ -54,7 +54,7 @@ export const blogsRepositoryQuery = {
 
             const blogsItemsSearchName = await dbBlogsCollection
                 .find({name: {$regex: searchNameToRegExp}})
-                .sort({createdAt: query.sortDirection})
+                .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
                 .toArray()
@@ -66,7 +66,7 @@ export const blogsRepositoryQuery = {
 
         const blogsItems = await dbBlogsCollection
             .find()
-            .sort({createdAt: query.sortDirection})
+            .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()
