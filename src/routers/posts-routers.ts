@@ -25,7 +25,7 @@ postRouter.post( '/posts', validTitle, validShortDescription, validContent, vali
     return res.status(201).send(post)
 })
 
-postRouter.put('/posts/:id', validTitle, validShortDescription, validContent, validAuthorize, validId, errorsOfValidation, async (req: Request, res: Response) => {
+postRouter.put('/posts/:id', validTitle, validShortDescription, validContent, validBlogIdBody, validAuthorize, validId, errorsOfValidation, async (req: Request, res: Response) => {
     const postIsUpdate = await postsRepository.updatePost(req.params.id, req.body)
     if (postIsUpdate) return res.sendStatus(204)
     return res.sendStatus(404)
