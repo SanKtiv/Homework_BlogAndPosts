@@ -48,7 +48,9 @@ export const blogsRepositoryQuery = {
     async getBlogsWithPaging(query: any): Promise<BlogsOutputQueryType | null> {
 
         if (query.searchNameTerm !== 'null') {
-            const searchNameToRegExp = new RegExp(query.searchNameTerm)
+
+            const searchNameToRegExp = new RegExp(query.searchNameTerm, 'i')
+
             const totalBlogsBySearchName = await dbBlogsCollection
                 .countDocuments({name: {$regex: searchNameToRegExp}})
 
