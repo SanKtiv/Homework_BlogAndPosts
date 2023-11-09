@@ -18,28 +18,36 @@ export const blogsRepository = {
     },
 
     async getAllBlogs(): Promise<BlogModelOutType[]> {
+
         const allBlogs = await dbBlogsCollection.find().toArray()
+
         return allBlogs.map(blogOutDb => this.blogDbInToBlog(blogOutDb))
     },
 
     async getBlogById(id: string): Promise<BlogModelOutType | boolean> {
+
         const blogOutDb = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
+
         if (blogOutDb === null) return false
+
         return this.blogDbInToBlog(blogOutDb)
     },
 
     async createBlog(body: BlogBodyType): Promise<BlogModelOutType> {
+
         const newBlog: BlogType = {
             createdAt: dateNow().toISOString(),
             isMembership: false,
             ...body
         }
+
         await dbBlogsCollection.insertOne(newBlog)
-        //let {_id, ...newBlogWithout_id} = newBlog
+
         return this.blogDbInToBlog(newBlog as WithId<BlogType>)
     },
 
     async updateBlog(id: string, body: BlogBodyType): Promise<Boolean> {
+
         const foundBlog = await dbBlogsCollection.updateOne({_id: new ObjectId(id)}, {
                 $set: {
                     name: body.name,
@@ -47,13 +55,15 @@ export const blogsRepository = {
                     websiteUrl: body.websiteUrl
                 }
             })
+
         return foundBlog.matchedCount === 1
     },
 
     async deleteBlogById(id: string): Promise<Boolean> {
 
         const deleteBlog = await dbBlogsCollection.deleteOne({_id: new ObjectId(id)})
-          return deleteBlog.deletedCount === 1
+
+        return deleteBlog.deletedCount === 1
     },
 
     async deleteAll(): Promise<void> {

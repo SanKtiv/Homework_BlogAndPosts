@@ -4,8 +4,9 @@ import {
     validId,
     validAuthorize,
     errorsOfValidation,
-    validateBlog,
-    validTitle, validShortDescription, validContent, validBlogIdMiddleWare
+    validBlog,
+    validPost,
+    validBlogIdMiddleWare
 } from "../validations/validations";
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
 
@@ -25,17 +26,17 @@ export const blogRouter = Router ({})
 //     return res.sendStatus(404)
 // })
 
-blogRouter.post( '/blogs', validateBlog(), validAuthorize, errorsOfValidation, async (req: Request, res: Response) => {
+blogRouter.post( '/blogs', validBlog, validAuthorize, errorsOfValidation, async (req: Request, res: Response) => {
     const blog = await blogsRepository.createBlog(req.body)
     return res.status(201).send(blog)
 })
 
-blogRouter.post( '/blogs/:blogId/posts', validTitle, validShortDescription, validContent, validAuthorize, validBlogIdMiddleWare, errorsOfValidation, async (req: Request, res: Response) => {
+blogRouter.post( '/blogs/:blogId/posts', validPost, validAuthorize, validBlogIdMiddleWare, errorsOfValidation, async (req: Request, res: Response) => {
     const post = await postsRepository.createPostForBlogId(req.params.blogId, req.body)
     return res.status(201).send(post)
 })
 
-blogRouter.put('/blogs/:id', validateBlog(), validAuthorize, validId, errorsOfValidation, async (req: Request, res: Response) => {
+blogRouter.put('/blogs/:id', validBlog, validAuthorize, validId, errorsOfValidation, async (req: Request, res: Response) => {
     const blogIsUpdate = await blogsRepository.updateBlog(req.params.id, req.body)
     if (blogIsUpdate) return res.sendStatus(204)
     return res.sendStatus(404)

@@ -3,12 +3,6 @@ import {blogRouterQuery} from "./routers/blogs-routers-Query";
 import {blogRouter} from './routers/blogs-routers';
 import {postRouter} from "./routers/posts-routers";
 import {dellAllRouter} from "./routers/all-data-routers";
-import {
-    validTitle,
-    validShortDescription,
-    validContent,
-    validBlogIdBody, validateBlog
-} from "./validations/validations";
 import {postRouterQuery} from "./routers/posts-routers-Query";
 
 export const app = express()
@@ -18,5 +12,3 @@ app.use(parserMiddleware)
 app.use('/', dellAllRouter)
 app.use('/', blogRouter, blogRouterQuery)
 app.use('/', postRouter, postRouterQuery)
-
-//app.use('/blogs?', validateBlog(), blogRouterQuery)

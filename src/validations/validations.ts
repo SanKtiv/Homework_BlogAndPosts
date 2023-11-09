@@ -25,22 +25,22 @@ export const errorsOfValidation = (req: Request, res: Response, next: NextFuncti
     } else next()
 }
 
-//валидатоы можно объеденить в массив, создавать через функцию и т.д.
+// Validations for blog
 export const validId = param('id', 'id is incorrect')
     .trim()
     .isString()
 
-export const validName = body('name', `name is incorrect`)
+const validName = body('name', `name is incorrect`)
     .isString()
     .trim()
     .isLength({min: 1, max: 15})
 
-export const validDescription = body('description', `description is incorrect`)
+const validDescription = body('description', `description is incorrect`)
     .isString()
     .trim()
     .isLength({min: 1, max: 500})
 
-export const validWebsiteUrl = body('websiteUrl', `websiteUrl is incorrect`)
+const validWebsiteUrl = body('websiteUrl', `websiteUrl is incorrect`)
     .isString()
     .trim()
     .isLength({min: 1, max: 100})
@@ -51,7 +51,10 @@ export const validAuthorize = (req: Request, res: Response, next: NextFunction) 
         next() :
         res.sendStatus(401)
 }
-///////////////////////////////////////
+
+export const validBlog = [validName, validDescription, validWebsiteUrl]
+
+// Validation for posts
 export const validTitle = body('title', 'title length is incorrect')
     .isString()
     .trim()
@@ -76,20 +79,23 @@ export const validBlogIdBody = body('blogId')
         }
     })
 
+export const validPost = [validTitle, validShortDescription, validContent]
+
+export const validPostBlogId = [...validPost, validBlogIdBody]
+
 export const validBlogIdMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
     const blog = await blogsRepository.getBlogById(req.params.blogId)
     if (blog) return  next()
     return res.sendStatus(404)
 }
-export const validBlogIdParam = param('blogId', 'blogId length is incorrect')
-    .trim()
-    .custom(async id => {
-        if (!await blogsRepository.getBlogById(id)) {
-            throw new Error('Blog is not exist')
-        }
-    })
 
-export const validateBlog = () => [validName, validDescription, validWebsiteUrl]
+// export const validBlogIdParam = param('blogId', 'blogId length is incorrect')
+//     .trim()
+//     .custom(async id => {
+//         if (!await blogsRepository.getBlogById(id)) {
+//             throw new Error('Blog is not exist')
+//         }
+//     })
 
 const querySortBy = ['id', 'title', 'blogId', 'name', 'blogName', 'createdAt']
 
@@ -120,10 +126,4 @@ export const queryBlogIdMiddleware = async (req: Request, res: Response, next: N
     next()
 }
 
-// export const queryAllBlogsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-//     if (req.query.searchNameTerm?.length) {
-//
-//     }
-//     next()
-// }
 
