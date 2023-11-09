@@ -11,11 +11,11 @@ export const blogRouterQuery = Router ({})
 //     }
 //     return res.status(200).send(await blogsRepository.getAllBlogs())
 // })
-
-blogRouterQuery.get( '/blogs', async (req: Request, res: Response) => {
-
-    return res.status(200).send(await blogsRepository.getAllBlogs())
-})
+//
+// blogRouterQuery.get( '/blogs', async (req: Request, res: Response) => {
+//
+//     return res.status(200).send(await blogsRepository.getAllBlogs())
+// })
 
 blogRouterQuery.get( '/blogs', queryBlogIdMiddleware, async (req: Request, res: Response) => {
 
