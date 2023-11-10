@@ -26,5 +26,14 @@ export const usersRepository = {
         await dbUsersCollection.insertOne(user)
 
         return this.addIdToUser(user as WithId<UserType>)
+    },
+
+    async deleteById(id: string): Promise<boolean> {
+        const delUser = await dbUsersCollection.deleteOne({_id: new ObjectId(id)})
+        return delUser.deletedCount === 1
+    },
+    
+    async deleteAll(): Promise<void> {
+        await dbUsersCollection.deleteMany({})
     }
 }

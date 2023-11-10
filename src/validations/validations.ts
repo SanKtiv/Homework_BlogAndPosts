@@ -17,7 +17,7 @@ const customError = ({msg, path}: any): ErrorMessType => {
     }
 }
 
-export const errorsOfValidation = (req: Request, res: Response, next: NextFunction) => {
+export const validErrors = (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req)
     if (!result.isEmpty()) {
         const error = result.array({onlyFirstError: true}).map(error => customError(error))

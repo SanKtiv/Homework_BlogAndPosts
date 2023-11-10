@@ -10,3 +10,10 @@ export const defaultQuery = {
     sortBy: 'createdAt',
     sortDirection: 'desc'
 }
+
+export const defaultUsersQuery = {
+    pageNumber: '1',
+    pageSize: '10',
+    sortBy: 'createdAt',
+    sortDirection: 'desc'
+}
