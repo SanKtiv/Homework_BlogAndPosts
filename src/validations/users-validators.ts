@@ -2,8 +2,9 @@ import {body} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {defaultUsersQuery} from "../variables/variables";
 
-const loginRegex = new RegExp('^[a-zA-Z0-9_-]*$')
-//const emailRegex = new RegExp('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+const loginRegex: RegExp = /^[a-zA-Z0-9_-]*$/
+const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+const loginOrEmailRegex = /(?:^[\w\-.]+@([\w-]+.)+[\w-]{2,4}$)|(?:^[a-zA-Z0-9_-]*$)/
 
 const userLogin = body('login')
     .isString().withMessage('login is not string')
@@ -19,14 +20,14 @@ const userPassword = body('password')
 const userEmail = body('email')
     .isString().withMessage('email is not string')
     .trim()
-    .matches(/^[\w-\.]+@([\w-]+.)+[\w-]{2,4}$/).withMessage('email have invalid characters')
+    .matches(emailRegex).withMessage('email have invalid characters')
 
 export const userInputValid = [userLogin, userPassword, userEmail]
 
 const userLoginOrEmail = body('loginOrEmail')
     .isString().withMessage('loginOrEmail is not string')
     .trim()
-    .matches(/(?:^[\w\-.]+@([\w-]+.)+[\w-]{2,4}$)|(?:^[a-zA-Z0-9_-]*$)/).withMessage('login have invalid characters')
+    .matches(loginOrEmailRegex).withMessage('login have invalid characters')
 
 export const userAuthValid = [userLoginOrEmail, userPassword]
 
