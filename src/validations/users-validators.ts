@@ -5,23 +5,30 @@ import {defaultUsersQuery} from "../variables/variables";
 const loginRegex = new RegExp('^[a-zA-Z0-9_-]*$')
 //const emailRegex = new RegExp('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
 
-export const userLogin = body('login')
+const userLogin = body('login')
     .isString().withMessage('login is not string')
     .trim()
     .isLength({min: 3, max: 10}).withMessage('login length is incorrect')
     .matches(loginRegex).withMessage('login have invalid characters')
 
-export const userPassword = body('password')
+const userPassword = body('password')
     .isString().withMessage('password is not string')
     .trim()
     .isLength({min: 6, max: 20}).withMessage('password length is incorrect')
 
-export const userEmail = body('email')
+const userEmail = body('email')
     .isString().withMessage('email is not string')
     .trim()
     .matches(/^[\w-\.]+@([\w-]+.)+[\w-]{2,4}$/).withMessage('email have invalid characters')
 
 export const userInputValid = [userLogin, userPassword, userEmail]
+
+const userLoginOrEmail = body('LoginOrEmail')
+    .isString().withMessage('LoginOrEmail is not string')
+    .trim()
+    .matches(loginRegex || /^[\w-\.]+@([\w-]+.)+[\w-]{2,4}$/).withMessage('login have invalid characters')
+
+export const userAuthValid = [userLoginOrEmail, userPassword]
 
 export const usersQueryDefault = async (req: Request, res: Response, next: NextFunction) => {
 
