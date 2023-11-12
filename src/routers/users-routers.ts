@@ -2,15 +2,13 @@ import {Request, Response, Router} from "express";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb";
 import {userInputValid} from "../validations/users-validators";
 import {validErrors, validAuthorize} from "../validations/validations";
+import {userService} from "../services/users-service";
 
 export const userRouter = Router({})
 
-userRouter.post('/', async (req: Request, res: Response) => {
-
-})
 
 userRouter.post('/users',validAuthorize , userInputValid, validErrors, async (req: Request, res: Response) => {
-    const user = await usersRepository.createUser(req.body)
+    const user = await userService.createUser(req.body)
     res.status(201).send(user)
 })
 

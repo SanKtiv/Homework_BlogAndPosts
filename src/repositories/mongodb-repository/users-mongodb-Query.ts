@@ -1,25 +1,25 @@
-import {UserQueryType, UsersOutputType, UserType} from "../../types/types-users";
+import {UserDbType} from "../../types/types-users";
 import {dbUsersCollection} from "./db";
 import {WithId} from "mongodb";
-import {usersRepository} from "./users-mongodb";
+import {userService} from "../../services/users-service";
 
 
 export const usersRepositoryReadOnly = {
 
-    usersFormOutput(totalUsers: number,
-                    usersSearch: WithId<UserType>[],
-                    query: UserQueryType): UsersOutputType {
+    // usersFormOutput(totalUsers: number,
+    //                 usersSearch: WithId<UserType>[],
+    //                 query: UserQueryType): UsersOutputType {
+    //
+    //     return {
+    //         pagesCount: Math.ceil(totalUsers / +query.pageSize),
+    //         page: +query.pageNumber,
+    //         pageSize: +query.pageSize,
+    //         totalCount: totalUsers,
+    //         items: usersSearch.map(userDb => usersRepository.addIdToUser(userDb))
+    //     }
+    // },
 
-        return {
-            pagesCount: Math.ceil(totalUsers / +query.pageSize),
-            page: +query.pageNumber,
-            pageSize: +query.pageSize,
-            totalCount: totalUsers,
-            items: usersSearch.map(userDb => usersRepository.addIdToUser(userDb))
-        }
-    },
-
-    async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<UserType>[]> {
+    async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<UserDbType>[]> {
 
         if (login && email) {
 
@@ -84,6 +84,6 @@ export const usersRepositoryReadOnly = {
 
         const usersSearch = await this.userSearch(query, searchLoginTermRegexp, searchEmailTermRegexp)
 
-        return this.usersFormOutput(totalUsers, usersSearch, query)
+        return userService.usersFormOutput(totalUsers, usersSearch, query)
     }
 }

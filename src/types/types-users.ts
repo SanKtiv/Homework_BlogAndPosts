@@ -1,5 +1,3 @@
-import {BlogModelOutType} from "./typesForMongoDB";
-
 export type UserType = {
     login: string
     email: string
@@ -13,16 +11,23 @@ export type IdUserType = {
     createdAt: string
 }
 
+export type UserDbType = {
+    login: string
+    email: string
+    createdAt: string
+    passwordHash: string
+}
+
 export type InputUserType = {
     login: string
     password: string
     email: string
 }
 
-export type InputLoginType = {
-    loginOrEmail: string
-    password: string
-}
+// export type InputLoginType = {
+//     loginOrEmail: string
+//     password: string
+// }
 
 export type UserQueryType = {
     searchLoginTerm: string | null
