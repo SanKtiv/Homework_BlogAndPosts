@@ -12,7 +12,7 @@ userRouter.post('/users',validAuthorize , userInputValid, validErrors, async (re
     res.status(201).send(user)
 })
 
-userRouter.delete('/users/:id', async (req: Request, res: Response) => {
+userRouter.delete('/users/:id', validAuthorize, async (req: Request, res: Response) => {
     if (await usersRepository.deleteById(req.params.id)) return res.sendStatus(204)
     return res.sendStatus(404)
 })
