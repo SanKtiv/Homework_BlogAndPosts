@@ -23,10 +23,10 @@ const userEmail = body('email')
 
 export const userInputValid = [userLogin, userPassword, userEmail]
 
-const userLoginOrEmail = body('LoginOrEmail')
-    .isString().withMessage('LoginOrEmail is not string')
+const userLoginOrEmail = body('loginOrEmail')
+    .isString().withMessage('loginOrEmail is not string')
     .trim()
-    .matches(loginRegex || /^[\w-\.]+@([\w-]+.)+[\w-]{2,4}$/).withMessage('login have invalid characters')
+    .matches(/(?:^[\w\-.]+@([\w-]+.)+[\w-]{2,4}$)|(?:^[a-zA-Z0-9_-]*$)/).withMessage('login have invalid characters')
 
 export const userAuthValid = [userLoginOrEmail, userPassword]
 
