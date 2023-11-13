@@ -4,18 +4,6 @@ import {ObjectId, WithId} from "mongodb";
 import {blogsService} from "../../services/blogs-service";
 
 export const blogsRepository = {
-    // blogDbInToBlog(blogOutDb: WithId<BlogType>): BlogModelOutType {
-    //     // const {_id, ...withOutId} = blogOutDb
-    //     // return  {id:blogOutDb._id.toString(), ...withOutId}
-    //     return {
-    //         id: blogOutDb._id.toString(),
-    //         name: blogOutDb.name,
-    //         description: blogOutDb.description,
-    //         websiteUrl: blogOutDb.websiteUrl,
-    //         createdAt: blogOutDb.createdAt,
-    //         isMembership: blogOutDb.isMembership
-    //     }
-    // },
 
     async getAllBlogs(): Promise<BlogModelOutType[]> {
 
@@ -32,11 +20,6 @@ export const blogsRepository = {
 
     async createBlog(body: BlogBodyType): Promise<BlogModelOutType> {
 
-        // const newBlog: BlogType = {
-        //     createdAt: dateNow().toISOString(),
-        //     isMembership: false,
-        //     ...body
-        // }
         const newBlog = await blogsService.newBlog(body)
         await dbBlogsCollection.insertOne(newBlog)
         return blogsService.blogDbInToBlog(newBlog as WithId<BlogType>)

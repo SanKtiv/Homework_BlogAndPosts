@@ -1,4 +1,4 @@
-import {UserDbType} from "../../types/types-users";
+import {UserDbType, UsersOutputType} from "../../types/types-users";
 import {dbUsersCollection} from "./db";
 import {WithId} from "mongodb";
 import {userService} from "../../services/users-service";
@@ -42,7 +42,7 @@ export const usersRepositoryReadOnly = {
             .toArray()
     },
 
-    async getAllUsers(query: any) {
+    async getAllUsers(query: any): Promise<UsersOutputType> {
 
         const searchLoginTermRegexp = new RegExp(query.searchLoginTerm, 'i')
         const searchEmailTermRegexp = new RegExp(query.searchEmailTerm, 'i')

@@ -5,11 +5,7 @@ import {ObjectId, WithId} from "mongodb";
 import {postsService} from "../../services/posts-service";
 
 export const postsRepository = {
-//     postDbInToBlog(postOutDb: WithId<PostType>): PostModelOutType {
-//     const {_id, ...withOutId} = postOutDb
-//     return  {id:postOutDb._id.toString(), ...withOutId}
-//
-// },
+
     async getAllPosts(): Promise<PostModelOutType[]> {
         const allPosts = await dbPostsCollection.find().toArray()
         return allPosts.map(postOutDb => postsService.postDbInToBlog(postOutDb))
