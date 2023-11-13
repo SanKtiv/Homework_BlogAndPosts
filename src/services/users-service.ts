@@ -50,11 +50,8 @@ export const userService = {
 
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
 
-        if (user) {
+        if (user) return await bcrypt.compare(password, user.passwordHash);
 
-            return await bcrypt.compare(password, user.passwordHash);
-
-        }
         return false
 
     },

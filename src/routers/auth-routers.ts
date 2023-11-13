@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {userService} from "../services/users-service";
 import {userAuthValid} from "../validations/users-validators";
-import {validErrors} from "../validations/validations";
+import {validErrors} from "../validations/middlewares";
 
 export const authRouters = Router({})
 

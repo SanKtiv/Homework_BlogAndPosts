@@ -9,7 +9,9 @@ import {postRouterQuery} from "./routers/posts-routers-Query";
 import {authRouters} from "./routers/auth-routers";
 
 export const app = express()
+
 const parserMiddleware = express.json()
+
 app.use(parserMiddleware)
 
 app.use('/', dellAllRouter)

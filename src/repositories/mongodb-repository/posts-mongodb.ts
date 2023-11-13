@@ -2,22 +2,23 @@ import {PostType, PostBodyType, PostModelOutType, PostBodyWithoutBlogIdType} fro
 import {dbPostsCollection} from "./db";
 import {dateNow} from "../../variables/variables";
 import {ObjectId, WithId} from "mongodb";
+import {postsService} from "../../services/posts-service";
 
 export const postsRepository = {
-    postDbInToBlog(postOutDb: WithId<PostType>): PostModelOutType {
-    const {_id, ...withOutId} = postOutDb
-    return  {id:postOutDb._id.toString(), ...withOutId}
-
-},
+//     postDbInToBlog(postOutDb: WithId<PostType>): PostModelOutType {
+//     const {_id, ...withOutId} = postOutDb
+//     return  {id:postOutDb._id.toString(), ...withOutId}
+//
+// },
     async getAllPosts(): Promise<PostModelOutType[]> {
         const allPosts = await dbPostsCollection.find().toArray()
-        return allPosts.map(postOutDb => this.postDbInToBlog(postOutDb))
+        return allPosts.map(postOutDb => postsService.postDbInToBlog(postOutDb))
     },
 
     async getPostById(id: string): Promise<PostModelOutType | null> {
         const postOutDb = await dbPostsCollection.findOne({_id: new ObjectId(id)})
         if (postOutDb === null) return null
-        return this.postDbInToBlog(postOutDb)
+        return postsService.postDbInToBlog(postOutDb)
     },
 
     async createPost(body: PostBodyType): Promise<PostModelOutType> {
@@ -27,7 +28,7 @@ export const postsRepository = {
             ...body
         }
         await dbPostsCollection.insertOne(newPost)
-        return this.postDbInToBlog(newPost as WithId<PostType>)
+        return postsService.postDbInToBlog(newPost as WithId<PostType>)
     },
 
     async createPostForBlogId(blogId: string, body: PostBodyWithoutBlogIdType): Promise<PostModelOutType> {
@@ -38,7 +39,7 @@ export const postsRepository = {
             ...body
         }
         await dbPostsCollection.insertOne(newPost)
-        return this.postDbInToBlog(newPost as WithId<PostType>)
+        return postsService.postDbInToBlog(newPost as WithId<PostType>)
     },
 
     async updatePost(id: string, body: PostBodyType): Promise<Boolean> {

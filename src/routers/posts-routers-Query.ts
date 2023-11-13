@@ -1,16 +1,9 @@
 import {Request, Response, Router} from 'express';
 import {postsRepositoryQuery} from "../repositories/mongodb-repository/posts-mongodb-Query";
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
-import {queryBlogIdMiddleware} from "../validations/validations";
+import {queryBlogIdMiddleware} from "../validations/middlewares";
 
 export const postRouterQuery = Router ({})
-
-// postRouterQuery.get( '/posts', async (req: Request, res: Response) => {
-//     if (Object.keys(req.query).length) {
-//         return res.status(200).send(await postsRepositoryQuery.getPostsWithPaging(req.query))
-//     }
-//     return res.status(200).send(await postsRepository.getAllPosts())
-// })
 
 postRouterQuery.get( '/posts', queryBlogIdMiddleware, async (req: Request, res: Response) => {
 

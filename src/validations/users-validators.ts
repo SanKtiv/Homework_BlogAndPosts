@@ -27,16 +27,16 @@ export const userInputValid = [userLogin, userPassword, userEmail]
 const userLoginOrEmail = body('loginOrEmail')
     .isString().withMessage('loginOrEmail is not string')
     .trim()
-    .matches(loginOrEmailRegex).withMessage('login have invalid characters')
+    .matches(loginOrEmailRegex).withMessage('loginOrEmail have invalid characters')
 
 export const userAuthValid = [userLoginOrEmail, userPassword]
 
-export const usersQueryDefault = async (req: Request, res: Response, next: NextFunction) => {
-
-    if (!req.query.pageNumber) req.query.pageNumber = defaultUsersQuery.pageNumber
-    if (!req.query.pageSize) req.query.pageSize = defaultUsersQuery.pageSize
-    if (!req.query.sortBy) req.query.sortBy = defaultUsersQuery.sortBy
-    if (!req.query.sortDirection) req.query.sortDirection = defaultUsersQuery.sortDirection
-
-    next()
-}
+// export const usersQueryDefault = async (req: Request, res: Response, next: NextFunction) => {
+//
+//     if (!req.query.pageNumber) req.query.pageNumber = defaultUsersQuery.pageNumber
+//     if (!req.query.pageSize) req.query.pageSize = defaultUsersQuery.pageSize
+//     if (!req.query.sortBy) req.query.sortBy = defaultUsersQuery.sortBy
+//     if (!req.query.sortDirection) req.query.sortDirection = defaultUsersQuery.sortDirection
+//
+//     next()
+// }

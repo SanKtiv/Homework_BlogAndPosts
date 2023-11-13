@@ -1,9 +1,7 @@
-import {BlogType, PostType} from "../../types/typesForMongoDB";
 import {dbBlogsCollection, dbPostsCollection} from "./db";
-import {WithId} from "mongodb";
-import {BlogsOutputQueryType, InputQueryWithSearchNameType, PostsOutputQueryType, InputQueryType} from "../../types/typesForQuery";
-import {blogsRepository} from "./blogs-mongodb";
-import {postsRepository} from "./posts-mongodb";
+import {BlogsOutputQueryType, PostsOutputQueryType} from "../../types/typesForQuery";
+import {blogsService} from "../../services/blogs-service";
+import {postsService} from "../../services/posts-service";
 
 export const blogsRepositoryQuery = {
     // blogDbInToBlog(blogOutDb: WithId<BlogType>): BlogModelOutType {
@@ -17,40 +15,39 @@ export const blogsRepositoryQuery = {
     //     }
     // },
 
-    blogsOutputQuery(
-        totalBlogs: number,
-        blogsItems: WithId<BlogType>[],
-        query: InputQueryWithSearchNameType): BlogsOutputQueryType {
+    // blogsOutputQuery(
+    //     totalBlogs: number,
+    //     blogsItems: WithId<BlogType>[],
+    //     query: InputQueryWithSearchNameType): BlogsOutputQueryType {
+    //
+    //     return {
+    //         pagesCount: Math.ceil(totalBlogs / +query.pageSize),
+    //         page: +query.pageNumber,
+    //         pageSize: +query.pageSize,
+    //         totalCount: totalBlogs,
+    //         items: blogsItems.map(blogOutDb => blogsService.blogDbInToBlog(blogOutDb))
+    //     }
+    // },
 
-        return {
-            pagesCount: Math.ceil(totalBlogs / +query.pageSize),
-            page: +query.pageNumber,
-            pageSize: +query.pageSize,
-            totalCount: totalBlogs,
-            items: blogsItems.map(blogOutDb => blogsRepository.blogDbInToBlog(blogOutDb))
-        }
-    },
-
-    postsOutputQuery(
-        totalBlogs: number,
-        blogsItems: WithId<PostType>[],
-        query: InputQueryType): PostsOutputQueryType {
-
-        return {
-            pagesCount: Math.ceil(totalBlogs / +query.pageSize),
-            page: +query.pageNumber,
-            pageSize: +query.pageSize,
-            totalCount: totalBlogs,
-            items: blogsItems.map(blogOutDb => postsRepository.postDbInToBlog(blogOutDb))
-        }
-    },
+    // postsOutputQuery(
+    //     totalBlogs: number,
+    //     blogsItems: WithId<PostType>[],
+    //     query: InputQueryType): PostsOutputQueryType {
+    //
+    //     return {
+    //         pagesCount: Math.ceil(totalBlogs / +query.pageSize),
+    //         page: +query.pageNumber,
+    //         pageSize: +query.pageSize,
+    //         totalCount: totalBlogs,
+    //         items: blogsItems.map(blogOutDb => postsRepository.postDbInToBlog(blogOutDb))
+    //     }
+    // },
 
     async getBlogsWithPaging(query: any): Promise<BlogsOutputQueryType | null> {
 
         if (query.searchNameTerm !== 'null') {
 
             const searchNameToRegExp = new RegExp(query.searchNameTerm, 'i')
-
             const totalBlogsBySearchName = await dbBlogsCollection
                 .countDocuments({name: {$regex: searchNameToRegExp}})
 
@@ -61,7 +58,7 @@ export const blogsRepositoryQuery = {
                 .limit(+query.pageSize)
                 .toArray()
 
-            return this.blogsOutputQuery(totalBlogsBySearchName, blogsItemsSearchName, query)
+            return blogsService.blogsOutputQuery(totalBlogsBySearchName, blogsItemsSearchName, query)
         }
 
         const totalBlogs = await dbBlogsCollection.countDocuments()
@@ -73,7 +70,7 @@ export const blogsRepositoryQuery = {
             .limit(+query.pageSize)
             .toArray()
 
-        return this.blogsOutputQuery(totalBlogs, blogsItems, query)
+        return blogsService.blogsOutputQuery(totalBlogs, blogsItems, query)
     },
 
     async getPostsByBlogId(blogId: string, query: any): Promise<PostsOutputQueryType | null> {
@@ -89,6 +86,6 @@ export const blogsRepositoryQuery = {
             .limit(+query.pageSize)
             .toArray()
 
-        return this.postsOutputQuery(totalPostsByBlogId, postsOutputFromDb, query)
+        return postsService.postsOutputQuery(totalPostsByBlogId, postsOutputFromDb, query)
     },
 }

@@ -6,19 +6,6 @@ import {userService} from "../../services/users-service";
 
 export const usersRepositoryReadOnly = {
 
-    // usersFormOutput(totalUsers: number,
-    //                 usersSearch: WithId<UserType>[],
-    //                 query: UserQueryType): UsersOutputType {
-    //
-    //     return {
-    //         pagesCount: Math.ceil(totalUsers / +query.pageSize),
-    //         page: +query.pageNumber,
-    //         pageSize: +query.pageSize,
-    //         totalCount: totalUsers,
-    //         items: usersSearch.map(userDb => usersRepository.addIdToUser(userDb))
-    //     }
-    // },
-
     async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<UserDbType>[]> {
 
         if (login && email) {
