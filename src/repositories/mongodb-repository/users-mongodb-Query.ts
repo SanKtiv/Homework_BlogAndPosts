@@ -8,6 +8,18 @@ export const usersRepositoryReadOnly = {
 
     async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<UserDbType>[]> {
 
+        // const filter: any = {}
+        //
+        // if (login) filter.login = {$regex: login}
+        // if (email) filter.email = {$regex: email}
+        //
+        // return dbUsersCollection
+        //     .find(filter)
+        //     .sort({[query.sortBy]: query.sortDirection})
+        //     .skip((+query.pageNumber - 1) * +query.pageSize)
+        //     .limit(+query.pageSize)
+        //     .toArray()
+
         if (login && email) {
 
             return dbUsersCollection

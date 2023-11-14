@@ -1,6 +1,4 @@
 import {body} from "express-validator";
-import {NextFunction, Request, Response} from "express";
-import {defaultUsersQuery} from "../variables/variables";
 
 const loginRegex: RegExp = /^[a-zA-Z0-9_-]*$/
 const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
@@ -30,13 +28,3 @@ const userLoginOrEmail = body('loginOrEmail')
     .matches(loginOrEmailRegex).withMessage('loginOrEmail have invalid characters')
 
 export const userAuthValid = [userLoginOrEmail, userPassword]
-
-// export const usersQueryDefault = async (req: Request, res: Response, next: NextFunction) => {
-//
-//     if (!req.query.pageNumber) req.query.pageNumber = defaultUsersQuery.pageNumber
-//     if (!req.query.pageSize) req.query.pageSize = defaultUsersQuery.pageSize
-//     if (!req.query.sortBy) req.query.sortBy = defaultUsersQuery.sortBy
-//     if (!req.query.sortDirection) req.query.sortDirection = defaultUsersQuery.sortDirection
-//
-//     next()
-// }
