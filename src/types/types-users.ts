@@ -24,10 +24,9 @@ export type InputUserType = {
     email: string
 }
 
-// export type InputLoginType = {
-//     loginOrEmail: string
-//     password: string
-// }
+export type OutputModelTokenType = {
+    accessToken: string
+}
 
 export type UserQueryType = {
     searchLoginTerm: string | null

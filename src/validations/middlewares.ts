@@ -3,6 +3,8 @@ import {NextFunction, Request, Response} from "express";
 import {validationResult} from "express-validator";
 import {defaultQuery, defaultUsersQuery} from "../variables/variables";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
+import {jwtService} from "../applications/jwt-service";
+import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
 
 const customError = ({msg, path}: any): ErrorMessType => {
     return {
@@ -19,7 +21,7 @@ export const validErrors = (req: Request, res: Response, next: NextFunction) => 
     } else next()
 }
 
-export const validAuthorize = (req: Request, res: Response, next: NextFunction) => {
+export const basicAuth = (req: Request, res: Response, next: NextFunction) => {
     req.headers.authorization === 'Basic YWRtaW46cXdlcnR5' ?
         next() :
         res.sendStatus(401)

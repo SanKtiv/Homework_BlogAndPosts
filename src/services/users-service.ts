@@ -46,14 +46,17 @@ export const userService = {
         return this.addIdToUser(findUser as WithId<UserDbType>)
     },
 
-    async checkCredentials(loginOrEmail: string, password: string) {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<WithId<UserDbType> | null> {
 
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
 
-        if (user) return await bcrypt.compare(password, user.passwordHash);
+        if (!user) return user
 
-        return false
+        const result = await bcrypt.compare(password, user.passwordHash)
 
+        if (result) return user
+
+        return null
     },
 
     async genHash(password: string, salt: string) {
