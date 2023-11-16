@@ -1,7 +1,9 @@
 export type UserType = {
+    _id: string
     login: string
     email: string
     createdAt: string
+    passwordHash: string
 }
 
 export type IdUserType = {
@@ -43,4 +45,10 @@ export type UsersOutputType = {
     pageSize: number
     totalCount: number
     items: IdUserType[]
+}
+
+export type OutputAcesAuthModelType = {
+    email: string
+    login: string
+    userId: string
 }

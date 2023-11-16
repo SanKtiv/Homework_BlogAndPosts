@@ -1,4 +1,4 @@
-import {UserDbType, UsersOutputType} from "../../types/types-users";
+import {UserDbType, UsersOutputType, UserType} from "../../types/types-users";
 import {dbUsersCollection} from "./db";
 import {ObjectId, WithId} from "mongodb";
 import {userService} from "../../services/users-service";
@@ -82,12 +82,13 @@ export const usersRepositoryReadOnly = {
         }
 
         const usersSearch = await this.userSearch(query, searchLoginTermRegexp, searchEmailTermRegexp)
-
         return userService.usersFormOutput(totalUsers, usersSearch, query)
     },
 
-    async getUserById(userId: string): Promise<WithId<UserDbType> | null> {
-        return  dbUsersCollection.findOne({_id: new ObjectId(userId)})
+    async getUserById(userId: string): Promise<UserType | null> {
 
+        const user = await dbUsersCollection.findOne({_id: new ObjectId(userId)})
+        if (user) return {...user, _id: user._id.toString()}
+        return null
     }
 }

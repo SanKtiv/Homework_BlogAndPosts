@@ -7,6 +7,7 @@ import {userRouterQuery} from "./routers/users-routers-Query";
 import {dellAllRouter} from "./routers/all-data-routers";
 import {postRouterQuery} from "./routers/posts-routers-Query";
 import {authRouters} from "./routers/auth-routers";
+import {commentRouter} from "./routers/comments-routers";
 
 export const app = express()
 
@@ -19,3 +20,4 @@ app.use('/', blogRouter, blogRouterQuery)
 app.use('/', postRouter, postRouterQuery)
 app.use('/', userRouter, userRouterQuery)
 app.use('/', authRouters)
+app.use('/comments', commentRouter)

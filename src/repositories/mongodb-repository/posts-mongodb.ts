@@ -1,8 +1,10 @@
 import {PostType, PostBodyType, PostModelOutType, PostBodyWithoutBlogIdType} from "../../types/typesForMongoDB";
-import {dbPostsCollection} from "./db";
+import {dbPostsCollection, dbCommentsCollection} from "./db";
 import {dateNow} from "../../variables/variables";
 import {ObjectId, WithId} from "mongodb";
 import {postsService} from "../../services/posts-service";
+import {CommentDBType, CommentType} from "../../types/types-comments";
+import {commentService} from "../../services/commets-service";
 
 export const postsRepository = {
 
@@ -36,6 +38,22 @@ export const postsRepository = {
         }
         await dbPostsCollection.insertOne(newPost)
         return postsService.postDbInToBlog(newPost as WithId<PostType>)
+    },
+
+    async createComment(content: string, userId: string, userLogin: string): Promise<CommentType> {
+
+        const comment: CommentDBType = {
+            content: content,
+            commentatorInfo: {
+                userId: userId,
+                userLogin: userLogin
+            },
+            createdAt:dateNow().toISOString()
+        }
+
+        await dbCommentsCollection.insertOne(comment)
+
+        return commentService.createCommentViewModel(comment as WithId<CommentDBType>)
     },
 
     async updatePost(id: string, body: PostBodyType): Promise<Boolean> {

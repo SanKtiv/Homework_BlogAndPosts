@@ -4,8 +4,8 @@ import {userAuthValid} from "../validations/users-validators";
 import {validErrors} from "../validations/middlewares";
 import {jwtService} from "../applications/jwt-service";
 import {WithId} from "mongodb";
-import {UserDbType} from "../types/types-users";
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
+import {OutputAcesAuthModelType, UserDbType, UserType} from "../types/types-users";
+//import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
 import {jwtAuth} from "../validations/new-middleware";
 
 export const authRouters = Router({})
@@ -22,7 +22,14 @@ authRouters.post('/auth/login', userAuthValid, validErrors, async (req: Request,
     return res.sendStatus(401)
 })
 
-authRouters.get('/auth/me', jwtAuth, async (req: any, res: Response) => {
+authRouters.get('/auth/me', jwtAuth, async (req: Request, res: Response) => {
 
-    return res.status(200).send(req.user)
+    const returnedBody = ({email, login, _id}: UserType) => {
+        return {
+            email: email,
+            login: login,
+            userId: _id
+        }
+    }
+    return res.status(200).send(returnedBody(req.user!))
 })

@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import {MongoClient} from 'mongodb'
 import {PostType, BlogType} from "../../types/typesForMongoDB";
 import {UserDbType} from "../../types/types-users";
+import {CommentDBType} from "../../types/types-comments";
 
 dotenv.config()
 
@@ -13,10 +14,12 @@ const db: string = 'tube'
 const postsCollection: string = 'posts'
 const blogsCollection: string = 'blogs'
 const usersCollection: string = 'users'
+const commentsCollection: string = 'comments'
 
 export const dbBlogsCollection = client.db(db).collection<BlogType>(blogsCollection)
 export const dbPostsCollection = client.db(db).collection<PostType>(postsCollection)
 export const dbUsersCollection = client.db(db).collection<UserDbType>(usersCollection)
+export const dbCommentsCollection = client.db(db).collection<CommentDBType>(commentsCollection)
 
 export async function runDb() {
     try {

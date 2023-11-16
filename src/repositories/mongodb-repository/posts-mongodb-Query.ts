@@ -1,6 +1,8 @@
 import {dbPostsCollection} from "./db";
 import {PostsOutputQueryType} from "../../types/typesForQuery";
 import {postsService} from "../../services/posts-service";
+import {ObjectId, WithId} from "mongodb";
+import {PostType} from "../../types/typesForMongoDB";
 
 export const postsRepositoryQuery = {
 
@@ -17,4 +19,9 @@ export const postsRepositoryQuery = {
 
         return postsService.postsOutputQuery(totalPosts, postsOutputFromDb, query)
     },
+    
+    async findPostByPostId(postId: string): Promise<WithId<PostType> | null> {
+
+        return  dbPostsCollection.findOne({_id: new ObjectId(postId)})
+    }
 }

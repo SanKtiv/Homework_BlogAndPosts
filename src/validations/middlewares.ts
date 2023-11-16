@@ -5,6 +5,7 @@ import {defaultQuery, defaultUsersQuery} from "../variables/variables";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
 import {jwtService} from "../applications/jwt-service";
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
+import {postsRepositoryQuery} from "../repositories/mongodb-repository/posts-mongodb-Query";
 
 const customError = ({msg, path}: any): ErrorMessType => {
     return {
@@ -69,4 +70,11 @@ export const queryBlogIdMiddleware = async (req: Request, res: Response, next: N
     }
 
     next()
+}
+
+export const checkPostByPostId = async (req: Request, res: Response, next: NextFunction) => {
+
+    const post = await postsRepositoryQuery.findPostByPostId(req.params.postId)
+    if (!post) return res.sendStatus(404)// Если нет return приложение падает, выдает ошибку Cannot set headers after they are sent to the client
+    return next()//Если перед res есть return, а здесь нет, то ts выдает ошибку: Not all code paths return a value
 }
