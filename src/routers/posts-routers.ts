@@ -2,16 +2,17 @@ import {Request, Response, Router} from 'express';
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
 import {validId} from "../validations/blogs-validators";
 import {validPostBlogId} from "../validations/posts-validators";
-import {validErrors, basicAuth, checkPostByPostId} from "../validations/middlewares";
+import {basicAuth, checkPostByPostId} from "../validations/middlewares";
 import {checkInputFormComment} from "../validations/comments-validators";
-import {jwtAuth} from "../validations/new-middleware";
+import {authorizationJWT} from "../middlewares/authorization-jwt";
+import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 
 export const postRouter = Router ({})
 
 postRouter.post('/posts',
     validPostBlogId,
     basicAuth,
-    validErrors,
+    errorsOfValidate,
     async (req: Request, res: Response) => {
 
         const post = await postsRepository.createPost(req.body)
@@ -19,10 +20,10 @@ postRouter.post('/posts',
 })
 
 postRouter.post('/posts/:postId/comments',
-    jwtAuth,
+    authorizationJWT,
     checkInputFormComment,
     checkPostByPostId,
-    validErrors,
+    errorsOfValidate,
     async (req: Request, res: Response) => {
 
         const comment = await postsRepository
@@ -35,7 +36,7 @@ postRouter.put('/posts/:id',
     validPostBlogId,
     basicAuth,
     validId,
-    validErrors,
+    errorsOfValidate,
     async (req: Request, res: Response) => {
 
         const postIsUpdate = await postsRepository.updatePost(req.params.id, req.body)

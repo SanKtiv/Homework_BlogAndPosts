@@ -1,24 +1,7 @@
-import {ErrorMessType} from "../types/typesForMongoDB";
 import {NextFunction, Request, Response} from "express";
-import {validationResult} from "express-validator";
 import {defaultQuery, defaultUsersQuery} from "../variables/variables";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
 import {postsRepositoryQuery} from "../repositories/mongodb-repository/posts-mongodb-Query";
-
-const customError = ({msg, path}: any): ErrorMessType => {
-    return {
-        message: msg,
-        field: path
-    }
-}
-
-export const validErrors = (req: Request, res: Response, next: NextFunction) => {
-    const result = validationResult(req)
-    if (!result.isEmpty()) {
-        const error = result.array({onlyFirstError: true}).map(error => customError(error))
-        res.status(400).send({errorsMessages: error})
-    } else next()
-}
 
 export const basicAuth = (req: Request, res: Response, next: NextFunction) => {
     req.headers.authorization === 'Basic YWRtaW46cXdlcnR5' ?

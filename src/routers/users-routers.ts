@@ -2,11 +2,12 @@ import {Request, Response, Router} from "express";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb";
 import {userInputValid} from "../validations/users-validators";
 import {userService} from "../services/users-service";
-import {validErrors, basicAuth} from "../validations/middlewares";
+import {basicAuth} from "../validations/middlewares";
+import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 
 export const userRouter = Router({})
 
-userRouter.post('/users',basicAuth , userInputValid, validErrors, async (req: Request, res: Response) => {
+userRouter.post('/users',basicAuth , userInputValid, errorsOfValidate, async (req: Request, res: Response) => {
 
     const user = await userService.createUser(req.body)
     res.status(201).send(user)

@@ -2,7 +2,7 @@ import {NextFunction, Response, Request} from "express";
 import {jwtService} from "../applications/jwt-service";
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
 
-export const jwtAuth = async (req: Request, res: Response, next: NextFunction) => {
+export const authorizationJWT = async (req: Request, res: Response, next: NextFunction) => {
 
     if (req.headers.authorization) {
 
