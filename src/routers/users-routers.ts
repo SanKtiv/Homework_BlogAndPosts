@@ -2,7 +2,7 @@ import {Request, Response, Router} from "express";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb";
 import {userInputValid} from "../validations/users-validators";
 import {userService} from "../services/users-service";
-import {basicAuth} from "../validations/middlewares";
+import {basicAuth} from "../middlewares/authorization-basic";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 
 export const userRouter = Router({})

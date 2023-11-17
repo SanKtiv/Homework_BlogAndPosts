@@ -1,6 +1,6 @@
 import {Router, Response, Request} from "express";
 import {checkCommentModelForUpdate, checkId} from "../validations/comments-validators";
-import {checkCommentById, checkOwnCommentById} from "../validations/comment-middleware";
+import {checkCommentById, checkOwnCommentById} from "../middlewares/comment-middleware";
 import {commentsRepository} from "../repositories/mongodb-repository/comments-mongodb";
 import {commentService} from "../services/commets-service";
 import {authorizationJWT} from "../middlewares/authorization-jwt";

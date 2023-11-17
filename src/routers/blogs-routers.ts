@@ -3,8 +3,9 @@ import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb"
 import {validId, validBlog} from "../validations/blogs-validators";
 import {validPost} from "../validations/posts-validators";
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
-import {basicAuth, validBlogIdMiddleWare} from "../validations/middlewares";
+import {checkBlogByBlogId} from "../middlewares/blogs-middlewares";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
+import {basicAuth} from "../middlewares/authorization-basic";
 
 export const blogRouter = Router ({})
 
@@ -13,7 +14,7 @@ blogRouter.post( '/blogs', validBlog, basicAuth, errorsOfValidate, async (req: R
     return res.status(201).send(blog)
 })
 
-blogRouter.post( '/blogs/:blogId/posts', validPost, basicAuth, validBlogIdMiddleWare, errorsOfValidate, async (req: Request, res: Response) => {
+blogRouter.post( '/blogs/:blogId/posts', validPost, basicAuth, checkBlogByBlogId, errorsOfValidate, async (req: Request, res: Response) => {
     const post = await postsRepository.createPostForBlogId(req.params.blogId, req.body)
     return res.status(201).send(post)
 })

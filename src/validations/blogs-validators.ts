@@ -22,5 +22,3 @@ const validWebsiteUrl = body('websiteUrl', `websiteUrl is incorrect`)
     .matches(regexp)
 
 export const validBlog = [validName, validDescription, validWebsiteUrl]
-
-
