@@ -40,7 +40,7 @@ export const postsRepository = {
         return postsService.postDbInToBlog(newPost as WithId<PostType>)
     },
 
-    async createComment(content: string, userId: string, userLogin: string): Promise<CommentType> {
+    async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentType> {
 
         const comment: CommentDBType = {
             content: content,
@@ -48,7 +48,8 @@ export const postsRepository = {
                 userId: userId,
                 userLogin: userLogin
             },
-            createdAt:dateNow().toISOString()
+            createdAt:dateNow().toISOString(),
+            postId: postId
         }
 
         await dbCommentsCollection.insertOne(comment)

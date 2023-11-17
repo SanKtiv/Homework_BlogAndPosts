@@ -13,4 +13,16 @@ export const commentsRepository = {
             return null
         }
     },
+
+    async updateCommentById(id: string, content: string): Promise<void> {
+        await dbCommentsCollection.findOneAndUpdate({_id: new ObjectId(id)}, {$set: {content: content}})
+    },
+
+    async deleteCommentById(id: string): Promise<void> {
+       await dbCommentsCollection.deleteOne({_id: new ObjectId(id)})
+    },
+
+    async deleteAll(): Promise<void> {
+        await dbCommentsCollection.deleteMany({})
+    }
 }

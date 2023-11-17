@@ -3,8 +3,6 @@ import {NextFunction, Request, Response} from "express";
 import {validationResult} from "express-validator";
 import {defaultQuery, defaultUsersQuery} from "../variables/variables";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
-import {jwtService} from "../applications/jwt-service";
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
 import {postsRepositoryQuery} from "../repositories/mongodb-repository/posts-mongodb-Query";
 
 const customError = ({msg, path}: any): ErrorMessType => {

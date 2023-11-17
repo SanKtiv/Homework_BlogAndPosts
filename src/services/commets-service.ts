@@ -1,5 +1,5 @@
 import {WithId} from "mongodb";
-import {CommentDBType, CommentType} from "../types/types-comments";
+import {CommentDBType, CommentType, PaginatorCommentViewModelType} from "../types/types-comments";
 
 export const commentService = {
 
@@ -13,6 +13,20 @@ export const commentService = {
                 userLogin: dbComment.commentatorInfo.userLogin
             },
             createdAt: dbComment.createdAt
+        }
+    },
+
+    paginatorCommentViewModel(
+        totalComments: number,
+        findComments: WithId<CommentDBType>[],
+        query: any): PaginatorCommentViewModelType {
+
+        return {
+            pagesCount: Math.ceil(totalComments / +query.pageSize),
+            page: +query.pageNumber,
+            pageSize: +query.pageSize,
+            totalCount: totalComments,
+            items: findComments.map(el => this.createCommentViewModel(el))
         }
     }
 }

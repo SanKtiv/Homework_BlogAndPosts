@@ -1,8 +1,9 @@
-import {dbPostsCollection} from "./db";
+import {dbBlogsCollection, dbCommentsCollection, dbPostsCollection} from "./db";
 import {PostsOutputQueryType} from "../../types/typesForQuery";
 import {postsService} from "../../services/posts-service";
 import {ObjectId, WithId} from "mongodb";
 import {PostType} from "../../types/typesForMongoDB";
+import {commentService} from "../../services/commets-service";
 
 export const postsRepositoryQuery = {
 
@@ -22,6 +23,21 @@ export const postsRepositoryQuery = {
     
     async findPostByPostId(postId: string): Promise<WithId<PostType> | null> {
 
-        return  dbPostsCollection.findOne({_id: new ObjectId(postId)})
+        return dbPostsCollection.findOne({_id: new ObjectId(postId)})
+    },
+
+    async getCommentsByPostId(postId: string, query: any) {
+
+        const totalCommentsByPostId = await dbCommentsCollection.countDocuments({postId: postId})
+
+        const commentsByPostId = await dbCommentsCollection
+            .find({postId: postId})
+            .sort({[query.sortBy]: query.sortDirection})
+            .skip((+query.pageNumber - 1) * +query.pageSize)
+            .limit(+query.pageSize)
+            .toArray()
+
+        return  commentService
+            .paginatorCommentViewModel(totalCommentsByPostId, commentsByPostId, query)
     }
 }
