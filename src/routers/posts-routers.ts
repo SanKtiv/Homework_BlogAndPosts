@@ -28,7 +28,7 @@ postRouter.post('/posts/:postId/comments',
         const comment = await postsRepository
             .createComment(req.params.postId, req.body.content, req.user!._id, req.user!.login)
 
-        res.status(200).send(comment)
+        res.status(201).send(comment)
 })
 
 postRouter.put('/posts/:id',

@@ -14,4 +14,5 @@ export const jwtAuth = async (req: Request, res: Response, next: NextFunction) =
         req.user = await usersRepositoryReadOnly.getUserById(userId)
         return next()
     }
+    res.sendStatus(401)
 }
