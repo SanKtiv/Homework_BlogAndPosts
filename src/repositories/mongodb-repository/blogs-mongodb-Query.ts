@@ -1,5 +1,5 @@
 import {dbBlogsCollection, dbPostsCollection} from "./db";
-import {BlogsOutputQueryType, PostsOutputQueryType} from "../../types/typesForQuery";
+import {BlogsInputPagingType, BlogsOutputQueryType, PostsOutputQueryType} from "../../types/typesForQuery";
 import {blogsService} from "../../services/blogs-service";
 import {postsService} from "../../services/posts-service";
 
@@ -7,7 +7,7 @@ export const blogsRepositoryQuery = {
 
     async getBlogsWithPaging(query: any): Promise<BlogsOutputQueryType | null> {
 
-        if (!query.searchNameTerm) {
+        if (query.searchNameTerm) {
 
             const searchNameToRegExp = new RegExp(query.searchNameTerm, 'i')
             const totalBlogsBySearchName = await dbBlogsCollection
