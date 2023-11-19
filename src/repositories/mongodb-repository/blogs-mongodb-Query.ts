@@ -11,10 +11,10 @@ export const blogsRepositoryQuery = {
 
             const searchNameToRegExp = new RegExp(query.searchNameTerm, 'i')
             const totalBlogsBySearchName = await dbBlogsCollection
-                .countDocuments({name: {$regex: (query.searchNameTerm, 'i')}})
+                .countDocuments({name: {$regex: /query.searchNameTerm/i}})
 
             const blogsItemsSearchName = await dbBlogsCollection
-                .find({name: {$regex: (query.searchNameTerm, 'i')}})
+                .find({name: {$regex: /query.searchNameTerm/i}})
                 .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
