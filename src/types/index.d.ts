@@ -1,5 +1,5 @@
-import {WithId} from "mongodb";
-import {UserDbType, UserType} from "./types-users";
+
+import {UserType} from "./types-users";
 
 
 declare global {

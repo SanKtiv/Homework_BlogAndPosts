@@ -1,8 +1,8 @@
 import {BlogModelOutType} from "./typesForMongoDB";
 import {PostModelOutType} from "./typesForMongoDB";
 
-export type InputQueryWithSearchNameType = {
-    searchNameTerm: string
+export type BlogsInputPagingType = {
+    searchNameTerm: string | null
     sortBy: string
     sortDirection: 'asc' | 'desc'
     pageNumber: string

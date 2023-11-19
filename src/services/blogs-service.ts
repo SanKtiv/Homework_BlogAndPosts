@@ -1,7 +1,7 @@
 import {WithId} from "mongodb";
 import {BlogBodyType, BlogModelOutType, BlogType} from "../types/typesForMongoDB";
 import {dateNow} from "../variables/variables";
-import {BlogsOutputQueryType, InputQueryWithSearchNameType} from "../types/typesForQuery";
+import {BlogsOutputQueryType, BlogsInputPagingType} from "../types/typesForQuery";
 
 export const blogsService = {
 
@@ -20,7 +20,7 @@ export const blogsService = {
     blogsOutputQuery(
         totalBlogs: number,
         blogsItems: WithId<BlogType>[],
-        query: InputQueryWithSearchNameType): BlogsOutputQueryType {
+        query: BlogsInputPagingType): BlogsOutputQueryType {
 
         return {
             pagesCount: Math.ceil(totalBlogs / +query.pageSize),

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import {ObjectId, WithId} from 'mongodb'
+import {WithId} from 'mongodb'
 import {OutputModelTokenType, UserDbType} from "../types/types-users";
 
 const secret = process.env.SECRET_KEY || "undefined"
