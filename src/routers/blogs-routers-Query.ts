@@ -2,12 +2,14 @@ import {Request, Response, Router} from 'express';
 import {blogsRepositoryQuery} from "../repositories/mongodb-repository/blogs-mongodb-Query";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
 import {blogsPaginatorDefault} from "../middlewares/blogs-middlewares";
+import {BlogsInputPagingType} from "../types/typesForQuery";
 
 export const blogRouterQuery = Router ({})
 
 blogRouterQuery.get( '/blogs', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
-    return res.status(200).send(await blogsRepositoryQuery.getBlogsWithPaging(req.query))
+    const blogsPaging = await blogsRepositoryQuery.getBlogsWithPaging(req.query as BlogsInputPagingType)
+    res.status(200).send(blogsPaging)
 })
 
 blogRouterQuery.get( '/blogs/:blogId/posts', blogsPaginatorDefault, async (req: Request, res: Response) => {

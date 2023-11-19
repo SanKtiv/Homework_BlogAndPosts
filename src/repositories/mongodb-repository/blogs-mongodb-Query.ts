@@ -5,11 +5,11 @@ import {postsService} from "../../services/posts-service";
 
 export const blogsRepositoryQuery = {
 
-    async getBlogsWithPaging(query: any): Promise<BlogsOutputQueryType | null> {
+    async getBlogsWithPaging(query: BlogsInputPagingType): Promise<BlogsOutputQueryType | null> {
 
         if (query.searchNameTerm) {
 
-            const searchNameToRegExp = new RegExp(query.searchNameTerm, 'i')
+            //const searchNameToRegExp = new RegExp(query.searchNameTerm, 'i')
             const totalBlogsBySearchName = await dbBlogsCollection
                 .countDocuments({name: {$regex: query.searchNameTerm, $options: 'i'}})
 
