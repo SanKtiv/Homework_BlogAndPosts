@@ -1,12 +1,13 @@
 import request from 'supertest'
 import {app} from '../../src/setting'
 import {client} from "../../src/repositories/mongodb-repository/db";
+import {routePaths} from "../../src/setting";
 
 const getRequest = () => {
     return request(app)
 }
 
-const viewModel = {
+const viewModelQueryIsEmpty = {
     pagesCount: 0,
     page: 1, pageSize: 10,
     totalCount: 0, items: []
@@ -28,7 +29,7 @@ const blogInputModel = {
 
 }
 
-describe('/blogs', () => {
+describe('test for /blogs', () => {
 
     beforeEach(async () => {
         await client.connect()
@@ -41,13 +42,15 @@ describe('/blogs', () => {
 
     it('-GET with empty query, should HTTP status equal 200, and return empty array', async () => {
         await getRequest()
-            .get('/blogs')
-            .expect(200, viewModel)
+            .get(routePaths.blogs)
+            .expect(200, viewModelQueryIsEmpty)
     })
+
+
 
     it('-POST, should return status 201, ', async () => {
         await getRequest()
-            .post('/blog')
+            .post(routePaths.blog)
             .send(blogInputModel)
             .expect(201, {...blogInputModel, id: })
     })
