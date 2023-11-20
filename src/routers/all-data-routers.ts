@@ -6,7 +6,7 @@ import {commentsRepository} from "../repositories/mongodb-repository/comments-mo
 
 export const dellAllRouter = Router ({})
 
-dellAllRouter.delete('/testing/all-data', async (req: Request, res: Response) => {
+dellAllRouter.delete('/', async (req: Request, res: Response) => {
 
     await blogsRepository.deleteAll()
     await postsRepository.deleteAll()

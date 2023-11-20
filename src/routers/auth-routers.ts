@@ -9,7 +9,7 @@ import {authorizationJWT} from "../middlewares/authorization-jwt";
 
 export const authRouters = Router({})
 
-authRouters.post('/auth/login', userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
+authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
 
     const user: WithId<UserDbType> | null = await userService
         .checkCredentials(req.body.loginOrEmail, req.body.password)
@@ -21,7 +21,7 @@ authRouters.post('/auth/login', userAuthValid, errorsOfValidate, async (req: Req
     return res.sendStatus(401)
 })
 
-authRouters.get('/auth/me', authorizationJWT, async (req: Request, res: Response) => {
+authRouters.get('/me', authorizationJWT, async (req: Request, res: Response) => {
 
     const returnedBody = ({email, login, _id}: UserType) => {
         return {

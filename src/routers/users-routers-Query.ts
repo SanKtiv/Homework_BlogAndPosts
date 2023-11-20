@@ -5,7 +5,7 @@ import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-
 
 export const userRouterQuery = Router({})
 
-userRouterQuery.get('/users', basicAuth, usersPaginatorDefault, async (req:Request, res: Response) => {
+userRouterQuery.get('/', basicAuth, usersPaginatorDefault, async (req:Request, res: Response) => {
     const usersForm = await usersRepositoryReadOnly.getAllUsers(req.query)
     res.status(200).send(usersForm)
 })

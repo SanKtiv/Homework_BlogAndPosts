@@ -7,13 +7,13 @@ import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 
 export const userRouter = Router({})
 
-userRouter.post('/users',basicAuth , userInputValid, errorsOfValidate, async (req: Request, res: Response) => {
+userRouter.post('/',basicAuth , userInputValid, errorsOfValidate, async (req: Request, res: Response) => {
 
     const user = await userService.createUser(req.body)
     res.status(201).send(user)
 })
 
-userRouter.delete('/users/:id', basicAuth, async (req: Request, res: Response) => {
+userRouter.delete('/:id', basicAuth, async (req: Request, res: Response) => {
 
     if (await usersRepository.deleteById(req.params.id)) return res.sendStatus(204)
     return res.sendStatus(404)
