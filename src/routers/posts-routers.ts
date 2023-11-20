@@ -10,7 +10,7 @@ import {basicAuth} from "../middlewares/authorization-basic";
 
 export const postRouter = Router ({})
 
-postRouter.post('/posts',
+postRouter.post('/',
     validPostBlogId,
     basicAuth,
     errorsOfValidate,
@@ -20,7 +20,7 @@ postRouter.post('/posts',
         return res.status(201).send(post)
 })
 
-postRouter.post('/posts/:postId/comments',
+postRouter.post('/:postId/comments',
     authorizationJWT,
     checkInputFormComment,
     checkPostByPostId,
@@ -33,7 +33,7 @@ postRouter.post('/posts/:postId/comments',
         res.status(201).send(comment)
 })
 
-postRouter.put('/posts/:id',
+postRouter.put('/:id',
     validPostBlogId,
     basicAuth,
     validId,
@@ -45,7 +45,7 @@ postRouter.put('/posts/:id',
         return res.sendStatus(404)
 })
 
-postRouter.delete('/posts/:id',
+postRouter.delete('/:id',
     basicAuth,
     validId,
     async (req: Request, res: Response) => {

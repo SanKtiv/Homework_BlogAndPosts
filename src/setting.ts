@@ -17,7 +17,7 @@ app.use(parserMiddleware)
 
 app.use('/', dellAllRouter)
 app.use('/blogs', blogRouter, blogRouterQuery)
-app.use('/', postRouter, postRouterQuery)
+app.use('/posts', postRouter, postRouterQuery)
 app.use('/', userRouter, userRouterQuery)
 app.use('/', authRouters)
 app.use('/comments', commentRouter)

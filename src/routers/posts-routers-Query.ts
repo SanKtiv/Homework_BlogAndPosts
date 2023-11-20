@@ -7,18 +7,18 @@ import {checkPostByPostId} from "../middlewares/posts-middlewares";
 
 export const postRouterQuery = Router ({})
 
-postRouterQuery.get( '/posts', blogsPaginatorDefault, async (req: Request, res: Response) => {
+postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
     return res.status(200).send(await postsRepositoryQuery.getPostsWithPaging(req.query))
 })
 
-postRouterQuery.get( '/posts/:id', async (req: Request, res: Response) => {
+postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
     const posts = await postsRepository.getPostById(req.params.id)
     if (posts) return res.status(200).send(posts)
     return res.sendStatus(404)
 })
 
-postRouterQuery.get('/posts/:postId/comments', checkPostByPostId, usersPaginatorDefault, async (req: Request, res: Response) =>{
+postRouterQuery.get('/:postId/comments', checkPostByPostId, usersPaginatorDefault, async (req: Request, res: Response) =>{
 
     const paginatorCommentViewModel = await postsRepositoryQuery
         .getCommentsByPostId(req.params.postId, req.query)
