@@ -1,6 +1,6 @@
 import {WithId} from "mongodb";
 import {PostModelOutType, PostType} from "../types/typesForMongoDB";
-import {InputQueryType, PostsOutputQueryType} from "../types/typesForQuery";
+import {PostsByBlogIdInputPagingType, PostsOutputQueryType} from "../types/typesForQuery";
 
 export const postsService = {
     postDbInToBlog(postOutDb: WithId<PostType>): PostModelOutType {
@@ -19,7 +19,7 @@ export const postsService = {
     postsOutputQuery(
         totalBlogs: number,
         blogsItems: WithId<PostType>[],
-        query: InputQueryType): PostsOutputQueryType {
+        query: PostsByBlogIdInputPagingType): PostsOutputQueryType {
 
         return {
             pagesCount: Math.ceil(totalBlogs / +query.pageSize),

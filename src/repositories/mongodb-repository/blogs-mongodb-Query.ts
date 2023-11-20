@@ -1,5 +1,10 @@
 import {dbBlogsCollection, dbPostsCollection} from "./db";
-import {BlogsInputPagingType, BlogsOutputQueryType, PostsOutputQueryType} from "../../types/typesForQuery";
+import {
+    BlogsInputPagingType,
+    BlogsOutputQueryType,
+    PostsByBlogIdInputPagingType,
+    PostsOutputQueryType
+} from "../../types/typesForQuery";
 import {blogsService} from "../../services/blogs-service";
 import {postsService} from "../../services/posts-service";
 
@@ -35,7 +40,7 @@ export const blogsRepositoryQuery = {
         return blogsService.blogsOutputQuery(totalBlogs, blogsItems, query)
     },
 
-    async getPostsByBlogId(blogId: string, query: any): Promise<PostsOutputQueryType | null> {
+    async getPostsByBlogId(blogId: string, query: PostsByBlogIdInputPagingType): Promise<PostsOutputQueryType | null> {
 
         const totalPostsByBlogId = await dbPostsCollection.countDocuments({blogId: blogId})
 

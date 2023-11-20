@@ -17,7 +17,7 @@ export type BlogsOutputQueryType = {
     items: BlogModelOutType[]
 }
 
-export type InputQueryType = {
+export type PostsByBlogIdInputPagingType = {
     sortBy: string
     sortDirection: 'asc' | 'desc'
     pageNumber: string
