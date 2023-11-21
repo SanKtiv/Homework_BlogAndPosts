@@ -3,6 +3,7 @@ import {app} from '../../src/setting'
 import {client} from "../../src/repositories/mongodb-repository/db";
 import {routePaths} from "../../src/setting";
 
+
 const getRequest = () => {
     return request(app)
 }
@@ -31,8 +32,11 @@ const blogInputModel = {
 
 describe('test for /blogs', () => {
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         await client.connect()
+    })
+
+    beforeEach(async () => {
         await getRequest().delete('/testing/all-data')
     })
 

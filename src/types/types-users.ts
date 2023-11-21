@@ -26,6 +26,11 @@ export type InputUserType = {
     email: string
 }
 
+export type InputUserAuthType = {
+    login: string
+    password: string
+}
+
 export type OutputModelTokenType = {
     accessToken: string
 }
