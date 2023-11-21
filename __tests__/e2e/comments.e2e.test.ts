@@ -66,7 +66,7 @@ const commentSendBody_TRUE = {
 
 const commentCorrect = {
     id: expect.any(String),
-    content: comments.body.content,
+    content: comments.content_TRUE,
     commentatorInfo: {
         userId: expect.any(String),
         userLogin: expect.any(String)
@@ -81,8 +81,6 @@ const commentsResponseModel = {
 const tokens = {
     incorrect: 'incorrectToken'
 }
-
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTVjN2EwYTZiODI4MjEyNDY1ZTJhNzUiLCJpYXQiOjE3MDA1NjIxMTksImV4cCI6MTcwMDU2NTcxOX0.gisAi5F5V3_-4ziNaAreEjDbS8xYlyPaK51UEn64MI8'
 
 const userActions = {
 
@@ -153,20 +151,20 @@ describe('TEST for comments', () => {
 
         const token = await userActions.authUser(userSendAuthBody_TRUE)
 
-        console.log(token.body.accessToken)
+        //console.log(token.body.accessToken)
 
         const bodyId = await blogActions.createBlog(blogSendBody_TRUE)
 
-        console.log(bodyId.body.id)
+        //console.log(bodyId.body.id)
 
         const postId = await postActions.createPost(postSendBody_TRUE, bodyId.body.id)
 
-        console.log(postId.body.id)
+        //console.log(postId.body.id)
 
         const commentId = await commentAction
             .createComment(token.body.accessToken, commentSendBody_TRUE, postId.body.id)
 
-        console.log(commentId.body.id)
+        //console.log(commentId.body.id)
 
 
         //console.log(count.body, count.statusCode)
