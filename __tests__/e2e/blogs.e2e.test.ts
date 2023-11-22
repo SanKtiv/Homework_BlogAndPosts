@@ -30,32 +30,32 @@ const blogInputModel = {
 
 }
 
-describe('test for /blogs', () => {
+describe('TEST for blogs', () => {
 
     beforeAll(async () => {
         await client.connect()
     })
 
     beforeEach(async () => {
-        await getRequest().delete('/testing/all-data')
+        await getRequest().delete(routePaths.deleteAllData)
     })
 
     afterAll(async () => {
         await client.close()
     })
 
-    it('-GET with empty query, should HTTP status equal 200, and return empty array', async () => {
-        await getRequest()
-            .get(routePaths.blogs)
-            .expect(200, viewModelQueryIsEmpty)
-    })
-
-
-
-    it('-POST, should return status 201, ', async () => {
-        await getRequest()
-            .post(routePaths.blog)
-            .send(blogInputModel)
-            .expect(201, {...blogInputModel, id: })
-    })
+    // it('-GET with empty query, should HTTP status equal 200, and return empty array', async () => {
+    //     await getRequest()
+    //         .get(routePaths.blogs)
+    //         .expect(200, viewModelQueryIsEmpty)
+    // })
+    //
+    //
+    //
+    // it('-POST, should return status 201, ', async () => {
+    //     await getRequest()
+    //         .post(routePaths.blog)
+    //         .send(blogInputModel)
+    //         .expect(201, {...blogInputModel, id: })
+    // })
 })

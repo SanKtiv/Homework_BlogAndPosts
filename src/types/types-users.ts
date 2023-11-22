@@ -27,7 +27,7 @@ export type InputUserType = {
 }
 
 export type InputUserAuthType = {
-    login: string
+    loginOrEmail: string
     password: string
 }
 

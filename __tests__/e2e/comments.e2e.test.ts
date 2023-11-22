@@ -2,171 +2,69 @@ import request from 'supertest'
 import {app} from '../../src/setting'
 import {client} from "../../src/repositories/mongodb-repository/db";
 import {routePaths} from "../../src/setting";
-import {CommentType} from "../../src/types/types-comments";
-import {InputUserAuthType, InputUserType} from "../../src/types/types-users";
+import {blogActions} from "./services/blogs-services";
+import {postActions} from "./services/posts-services";
+import {userActions} from "./services/users-services";
+import {commentAction} from "./services/comments-services";
+import {blogSendBody_TRUE} from "./utility/blogs-utility";
+import {postSendBody_TRUE} from "./utility/posts-utility";
+import {userSendBody_TRUE, userSendAuthBody_TRUE} from "./utility/users-utility";
+import {commentSendBody_TRUE, commentCorrect, comment} from "./utility/comments-utility";
+import {codesHTTP} from "../../src/utility/constants";
 
-const getRequest = () => {
-    return request(app)
-}
 
-const user = {
-    login_TRUE: 'Qwerty12',
-    login_FALSE: 'Qwerty13',
-    email_TRUE: 'qwerty@yandex.com',
-    password_TRUE: 'Qwerty12',
-    password_FALSE: 'Qwerty123'
-}
-
-const userSendBody_TRUE = {
-    login: user.login_TRUE,
-    password: user.password_TRUE,
-    email: user.email_TRUE
-}
-
-const userSendAuthBody_TRUE = {
-    login: user.login_TRUE,
-    password: user.password_TRUE
-}
-
-const blog = {
-    name_TRUE: "blog_name",
-    description_TRUE: "Qwerty12",
-    websiteUrl_TRUE: "https://someurl.com"
-}
-
-const blogSendBody_TRUE = {
-    name: blog.name_TRUE,
-    description: blog.description_TRUE,
-    websiteUrl: blog.websiteUrl_TRUE
-}
-
-const post = {
-    title_TRUE: "post_title",
-    shortDescription_TRUE: "Qwerty",
-    content_TRUE: "content",
-}
-
-const postSendBody_TRUE = {
-    title: post.title_TRUE,
-    shortDescription: post.shortDescription_TRUE,
-    content: post.content_TRUE,
-}
-
-type CommentInputType = {
-    content: string
-}
-
-const comments = {
-    content_TRUE: 'content-content-content',
-}
-
-const commentSendBody_TRUE = {
-    content: comments.content_TRUE
-}
-
-const commentCorrect = {
-    id: expect.any(String),
-    content: comments.content_TRUE,
-    commentatorInfo: {
-        userId: expect.any(String),
-        userLogin: expect.any(String)
-    },
-    createdAt: expect.any(String)
-}
-
-const commentsResponseModel = {
-
-}
-
-const tokens = {
-    incorrect: 'incorrectToken'
-}
-
-const userActions = {
-
-    createUser: async (userSendBody: InputUserType) =>
-
-        getRequest()
-            .post(routePaths.users)
-            .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .send(userSendBody),
-
-    authUser: async (userSendAuthBody: InputUserAuthType) =>
-
-        getRequest()
-            .post(`${routePaths.auth}/login`)
-            .send(userSendAuthBody),
-
-}
-
-const blogActions = {
-
-    createBlog: async (blogSendBody) =>
-        getRequest()
-            .post(`${routePaths.blogs}`)
-            .send(blogSendBody)
-}
-
-const postActions = {
-
-    createPost: async (postSendBody, blogId) =>
-        getRequest()
-            .post(`${routePaths.posts}`)
-            .send({...postSendBody, blogId: blogId})
-}
-
-const commentAction = {
-
-    createComment: async (token: string, bodyComment: CommentInputType, postId: string | null) =>
-
-        getRequest()
-            .post(`${routePaths.posts}/${postId}/comments`)
-            .set('Authorization', `Bearer ${token}`)
-            //.auth(token, {type: 'bearer'})
-            .send(bodyComment)
-    ,
-
-    getCommentById: async () =>
-        getRequest()
-            .get(`${routePaths.comments}/id`)
-            .send({})
-}
+export const getRequest = () => request(app)
 
 describe('TEST for comments', () => {
     beforeAll(async () => {
         await client.connect()
     })
 
-    // beforeEach(async () => {
-    //     await getRequest().delete(routePaths.deleteAllData)
-    // })
+    beforeEach(async () => {
+        await getRequest().delete(routePaths.deleteAllData)
+    })
 
     afterAll(async () => {
         await client.close()
     })
 
-    it(`-GET /comments:id, should return code 200 and ${commentCorrect}` , async () => {
+    it(`-GET /comments:id, should return code 200 and comment` , async () => {
 
         await userActions.createUser(userSendBody_TRUE)
-
         const token = await userActions.authUser(userSendAuthBody_TRUE)
-
-        //console.log(token.body.accessToken)
-
         const bodyId = await blogActions.createBlog(blogSendBody_TRUE)
-
-        //console.log(bodyId.body.id)
-
         const postId = await postActions.createPost(postSendBody_TRUE, bodyId.body.id)
-
-        //console.log(postId.body.id)
-
         const commentId = await commentAction
             .createComment(token.body.accessToken, commentSendBody_TRUE, postId.body.id)
 
-        //console.log(commentId.body.id)
-
-
-        //console.log(count.body, count.statusCode)
+        await commentAction
+            .expectGetCommentById_(commentId.body.id, 200, commentCorrect)
     })
+
+    it(`-GET /comments:id, should return code 404` , async () => {
+
+        await userActions.createUser(userSendBody_TRUE)
+        const token = await userActions.authUser(userSendAuthBody_TRUE)
+        const bodyId = await blogActions.createBlog(blogSendBody_TRUE)
+        const postId = await postActions.createPost(postSendBody_TRUE, bodyId.body.id)
+        await commentAction
+            .createComment(token.body.accessToken, commentSendBody_TRUE, postId.body.id)
+
+        await commentAction
+            .expectGetCommentById_(comment.id_FALSE, 404, {})
+    })
+
+    it(`-DELETE /comments:commentId, should return code 204`, async () => {
+
+        await userActions.createUser(userSendBody_TRUE)
+        const token = await userActions.authUser(userSendAuthBody_TRUE)
+        const bodyId = await blogActions.createBlog(blogSendBody_TRUE)
+        const postId = await postActions.createPost(postSendBody_TRUE, bodyId.body.id)
+        const commentId = await commentAction
+            .createComment(token.body.accessToken, commentSendBody_TRUE, postId.body.id)
+
+        await commentAction
+            .expectDeleteCommentById(token.body.accessToken, commentId.body.id, 204)
+    })
+
 })
