@@ -1,6 +1,6 @@
 import {NextFunction, Response, Request} from "express";
 import {jwtService} from "../applications/jwt-service";
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
+import {userApplication} from "../applications/user-application";
 
 export const authorizationJWT = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -11,7 +11,7 @@ export const authorizationJWT = async (req: Request, res: Response, next: NextFu
 
         if (!userId) return res.sendStatus(401)
 
-        req.user = await usersRepositoryReadOnly.getUserById(userId)
+        req.user = await userApplication.getUserById(userId)
         return next()
     }
     res.sendStatus(401)

@@ -85,10 +85,8 @@ export const usersRepositoryReadOnly = {
         return userService.usersFormOutput(totalUsers, usersSearch, query)
     },
 
-    async getUserById(userId: string): Promise<UserType | null> {
+    async getUserById(userId: string): Promise<WithId<UserDbType> | null> {
 
-        const user = await dbUsersCollection.findOne({_id: new ObjectId(userId)})
-        if (user) return {...user, _id: user._id.toString()}
-        return null
+        return  dbUsersCollection.findOne({_id: new ObjectId(userId)})
     }
 }

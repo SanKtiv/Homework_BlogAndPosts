@@ -12,6 +12,6 @@ export const checkOwnCommentById = async (req: Request, res:Response, next: Next
 
     const comment = await commentsRepository.findCommentById(req.params.commentId)
     if (!comment) return res.sendStatus(404)
-    if (comment.commentatorInfo.userId === req.user!._id) return next()
+    if (comment.commentatorInfo.userId === req.user!.userId) return next()
     res.sendStatus(403)
 }

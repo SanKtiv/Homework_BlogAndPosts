@@ -22,13 +22,13 @@ postRouter.post('/',
 
 postRouter.post('/:postId/comments',
     authorizationJWT,
-    checkInputFormComment,
+    ...checkInputFormComment,
     checkPostByPostId,
     errorsOfValidate,
     async (req: Request, res: Response) => {
 
         const comment = await postsRepository
-            .createComment(req.params.postId, req.body.content, req.user!._id, req.user!.login)
+            .createComment(req.params.postId, req.body.content, req.user!.userId, req.user!.login)
 
         res.status(201).send(comment)
 })

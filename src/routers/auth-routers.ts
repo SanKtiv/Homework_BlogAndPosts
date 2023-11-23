@@ -24,7 +24,7 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
 
 authRouters.get('/me', authorizationJWT, async (req: Request, res: Response) => {
 
-    const userInfo = await userApplication.getUserInfo(req.user!.email, req.user!.login, req.user!._id)
+    const userInfo = await userApplication.getUserInfo(req.user!.email, req.user!.login, req.user!.userId)
     // const returnedBody = ({email, login, _id}: UserType) => {
     //     return {
     //         email: email,
