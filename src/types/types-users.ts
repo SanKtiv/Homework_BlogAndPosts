@@ -1,3 +1,5 @@
+import {WithId} from "mongodb";
+
 export type UserType = {
     _id: string
     login: string
@@ -12,6 +14,25 @@ export type IdUserType = {
     email: string
     createdAt: string
 }
+export type User_Type = {
+    accountData: AccountDataType
+    emailConfirmation: EmailConfirmationType
+}
+
+type AccountDataType= {
+    login: string
+    email: string
+    createdAt: string
+    passwordHash: string
+}
+
+type EmailConfirmationType = {
+    confirmationCode: any
+    expirationDate: any
+    isConfirmed: boolean
+}
+
+export type UserDBType = WithId<User_Type>
 
 export type UserDbType = {
     login: string

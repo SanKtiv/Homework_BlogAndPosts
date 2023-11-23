@@ -6,6 +6,7 @@ import {jwtService} from "../applications/jwt-service";
 import {WithId} from "mongodb";
 import {UserDbType, UserType} from "../types/types-users";
 import {authorizationJWT} from "../middlewares/authorization-jwt";
+import {userApplication} from "../applications/user-application";
 
 export const authRouters = Router({})
 
@@ -23,14 +24,15 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
 
 authRouters.get('/me', authorizationJWT, async (req: Request, res: Response) => {
 
-    const returnedBody = ({email, login, _id}: UserType) => {
-        return {
-            email: email,
-            login: login,
-            userId: _id
-        }
-    }
-    return res.status(200).send(returnedBody(req.user!))
+    const userInfo = await userApplication.getUserInfo(req.user!.email, req.user!.login, req.user!._id)
+    // const returnedBody = ({email, login, _id}: UserType) => {
+    //     return {
+    //         email: email,
+    //         login: login,
+    //         userId: _id
+    //     }
+    // }
+    return res.status(200).send(userInfo)
 })
 
 authRouters.post('/registration', async (req: Request, res: Response) => {
