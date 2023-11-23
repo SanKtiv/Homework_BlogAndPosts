@@ -9,7 +9,7 @@ mailRouter.post('/registration', async (req: Request, res: Response) => {
         service: 'gmail',
         auth: {
             user: 'aleksandr.mail.test@gmail.com',
-            pass: '0434 7188 6698 3518 7865 3952 3038 8149 2671 6222 3416 2908 8743 8153 5391 3503 0581 6262 9116 0537'
+            pass: 'rglgkegtcyunuxds'
         }
     })
 

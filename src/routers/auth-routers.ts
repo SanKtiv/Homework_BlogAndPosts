@@ -1,5 +1,5 @@
 import {Router, Request, Response} from "express";
-import {userService} from "../services/users-service";
+import {authService} from "../services/auth-service";
 import {userAuthValid} from "../validations/users-validators";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 import {jwtService} from "../applications/jwt-service";
@@ -11,7 +11,7 @@ export const authRouters = Router({})
 
 authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
 
-    const user: WithId<UserDbType> | null = await userService
+    const user: WithId<UserDbType> | null = await authService
         .checkCredentials(req.body.loginOrEmail, req.body.password)
 
     if (user) {
@@ -31,4 +31,16 @@ authRouters.get('/me', authorizationJWT, async (req: Request, res: Response) => 
         }
     }
     return res.status(200).send(returnedBody(req.user!))
+})
+
+authRouters.post('/registration', async (req: Request, res: Response) => {
+
+})
+
+authRouters.post('/registration-confirmation', async (req: Request, res: Response) => {
+
+})
+
+authRouters.post('/registration-email-resending', async (req: Request, res: Response) => {
+
 })
