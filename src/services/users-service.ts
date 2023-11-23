@@ -60,6 +60,7 @@ export const userService = {
     },
 
     async genHash(password: string, salt: string) {
+
         return await bcrypt.hash(password, salt)
     },
 

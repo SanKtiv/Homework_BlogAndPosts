@@ -8,6 +8,7 @@ import {dellAllRouter} from "./routers/all-data-routers";
 import {postRouterQuery} from "./routers/posts-routers-Query";
 import {authRouters} from "./routers/auth-routers";
 import {commentRouter} from "./routers/comments-routers";
+import {mailRouter} from "./routers/mail-router";
 
 export const app = express()
 
@@ -28,5 +29,5 @@ app.use(routePaths.deleteAllData, dellAllRouter)
 app.use(routePaths.blogs, blogRouter, blogRouterQuery)
 app.use(routePaths.posts, postRouter, postRouterQuery)
 app.use(routePaths.users, userRouter, userRouterQuery)
-app.use(routePaths.auth, authRouters)
+app.use(routePaths.auth, authRouters, mailRouter)
 app.use(routePaths.comments, commentRouter)
