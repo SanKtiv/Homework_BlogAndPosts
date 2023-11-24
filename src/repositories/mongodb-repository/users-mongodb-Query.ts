@@ -23,7 +23,7 @@ export const usersRepositoryReadOnly = {
         if (login && email) {
 
             return dbUsersCollection
-                .find({$or: [{'login': {$regex: login}}, {'email': {$regex: email}}]})
+                .find({$or: [{'accountData.login': {$regex: login}}, {'accountData.email': {$regex: email}}]})
                 .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
@@ -32,7 +32,7 @@ export const usersRepositoryReadOnly = {
         }else if (login) {
 
             return dbUsersCollection
-                .find({'login': {$regex: login}})
+                .find({'accountData.login': {$regex: login}})
                 .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
@@ -40,7 +40,7 @@ export const usersRepositoryReadOnly = {
 
         } else if (email) {
             return dbUsersCollection
-                .find({'email': {$regex: email}})
+                .find({'accountData.email': {$regex: email}})
                 .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
@@ -64,18 +64,18 @@ export const usersRepositoryReadOnly = {
 
             totalUsers = await dbUsersCollection
                 .countDocuments({$or: [
-                    {'login': {$regex: searchLoginTermRegexp}},
-                            {'email': {$regex: searchEmailTermRegexp}}
+                    {'accountData.login': {$regex: searchLoginTermRegexp}},
+                            {'accountData.email': {$regex: searchEmailTermRegexp}}
                             ]})
         } else if (query.searchLoginTerm) {
 
             totalUsers = await dbUsersCollection
-                .countDocuments({'login': {$regex: searchLoginTermRegexp}})
+                .countDocuments({'accountData.login': {$regex: searchLoginTermRegexp}})
 
         } else if (query.searchEmailTerm) {
 
             totalUsers = await dbUsersCollection
-                .countDocuments({'email': {$regex: searchEmailTermRegexp}})
+                .countDocuments({'accountData.email': {$regex: searchEmailTermRegexp}})
         } else {
 
             totalUsers = await dbUsersCollection.countDocuments({})

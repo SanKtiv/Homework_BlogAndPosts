@@ -12,7 +12,7 @@ export const usersRepository = {
     },
 
     async findUserByLoginOrEmail(login: string): Promise<WithId<User_Type> | null> {
-        return await dbUsersCollection.findOne({$or: [{'login': login}, {'email': login}]})// FindOne DB
+        return await dbUsersCollection.findOne({$or: [{'accountData.login': login}, {'accountData.email': login}]})// FindOne DB
     },
 
     async deleteById(id: string): Promise<boolean> {
