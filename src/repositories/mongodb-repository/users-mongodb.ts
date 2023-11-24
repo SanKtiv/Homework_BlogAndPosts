@@ -12,7 +12,8 @@ export const usersRepository = {
     },
 
     async findUserByLoginOrEmail(login: string): Promise<WithId<User_Type> | null> {
-        return await dbUsersCollection.findOne({$or: [{'accountData.login': login}, {'accountData.email': login}]})// FindOne DB
+        return await dbUsersCollection
+            .findOne({$or: [{'accountData.login': login}, {'accountData.email': login}]})// FindOne DB
     },
 
     async deleteById(id: string): Promise<boolean> {
@@ -22,5 +23,11 @@ export const usersRepository = {
     
     async deleteAll(): Promise<void> {
         await dbUsersCollection.deleteMany({})
+    },
+
+    async updateUserExpirationDate(id: any): Promise<boolean> {
+        const result = await dbUsersCollection
+            .updateOne({_id: id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        return result.modifiedCount === 1
     }
 }

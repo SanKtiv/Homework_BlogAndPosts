@@ -9,7 +9,7 @@ export const userRouter = Router({})
 
 userRouter.post('/',basicAuth , userInputValid, errorsOfValidate, async (req: Request, res: Response) => {
 
-    const user = await authService.createUser(req.body)
+    const user = await authService.addUserInDB(req.body)
     res.status(201).send(user)
 })
 

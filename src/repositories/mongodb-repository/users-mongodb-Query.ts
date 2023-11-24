@@ -1,4 +1,4 @@
-import {User_Type, UserDbType, UsersOutputType, UserType} from "../../types/types-users";
+import {User_Type, UserDBType, UserDbType, UsersOutputType, UserType} from "../../types/types-users";
 import {dbUsersCollection} from "./db";
 import {ObjectId, WithId} from "mongodb";
 import {userService} from "../../services/users-service";
@@ -20,7 +20,7 @@ export const usersRepositoryReadOnly = {
         //     .limit(+query.pageSize)
         //     .toArray()
 
-const sortBy = `accountData.${query.sortBy}`
+        const sortBy = `accountData.${query.sortBy}`
 
         if (login && email) {
 
@@ -92,7 +92,15 @@ const sortBy = `accountData.${query.sortBy}`
     },
 
     async getUserById(userId: string): Promise<WithId<User_Type> | null> {
-
         return  dbUsersCollection.findOne({_id: new ObjectId(userId)})
+    },
+
+    async getUserByLoginOrEmail(loginOrEmail: string): Promise<UserDBType | null> {
+        return dbUsersCollection
+            .findOne({$or: [{'accountData.login': loginOrEmail}, {'accountData.email': loginOrEmail}]})
+    },
+
+    async getUserByConfirmationCode(code: string): Promise<UserDBType | null> {
+        return dbUsersCollection.findOne({'emailConfirmation.confirmationCode': code})
     }
 }

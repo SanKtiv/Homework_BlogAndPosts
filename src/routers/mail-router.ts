@@ -1,27 +1,36 @@
-import nodemailer from 'nodemailer'
 import {Request, Response, Router} from 'express'
+import {emailAdapter} from "../adapters/mail-adapter";
+import {registrationConfirmation} from "../adapters/email-message";
+import {userEmail, userInputValid} from "../validations/users-validators";
+import {errorsOfValidate} from "../middlewares/error-validators-middleware";
+import {authService} from "../services/auth-service";
+import {confirmationEmailCode} from "../validations/confirmation-code-validator";
 
 export const mailRouter = Router({})
 
-mailRouter.post('/registration', async (req: Request, res: Response) => {
+mailRouter.post('/registration', userInputValid, errorsOfValidate, async (req: Request, res: Response) => {
 
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'aleksandr.mail.test@gmail.com',
-            pass: 'rglgkegtcyunuxds'
-        }
-    })
+    const sendMessage = await emailAdapter.sendConfirmationMessage(
+        req.body.email,
+        registrationConfirmation.subject,
+        registrationConfirmation.emailMessage)
 
-    const mailOptions = {
-        from: 'Aleksandr <aleksandr.mail.test@gmail.com>',
-        to: 'aktitorov@gmail.com',
-        subject: 'test mail',
-        html: '<h1>this is a test mail.</h1>'
-    };
+    //console.log(sendMessage)
+    res.status(204)
 
-    const info = await transporter.sendMail(mailOptions)
+})
 
-    res.send({stats: 'OK'})
+mailRouter.post('/registration-confirmation', confirmationEmailCode, async (req: Request, res: Response) => {
+    await authService.confirmationRegistration(req.body.code)
+    res.status(204)
+})
 
+mailRouter.post('/registration-email-resending', userEmail, async (req: Request, res: Response) => {
+
+    await emailAdapter.sendConfirmationMessage(
+        req.body.email,
+        registrationConfirmation.subject,
+        registrationConfirmation.emailMessage)
+
+    res.status(204)
 })

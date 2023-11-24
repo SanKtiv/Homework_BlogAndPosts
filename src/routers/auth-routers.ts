@@ -25,24 +25,17 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
 authRouters.get('/me', authorizationJWT, async (req: Request, res: Response) => {
 
     const userInfo = await userApplication.getUserInfo(req.user!.email, req.user!.login, req.user!.userId)
-    // const returnedBody = ({email, login, _id}: UserType) => {
-    //     return {
-    //         email: email,
-    //         login: login,
-    //         userId: _id
-    //     }
-    // }
     return res.status(200).send(userInfo)
 })
 
-authRouters.post('/registration', async (req: Request, res: Response) => {
-
-})
-
-authRouters.post('/registration-confirmation', async (req: Request, res: Response) => {
-
-})
-
-authRouters.post('/registration-email-resending', async (req: Request, res: Response) => {
-
-})
+// authRouters.post('/registration', async (req: Request, res: Response) => {
+//
+// })
+//
+// authRouters.post('/registration-confirmation', async (req: Request, res: Response) => {
+//
+// })
+//
+// authRouters.post('/registration-email-resending', async (req: Request, res: Response) => {
+//
+// })

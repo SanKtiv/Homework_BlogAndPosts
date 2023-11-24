@@ -1,4 +1,5 @@
 import {body} from "express-validator";
+import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
 
 const loginRegex: RegExp = /^[a-zA-Z0-9_-]*$/
 const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
@@ -9,16 +10,26 @@ const userLogin = body('login')
     .trim()
     .isLength({min: 3, max: 10}).withMessage('login length is incorrect')
     .matches(loginRegex).withMessage('login have invalid characters')
+    .custom(async login => {
+        if (await usersRepositoryReadOnly.getUserByLoginOrEmail(login)) {
+            throw new Error('This login already use')
+        }
+    })
 
 const userPassword = body('password')
     .isString().withMessage('password is not string')
     .trim()
     .isLength({min: 6, max: 20}).withMessage('password length is incorrect')
 
-const userEmail = body('email')
+export const userEmail = body('email')
     .isString().withMessage('email is not string')
     .trim()
     .matches(emailRegex).withMessage('email have invalid characters')
+    .custom(async email => {
+        if (await usersRepositoryReadOnly.getUserByLoginOrEmail(email)) {
+            throw new Error('This email already use')
+        }
+    })
 
 export const userInputValid = [userLogin, userPassword, userEmail]
 
