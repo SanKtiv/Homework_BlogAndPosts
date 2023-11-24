@@ -1,20 +1,20 @@
 import {WithId} from "mongodb";
-import {IdUserType, UserDbType, UserQueryType, UsersOutputType} from "../types/types-users";
+import {IdUserType, User_Type, UserDbType, UserQueryType, UsersOutputType, UserViewModelType} from "../types/types-users";
 
 export const userService = {
 
-    addIdToUser(user: WithId<UserDbType>): IdUserType {
+    addIdToUser(user: WithId<User_Type>): UserViewModelType {
 
         return {
             id: user._id.toString(),
-            login: user.login,
-            email: user.email,
-            createdAt: user.createdAt
+            login: user.accountData.login,
+            email: user.accountData.email,
+            createdAt: user.accountData.createdAt
         }
     },
 
     usersFormOutput(totalUsers: number,
-                    usersSearch: WithId<UserDbType>[],
+                    usersSearch: WithId<User_Type>[],
                     query: UserQueryType): UsersOutputType {
 
         return {

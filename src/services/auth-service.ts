@@ -1,4 +1,4 @@
-import {IdUserType, InputUserType, UserDbType} from "../types/types-users";
+import {IdUserType, InputUserType, User_Type, UserDbType} from "../types/types-users";
 import {WithId} from "mongodb";
 import bcrypt from 'bcrypt'
 import {dateNow} from "../variables/variables";
@@ -14,21 +14,28 @@ export const authService = {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this.genHash(body.password, passwordSalt)
 
-        const user: UserDbType = {
-            login: body.login,
-            email: body.email,
-            passwordHash,
-            createdAt: dateNow().toISOString()
+        const user: User_Type = {
+            accountData: {
+                login: body.login,
+                email: body.email,
+                passwordHash,
+                createdAt: dateNow().toISOString()
+            },
+            emailConfirmation: {
+                confirmationCode: 'any',
+                expirationDate: 'any',
+                isConfirmed: false
+            }
         }
         const findUser = await usersRepository.createUser(user)
-        return userService.addIdToUser(findUser as WithId<UserDbType>)
+        return userService.addIdToUser(findUser as WithId<User_Type>)
     },
 
-    async checkCredentials(loginOrEmail: string, password: string): Promise<WithId<UserDbType> | null> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<WithId<User_Type> | null> {
 
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!user) return user
-        const result = await bcrypt.compare(password, user.passwordHash)
+        const result = await bcrypt.compare(password, user.accountData.passwordHash)
         if (result) return user
         return null
     },

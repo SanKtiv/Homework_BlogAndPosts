@@ -1,4 +1,4 @@
-import {UserDbType, UsersOutputType, UserType} from "../../types/types-users";
+import {User_Type, UserDbType, UsersOutputType, UserType} from "../../types/types-users";
 import {dbUsersCollection} from "./db";
 import {ObjectId, WithId} from "mongodb";
 import {userService} from "../../services/users-service";
@@ -6,7 +6,7 @@ import {userService} from "../../services/users-service";
 
 export const usersRepositoryReadOnly = {
 
-    async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<UserDbType>[]> {
+    async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<User_Type>[]> {
 
         // const filter: any = {}
         //
@@ -23,7 +23,7 @@ export const usersRepositoryReadOnly = {
         if (login && email) {
 
             return dbUsersCollection
-                .find({$or: [{login: {$regex: login}}, {email: {$regex: email}}]})
+                .find({$or: [{'login': {$regex: login}}, {'email': {$regex: email}}]})
                 .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
@@ -32,7 +32,7 @@ export const usersRepositoryReadOnly = {
         }else if (login) {
 
             return dbUsersCollection
-                .find({login: {$regex: login}})
+                .find({'login': {$regex: login}})
                 .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
@@ -40,7 +40,7 @@ export const usersRepositoryReadOnly = {
 
         } else if (email) {
             return dbUsersCollection
-                .find({email: {$regex: email}})
+                .find({'email': {$regex: email}})
                 .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
@@ -64,18 +64,18 @@ export const usersRepositoryReadOnly = {
 
             totalUsers = await dbUsersCollection
                 .countDocuments({$or: [
-                    {login: {$regex: searchLoginTermRegexp}},
-                            {email: {$regex: searchEmailTermRegexp}}
+                    {'login': {$regex: searchLoginTermRegexp}},
+                            {'email': {$regex: searchEmailTermRegexp}}
                             ]})
         } else if (query.searchLoginTerm) {
 
             totalUsers = await dbUsersCollection
-                .countDocuments({login: {$regex: searchLoginTermRegexp}})
+                .countDocuments({'login': {$regex: searchLoginTermRegexp}})
 
         } else if (query.searchEmailTerm) {
 
             totalUsers = await dbUsersCollection
-                .countDocuments({email: {$regex: searchEmailTermRegexp}})
+                .countDocuments({'email': {$regex: searchEmailTermRegexp}})
         } else {
 
             totalUsers = await dbUsersCollection.countDocuments({})
@@ -85,7 +85,7 @@ export const usersRepositoryReadOnly = {
         return userService.usersFormOutput(totalUsers, usersSearch, query)
     },
 
-    async getUserById(userId: string): Promise<WithId<UserDbType> | null> {
+    async getUserById(userId: string): Promise<WithId<User_Type> | null> {
 
         return  dbUsersCollection.findOne({_id: new ObjectId(userId)})
     }

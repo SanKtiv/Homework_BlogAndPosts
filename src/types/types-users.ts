@@ -19,7 +19,7 @@ export type User_Type = {
     emailConfirmation: EmailConfirmationType
 }
 
-type AccountDataType= {
+type AccountDataType = {
     login: string
     email: string
     createdAt: string
@@ -30,6 +30,13 @@ type EmailConfirmationType = {
     confirmationCode: any
     expirationDate: any
     isConfirmed: boolean
+}
+
+export type UserViewModelType = {
+    id: string
+    login: string
+    email: string
+    createdAt: string
 }
 
 export type UserDBType = WithId<User_Type>
