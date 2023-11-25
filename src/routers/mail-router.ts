@@ -25,7 +25,7 @@ mailRouter.post('/registration-confirmation', confirmationEmailCode, errorsOfVal
 
 mailRouter.post('/registration-email-resending', userEmailResending, errorsOfValidate, async (req: Request, res: Response) => {
 
-    await emailAdapter.resendNewConfirmationCodeByEmail(req.body.email)
+    await emailAdapter.sendConfirmationCodeByEmail(req.body.email)
 
     res.sendStatus(204)
 })
