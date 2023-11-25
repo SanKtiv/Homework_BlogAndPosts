@@ -8,6 +8,7 @@ export const emailAdapter = {
         const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(email)
         if (!user) return null // User dont find
         const confirmationCode = user.emailConfirmation.confirmationCode
+        //console.log(confirmationCode)
 
         const message = '<h1>Thank for your registration</h1>\n' +
             ' <p>To finish registration please follow the link below:\n' +
