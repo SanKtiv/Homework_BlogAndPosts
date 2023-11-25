@@ -61,11 +61,18 @@ export const authService = {
 
     async confirmationRegistration(code: string): Promise<boolean> {
 
-        const newCode = code.slice(0, code.length - 1)
+        const newCode = code.slice(0, code.length - 1)//!!!!!!!!!!!!!!!!!!!!!
 
         const user = await usersRepositoryReadOnly.getUserByConfirmationCode(newCode)
         if (!user) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false
         return usersRepository.updateUserExpirationDate(user._id)
     },
+
+    async changeConfirmationCode(email: string) {
+
+        const newConfirmationCode = uuidv4()
+        const newExpirationDate = add(new Date(), {hours: 1, minutes: 5})
+        return usersRepository.updateUserConfirmationCode(newConfirmationCode, email,newExpirationDate)
+    }
 }

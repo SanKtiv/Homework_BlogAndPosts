@@ -1,9 +1,10 @@
 import nodemailer from "nodemailer";
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
+import {authService} from "../services/auth-service";
 
 export const emailAdapter = {
 
-    async sendConfirmationMessage(email: string) {
+    async sendConfirmationCodeByEmail(email: string) {
 
         const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(email)
         if (!user) return null // User dont find
@@ -33,4 +34,10 @@ export const emailAdapter = {
 
         return transporter.sendMail(mailOptions)
     },
+    
+    async resendNewConfirmationCodeByEmail(email: string) {
+
+        const result = await authService.changeConfirmationCode(email)
+        if (result) await this.sendConfirmationCodeByEmail(email)
+    }
 }
