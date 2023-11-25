@@ -14,18 +14,18 @@ mailRouter.post('/registration', userInputValid, errorsOfValidate, async (req: R
     const sendMessage = await emailAdapter.sendConfirmationMessage(req.body.email)
 
     //console.log(sendMessage)
-    res.status(204)
+    res.sendStatus(204)
 
 })
 
 mailRouter.post('/registration-confirmation', confirmationEmailCode, async (req: Request, res: Response) => {
     await authService.confirmationRegistration(req.body.code)
-    res.status(204)
+    res.sendStatus(204)
 })
 
 mailRouter.post('/registration-email-resending', userEmail, async (req: Request, res: Response) => {
 
     await emailAdapter.sendConfirmationMessage(req.body.email)
 
-    res.status(204)
+    res.sendStatus(204)
 })
