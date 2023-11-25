@@ -46,7 +46,7 @@ export const userEmailResending = body('email')
     .matches(emailRegex).withMessage('email have invalid characters')
     .custom(async email => {
         const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(email)
-        if (user?.emailConfirmation.isConfirmed) {
+        if (!user || user.emailConfirmation.isConfirmed) {
             throw new Error('This email is confirmed')
         }
     })
