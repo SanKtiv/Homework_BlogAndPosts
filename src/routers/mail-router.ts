@@ -10,10 +10,8 @@ export const mailRouter = Router({})
 
 mailRouter.post('/registration', userInputValid, errorsOfValidate, async (req: Request, res: Response) => {
 
-    const sendMessage = await emailAdapter.sendConfirmationMessage(
-        req.body.email,
-        registrationConfirmation.subject,
-        registrationConfirmation.emailMessage)
+    const user = await authService.addUserInDB(req.body)
+    const sendMessage = await emailAdapter.sendConfirmationMessage(req.body.email)
 
     //console.log(sendMessage)
     res.status(204)
@@ -27,10 +25,7 @@ mailRouter.post('/registration-confirmation', confirmationEmailCode, async (req:
 
 mailRouter.post('/registration-email-resending', userEmail, async (req: Request, res: Response) => {
 
-    await emailAdapter.sendConfirmationMessage(
-        req.body.email,
-        registrationConfirmation.subject,
-        registrationConfirmation.emailMessage)
+    await emailAdapter.sendConfirmationMessage(req.body.email)
 
     res.status(204)
 })
