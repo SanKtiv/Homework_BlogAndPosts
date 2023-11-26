@@ -45,19 +45,21 @@ export const usersRepositoryReadOnly = {
         if (query.searchLoginTerm && query.searchEmailTerm) {
 
             totalUsers = await dbUsersCollection.countDocuments({$or: filter})
-        } else if (query.searchLoginTerm) {
-
-            totalUsers = await dbUsersCollection
-                .countDocuments({'accountData.login': searchLoginTermRegexp})
-
-        } else if (query.searchEmailTerm) {
-
-            totalUsers = await dbUsersCollection
-                .countDocuments({'accountData.email': searchEmailTermRegexp})
-        } else {
-
-            totalUsers = await dbUsersCollection.countDocuments({})
         }
+        // else if (query.searchLoginTerm) {
+        //
+        //     totalUsers = await dbUsersCollection
+        //         .countDocuments({'accountData.login': searchLoginTermRegexp})
+        //
+        // } else if (query.searchEmailTerm) {
+        //
+        //     totalUsers = await dbUsersCollection
+        //         .countDocuments({'accountData.email': searchEmailTermRegexp})
+        // } else {
+        //
+        //     totalUsers = await dbUsersCollection.countDocuments({})
+        // }
+        totalUsers = await dbUsersCollection.countDocuments(filter[0])
 
         const usersSearch = await this.userSearch(query, searchLoginTermRegexp, searchEmailTermRegexp)
         return userService.usersFormOutput(totalUsers, usersSearch, query)
