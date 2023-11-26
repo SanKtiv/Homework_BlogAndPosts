@@ -37,14 +37,15 @@ export const usersRepositoryReadOnly = {
         const searchLoginTermRegexp = new RegExp(query.searchLoginTerm, 'i')
         const searchEmailTermRegexp = new RegExp(query.searchEmailTerm, 'i')
         let totalUsers: number
+        const filter = []
+
+        if (query.searchLoginTerm) filter.push({'accountData.login': searchLoginTermRegexp})
+        if (query.searchEmailTerm) filter.push({'accountData.email': searchEmailTermRegexp})
 
         if (query.searchLoginTerm && query.searchEmailTerm) {
 
             totalUsers = await dbUsersCollection
-                .countDocuments({$or: [
-                    {'accountData.login': searchLoginTermRegexp},
-                            {'accountData.email': searchEmailTermRegexp}
-                            ]})
+                .countDocuments({$or: filter})
         } else if (query.searchLoginTerm) {
 
             totalUsers = await dbUsersCollection
