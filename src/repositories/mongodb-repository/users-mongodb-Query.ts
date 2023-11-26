@@ -8,7 +8,7 @@ export const usersRepositoryReadOnly = {
 
     async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<User_Type>[]> {
 
-        // const filter: any = {}
+         const filter: any = {}
         //
         // if (login) filter.login = {$regex: login}
         // if (email) filter.email = {$regex: email}
@@ -32,31 +32,44 @@ export const usersRepositoryReadOnly = {
                 .limit(+query.pageSize)
                 .toArray()
 
-        }else if (login) {
-
-            return dbUsersCollection
-                .find({'accountData.login': login})
-                //.find({'accountData.login': {$regex: login}})
-                .sort({[sortBy]: query.sortDirection})
-                .skip((+query.pageNumber - 1) * +query.pageSize)
-                .limit(+query.pageSize)
-                .toArray()
-
-        } else if (email) {
-            return dbUsersCollection
-                .find({'accountData.email':  email})
-                //.find({'accountData.email': {$regex: email}})
-                .sort({[sortBy]: query.sortDirection})
-                .skip((+query.pageNumber - 1) * +query.pageSize)
-                .limit(+query.pageSize)
-                .toArray()
         }
+        if (login) filter['accountData.login'] = login
+        if (email) filter['accountData.email'] = email
+
+        console.log(filter)
+
         return dbUsersCollection
-            .find({})
-            .sort({[sortBy]: query.sortDirection})
+            .find(filter)
+            .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()
+
+        // {
+        //
+        //     return dbUsersCollection
+        //         .find({'accountData.login': login})
+        //         //.find({'accountData.login': {$regex: login}})
+        //         .sort({[sortBy]: query.sortDirection})
+        //         .skip((+query.pageNumber - 1) * +query.pageSize)
+        //         .limit(+query.pageSize)
+        //         .toArray()
+        //
+        // } else if (email) {
+        //     return dbUsersCollection
+        //         .find({'accountData.email':  email})
+        //         //.find({'accountData.email': {$regex: email}})
+        //         .sort({[sortBy]: query.sortDirection})
+        //         .skip((+query.pageNumber - 1) * +query.pageSize)
+        //         .limit(+query.pageSize)
+        //         .toArray()
+        // }
+        // return dbUsersCollection
+        //     .find({})
+        //     .sort({[sortBy]: query.sortDirection})
+        //     .skip((+query.pageNumber - 1) * +query.pageSize)
+        //     .limit(+query.pageSize)
+        //     .toArray()
     },
 
     async getAllUsers(query: any): Promise<UsersOutputType> {
