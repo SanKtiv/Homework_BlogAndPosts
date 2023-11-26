@@ -59,7 +59,9 @@ export const usersRepositoryReadOnly = {
         //
         //     totalUsers = await dbUsersCollection.countDocuments({})
         // }
-        totalUsers = await dbUsersCollection.countDocuments(filter[0])
+        else {
+            totalUsers = await dbUsersCollection.countDocuments(filter[0])
+        }
 
         const usersSearch = await this.userSearch(query, searchLoginTermRegexp, searchEmailTermRegexp)
         return userService.usersFormOutput(totalUsers, usersSearch, query)
