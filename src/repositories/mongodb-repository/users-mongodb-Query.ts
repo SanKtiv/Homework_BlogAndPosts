@@ -27,7 +27,6 @@ export const usersRepositoryReadOnly = {
             return dbUsersCollection
                 .find({$or: [{'accountData.login': {$regex: login}}, {'accountData.email': {$regex: email}}]})
                 .sort({[sortBy]: query.sortDirection})
-                //.sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
                 .toArray()
@@ -35,18 +34,18 @@ export const usersRepositoryReadOnly = {
         }else if (login) {
 
             return dbUsersCollection
-                .find({'accountData.login': {$regex: login}})
+                .find({'accountData.login': login})
+                //.find({'accountData.login': {$regex: login}})
                 .sort({[sortBy]: query.sortDirection})
-                //.sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
                 .toArray()
 
         } else if (email) {
             return dbUsersCollection
-                .find({'accountData.email': {$regex: email}})
+                .find({'accountData.email':  email})
+                //.find({'accountData.email': {$regex: email}})
                 .sort({[sortBy]: query.sortDirection})
-                // .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
                 .toArray()
@@ -54,7 +53,6 @@ export const usersRepositoryReadOnly = {
         return dbUsersCollection
             .find({})
             .sort({[sortBy]: query.sortDirection})
-            //.sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()
