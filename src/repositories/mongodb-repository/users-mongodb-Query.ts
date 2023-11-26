@@ -44,8 +44,7 @@ export const usersRepositoryReadOnly = {
 
         if (query.searchLoginTerm && query.searchEmailTerm) {
 
-            totalUsers = await dbUsersCollection
-                .countDocuments({$or: filter})
+            totalUsers = await dbUsersCollection.countDocuments({$or: filter})
         } else if (query.searchLoginTerm) {
 
             totalUsers = await dbUsersCollection
