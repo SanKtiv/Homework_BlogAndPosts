@@ -25,7 +25,8 @@ export const usersRepositoryReadOnly = {
         if (login && email) {
 
             return dbUsersCollection
-                .find({$or: [{'accountData.login': {$regex: login}}, {'accountData.email': {$regex: email}}]})
+                .find({$or: [{'accountData.login': login}, {'accountData.email': email}]})
+                //.find({$or: [{'accountData.login': {$regex: login}}, {'accountData.email': {$regex: email}}]})
                 .sort({[sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
