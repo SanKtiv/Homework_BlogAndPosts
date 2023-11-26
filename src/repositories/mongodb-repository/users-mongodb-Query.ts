@@ -8,38 +8,33 @@ export const usersRepositoryReadOnly = {
 
     async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<User_Type>[]> {
 
-         const filter: any = {}
-        //
-        // if (login) filter.login = {$regex: login}
-        // if (email) filter.email = {$regex: email}
-        //
-        // return dbUsersCollection
-        //     .find(filter)
-        //     .sort({[query.sortBy]: query.sortDirection})
-        //     .skip((+query.pageNumber - 1) * +query.pageSize)
-        //     .limit(+query.pageSize)
-        //     .toArray()
-
         const sortBy = `accountData.${query.sortBy}`
+        const filter = []
+        //const filterOr = []
+
+        if (login) filter.push({'accountData.login': login})
+        if (email) filter.push({'accountData.email': email})
+
+        // if (login) filter['accountData.login'] = login
+        // if (email) filter['accountData.email'] = email
 
         if (login && email) {
 
+            //filterOr[0] =
             return dbUsersCollection
-                .find({$or: [{'accountData.login': login}, {'accountData.email': email}]})
-                //.find({$or: [{'accountData.login': {$regex: login}}, {'accountData.email': {$regex: email}}]})
+                .find({$or: filter})
+                //.find({$or: [{'accountData.login': login}, {'accountData.email': email}]})
                 .sort({[sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
                 .toArray()
 
         }
-        if (login) filter['accountData.login'] = login
-        if (email) filter['accountData.email'] = email
-
-        console.log(filter)
+        // if (login) filter['accountData.login'] = login
+        // if (email) filter['accountData.email'] = email
 
         return dbUsersCollection
-            .find(filter)
+            .find(filter[0])
             .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
