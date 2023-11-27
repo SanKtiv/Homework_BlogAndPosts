@@ -1,7 +1,6 @@
 import {Request, Response, Router} from 'express'
 import {emailAdapter} from "../adapters/mail-adapter";
-import {registrationConfirmation} from "../adapters/email-message";
-import {userEmail, userEmailResending, userInputValid} from "../validations/users-validators";
+import {userEmailResending, userInputValid} from "../validations/users-validators";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 import {authService} from "../services/auth-service";
 import {confirmationEmailCode} from "../validations/confirmation-code-validator";
@@ -13,7 +12,6 @@ mailRouter.post('/registration', userInputValid, errorsOfValidate, async (req: R
     const user = await authService.addUserInDB(req.body)
     const sendMessage = await emailAdapter.sendConfirmationCodeByEmail(req.body.email)
 
-    //console.log(sendMessage)
     res.sendStatus(204)
 
 })

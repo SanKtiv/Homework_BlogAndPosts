@@ -2,6 +2,14 @@ import request from 'supertest'
 import {app} from '../../src/setting'
 import {client} from "../../src/repositories/mongodb-repository/db";
 import {routePaths} from "../../src/setting";
+import {userActions} from "./services/users-services";
+import {userSendBody_TRUE} from "./utility/users-utility";
+import {
+    blogSendBody_TRUE,
+    expectBlog_TRUE,
+    manyBlogSendBody_TRUE, viewModelBlogsDefaultPaging_TRUE,
+} from "./utility/blogs-utility";
+import {blogActions} from "./services/blogs-services";
 
 
 const getRequest = () => {
@@ -12,12 +20,6 @@ const viewModelQueryIsEmpty = {
     pagesCount: 0,
     page: 1, pageSize: 10,
     totalCount: 0, items: []
-}
-
-const blogInputModel = {
-    name: 'blog_name_1',
-    description: "description_1",
-    websiteUrl: "https://www.website.com"
 }
 
     const blogOutputModel = {
@@ -34,6 +36,7 @@ describe('TEST for blogs', () => {
 
     beforeAll(async () => {
         await client.connect()
+        //await getRequest().delete(routePaths.deleteAllData)
     })
 
     beforeEach(async () => {
@@ -44,18 +47,15 @@ describe('TEST for blogs', () => {
         await client.close()
     })
 
-    // it('-GET with empty query, should HTTP status equal 200, and return empty array', async () => {
-    //     await getRequest()
-    //         .get(routePaths.blogs)
-    //         .expect(200, viewModelQueryIsEmpty)
-    // })
-    //
-    //
-    //
-    // it('-POST, should return status 201, ', async () => {
-    //     await getRequest()
-    //         .post(routePaths.blog)
-    //         .send(blogInputModel)
-    //         .expect(201, {...blogInputModel, id: })
-    // })
+    it('-POST, should return status 201, ', async () => {
+        await blogActions.expectCreateBlog(blogSendBody_TRUE, expectBlog_TRUE, 201)
+    })
+
+    it('-GET /blogs, should return blogs with default paging, status 200', async () => {
+        await blogActions.createManyBlogs(manyBlogSendBody_TRUE(10))
+        const result = await blogActions.getBlogsPaging()
+        console.log('#1', result.body)
+        await blogActions.expectGetBlogsPaging(200)
+    })
+
 })

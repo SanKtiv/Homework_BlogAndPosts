@@ -1,5 +1,5 @@
 import {WithId} from "mongodb";
-import {IdUserType, User_Type, UserDbType, UserQueryType, UsersOutputType, UserViewModelType} from "../types/types-users";
+import {User_Type, UserQueryType, UsersOutputType, UserViewModelType} from "../types/types-users";
 
 export const userService = {
 
