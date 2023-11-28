@@ -1,9 +1,9 @@
 import {WithId} from "mongodb";
-import {PostModelOutType, PostType} from "../types/typesForMongoDB";
-import {PostsByBlogIdInputPagingType, PostsOutputQueryType} from "../types/typesForQuery";
+import {ViewPostModelType, PostType} from "../types/posts-types";
+import {InputPostsPagingType, ViewPostsPagingType} from "../types/posts-types";
 
 export const postsService = {
-    postDbInToBlog(postOutDb: WithId<PostType>): PostModelOutType {
+    postDbInToBlog(postOutDb: WithId<PostType>): ViewPostModelType {
 
         return  {
             id: postOutDb._id.toString(),
@@ -19,7 +19,7 @@ export const postsService = {
     postsOutputQuery(
         totalBlogs: number,
         blogsItems: WithId<PostType>[],
-        query: PostsByBlogIdInputPagingType): PostsOutputQueryType {
+        query: InputPostsPagingType): ViewPostsPagingType {
 
         return {
             pagesCount: Math.ceil(totalBlogs / +query.pageSize),

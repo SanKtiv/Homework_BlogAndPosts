@@ -1,4 +1,4 @@
-import {BlogBodyType, BlogType} from "../../../src/types/typesForMongoDB";
+import {InputBlogModelType, BlogType} from "../../../src/types/posts-types";
 
 const blog = {
     name_TRUE: "blog_name",

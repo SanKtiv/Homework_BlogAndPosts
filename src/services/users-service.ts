@@ -1,9 +1,8 @@
-import {WithId} from "mongodb";
-import {User_Type, UserQueryType, UsersOutputType, UserViewModelType} from "../types/types-users";
+import {InputUserPagingType, ViewUsersPagingType, ViewUserModelType, UserDBType} from "../types/users-types";
 
 export const userService = {
 
-    addIdToUser(user: WithId<User_Type>): UserViewModelType {
+    addIdToUser(user: UserDBType): ViewUserModelType {
 
         return {
             id: user._id.toString(),
@@ -14,8 +13,8 @@ export const userService = {
     },
 
     usersFormOutput(totalUsers: number,
-                    usersSearch: WithId<User_Type>[],
-                    query: UserQueryType): UsersOutputType {
+                    usersSearch: UserDBType[],
+                    query: InputUserPagingType): ViewUsersPagingType {
 
         return {
             pagesCount: Math.ceil(totalUsers / +query.pageSize),

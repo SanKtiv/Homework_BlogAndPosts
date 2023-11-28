@@ -1,35 +1,41 @@
-import {PostType, PostBodyType, PostModelOutType, PostBodyWithoutBlogIdType} from "../../types/typesForMongoDB";
-import {dbPostsCollection, dbCommentsCollection} from "./db";
-import {dateNow} from "../../variables/variables";
-import {ObjectId, WithId} from "mongodb";
-import {postsService} from "../../services/posts-service";
-import {CommentDBType, CommentType} from "../../types/types-comments";
-import {commentService} from "../../services/commets-service";
+import {
+    PostType,
+    InputPostModelType,
+    ViewPostModelType,
+    PostBodyWithoutBlogIdType,
+    PostDBType
+} from "../../../types/posts-types";
+import {dbPostsCollection, dbCommentsCollection} from "../db";
+import {dateNow} from "../../../variables/variables";
+import {ObjectId} from "mongodb";
+import {postsService} from "../../../services/posts-service";
+import {CommentDBType, CommentType, ViewCommentModelType} from "../../../types/comments-types";
+import {commentService} from "../../../services/commets-service";
 
 export const postsRepository = {
 
-    async getAllPosts(): Promise<PostModelOutType[]> {
+    async getAllPosts(): Promise<ViewPostModelType[]> {
         const allPosts = await dbPostsCollection.find().toArray()
         return allPosts.map(postOutDb => postsService.postDbInToBlog(postOutDb))
     },
 
-    async getPostById(id: string): Promise<PostModelOutType | null> {
+    async getPostById(id: string): Promise<ViewPostModelType | null> {
         const postOutDb = await dbPostsCollection.findOne({_id: new ObjectId(id)})
         if (postOutDb === null) return null
         return postsService.postDbInToBlog(postOutDb)
     },
 
-    async createPost(body: PostBodyType): Promise<PostModelOutType> {
+    async createPost(body: InputPostModelType): Promise<ViewPostModelType> {
         const newPost: PostType = {
             createdAt: dateNow().toISOString(),
             blogName: 'name',
             ...body
         }
         await dbPostsCollection.insertOne(newPost)
-        return postsService.postDbInToBlog(newPost as WithId<PostType>)
+        return postsService.postDbInToBlog(newPost as PostDBType)
     },
 
-    async createPostForBlogId(blogId: string, body: PostBodyWithoutBlogIdType): Promise<PostModelOutType> {
+    async createPostForBlogId(blogId: string, body: PostBodyWithoutBlogIdType): Promise<ViewPostModelType> {
         const newPost: PostType = {
             createdAt: dateNow().toISOString(),
             blogName: 'name',
@@ -37,12 +43,12 @@ export const postsRepository = {
             ...body
         }
         await dbPostsCollection.insertOne(newPost)
-        return postsService.postDbInToBlog(newPost as WithId<PostType>)
+        return postsService.postDbInToBlog(newPost as PostDBType)
     },
 
-    async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentType> {
+    async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<ViewCommentModelType> {
 
-        const comment: CommentDBType = {
+        const comment: CommentType = {
             content: content,
             commentatorInfo: {
                 userId: userId,
@@ -54,10 +60,10 @@ export const postsRepository = {
 
         await dbCommentsCollection.insertOne(comment)
 
-        return commentService.createCommentViewModel(comment as WithId<CommentDBType>)
+        return commentService.createCommentViewModel(comment as CommentDBType)
     },
 
-    async updatePost(id: string, body: PostBodyType): Promise<Boolean> {
+    async updatePost(id: string, body: InputPostModelType): Promise<Boolean> {
         const foundPost = await dbPostsCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
                     title: body.title,

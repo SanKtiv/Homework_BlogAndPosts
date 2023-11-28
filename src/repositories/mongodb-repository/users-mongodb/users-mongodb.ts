@@ -1,31 +1,29 @@
-import {User_Type, UserDbType} from "../../types/types-users";
-import {dbUsersCollection} from "./db";
-import {ObjectId, WithId} from "mongodb";
+import {UserDBType, UserType} from "../../../types/users-types";
+import {dbUsersCollection} from "../db";
+import {ObjectId} from "mongodb";
 
 export const usersRepository = {
 
-    async createUser(user: User_Type): Promise<User_Type> {
-
+    async insertUserToDB(user: UserType): Promise<UserType> {
         await dbUsersCollection.insertOne(user)
-
         return user
     },
 
-    async findUserByLoginOrEmail(login: string): Promise<WithId<User_Type> | null> {
+    async findUserByLoginOrEmail(login: string): Promise<UserDBType | null> {
         return await dbUsersCollection
             .findOne({$or: [{'accountData.login': login}, {'accountData.email': login}]})// FindOne DB
     },
 
-    async deleteById(id: string): Promise<boolean> {
+    async deleteUserById(id: string): Promise<boolean> {
         const delUser = await dbUsersCollection.deleteOne({_id: new ObjectId(id)})
         return delUser.deletedCount === 1
     },
     
-    async deleteAll(): Promise<void> {
+    async deleteAllUsers(): Promise<void> {
         await dbUsersCollection.deleteMany({})
     },
 
-    async updateUserExpirationDate(id: any): Promise<boolean> {
+    async updateUserExpirationDate(id: ObjectId): Promise<boolean> {
         const result = await dbUsersCollection
             .updateOne({_id: id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1

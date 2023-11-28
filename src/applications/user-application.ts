@@ -1,4 +1,4 @@
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
+import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
 
 export const userApplication = {
 

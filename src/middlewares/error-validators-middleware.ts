@@ -1,4 +1,4 @@
-import {ErrorMessType} from "../types/typesForMongoDB";
+import {ErrorMessType} from "../types/error-types";
 import {NextFunction, Request, Response} from "express";
 import {validationResult} from "express-validator";
 

@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {defaultQuery} from "../variables/variables";
-import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
+import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-mongodb";
 
 export const checkBlogByBlogId = async (req: Request, res: Response, next: NextFunction) => {
     const blog = await blogsRepository.getBlogById(req.params.blogId)

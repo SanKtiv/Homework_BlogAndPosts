@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {postsRepositoryQuery} from "../repositories/mongodb-repository/posts-mongodb-Query";
+import {postsRepositoryQuery} from "../repositories/mongodb-repository/posts-mongodb/posts-mongodb-Query";
 
 export const checkPostByPostId = async (req: Request, res: Response, next: NextFunction) => {
 

@@ -1,26 +1,30 @@
-export type CommentType = {
+import {WithId} from "mongodb";
+
+export type ViewCommentModelType = {
     id: string
     content: string
     commentatorInfo: CommentatorInfoType
     createdAt: string
 }
 
-export type CommentDBType = {
+export type CommentType = {
     content: string
     commentatorInfo: CommentatorInfoType
     createdAt: string
     postId: string
 }
 
+export type CommentDBType = WithId<CommentType>
+
 type CommentatorInfoType = {
     userId: string
     userLogin: string
 }
 
-export type PaginatorCommentViewModelType = {
+export type ViewCommentPagingType = {
     pagesCount: number
     page: number
     pageSize: number
     totalCount: number
-    items: CommentType[]
+    items: ViewCommentModelType[]
 }

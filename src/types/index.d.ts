@@ -1,11 +1,11 @@
 
-import {OutputAcesAuthModelType} from "./types-users";
+import {RequestUserType} from "./users-types";
 
 
 declare global {
     namespace Express {
         export interface Request {
-            user: OutputAcesAuthModelType | null
+            user: RequestUserType | null
         }
     }
 }

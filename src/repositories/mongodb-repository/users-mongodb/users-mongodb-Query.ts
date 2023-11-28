@@ -1,12 +1,12 @@
-import {User_Type, UserDBType, UsersOutputType} from "../../types/types-users";
-import {dbUsersCollection} from "./db";
+import {UserType, UserDBType, ViewUsersPagingType} from "../../../types/users-types";
+import {dbUsersCollection} from "../db";
 import {ObjectId, WithId} from "mongodb";
-import {userService} from "../../services/users-service";
+import {userService} from "../../../services/users-service";
 
 
 export const usersRepositoryReadOnly = {
 
-    async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<User_Type>[]> {
+    async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<UserType>[]> {
 
         const sortBy = `accountData.${query.sortBy}`
         const filter = []
@@ -32,7 +32,7 @@ export const usersRepositoryReadOnly = {
             .toArray()
     },
 
-    async getAllUsers(query: any): Promise<UsersOutputType> {
+    async getAllUsers(query: any): Promise<ViewUsersPagingType> {
 
         const searchLoginTermRegexp = new RegExp(query.searchLoginTerm, 'i')
         const searchEmailTermRegexp = new RegExp(query.searchEmailTerm, 'i')
@@ -67,7 +67,7 @@ export const usersRepositoryReadOnly = {
         return userService.usersFormOutput(totalUsers, usersSearch, query)
     },
 
-    async getUserById(userId: string): Promise<WithId<User_Type> | null> {
+    async getUserById(userId: string): Promise<WithId<UserType> | null> {
         return  dbUsersCollection.findOne({_id: new ObjectId(userId)})
     },
 

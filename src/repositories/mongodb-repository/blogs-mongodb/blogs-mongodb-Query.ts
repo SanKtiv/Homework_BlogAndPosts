@@ -1,16 +1,12 @@
-import {dbBlogsCollection, dbPostsCollection} from "./db";
-import {
-    BlogsInputPagingType,
-    BlogsOutputQueryType,
-    PostsByBlogIdInputPagingType,
-    PostsOutputQueryType
-} from "../../types/typesForQuery";
-import {blogsService} from "../../services/blogs-service";
-import {postsService} from "../../services/posts-service";
+import {dbBlogsCollection, dbPostsCollection} from "../db";
+import {InputPostsPagingType, ViewPostsPagingType} from "../../../types/posts-types";
+import {blogsService} from "../../../services/blogs-service";
+import {postsService} from "../../../services/posts-service";
+import {InputBlogsPagingType, ViewBlogsPagingType} from "../../../types/blogs-types";
 
 export const blogsRepositoryQuery = {
 
-    async getBlogsWithPaging(query: BlogsInputPagingType): Promise<BlogsOutputQueryType | null> {
+    async getBlogsWithPaging(query: InputBlogsPagingType): Promise<ViewBlogsPagingType | null> {
 
         if (query.searchNameTerm) {
 
@@ -40,7 +36,7 @@ export const blogsRepositoryQuery = {
         return blogsService.blogsOutputQuery(totalBlogs, blogsItems, query)
     },
 
-    async getPostsByBlogId(blogId: string, query: PostsByBlogIdInputPagingType): Promise<PostsOutputQueryType | null> {
+    async getPostsByBlogId(blogId: string, query: InputPostsPagingType): Promise<ViewPostsPagingType | null> {
 
         const totalPostsByBlogId = await dbPostsCollection.countDocuments({blogId: blogId})
 

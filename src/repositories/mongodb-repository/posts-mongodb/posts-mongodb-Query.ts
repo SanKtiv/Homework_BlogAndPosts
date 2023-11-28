@@ -1,13 +1,12 @@
-import {dbBlogsCollection, dbCommentsCollection, dbPostsCollection} from "./db";
-import {PostsOutputQueryType} from "../../types/typesForQuery";
-import {postsService} from "../../services/posts-service";
-import {ObjectId, WithId} from "mongodb";
-import {PostType} from "../../types/typesForMongoDB";
-import {commentService} from "../../services/commets-service";
+import {dbCommentsCollection, dbPostsCollection} from "../db";
+import {postsService} from "../../../services/posts-service";
+import {ObjectId} from "mongodb";
+import {PostDBType, ViewPostsPagingType} from "../../../types/posts-types";
+import {commentService} from "../../../services/commets-service";
 
 export const postsRepositoryQuery = {
 
-    async getPostsWithPaging(query: any): Promise<PostsOutputQueryType> {
+    async getPostsWithPaging(query: any): Promise<ViewPostsPagingType> {
 
         const totalPosts = await dbPostsCollection.countDocuments()
 
@@ -21,7 +20,7 @@ export const postsRepositoryQuery = {
         return postsService.postsOutputQuery(totalPosts, postsOutputFromDb, query)
     },
     
-    async findPostByPostId(postId: string): Promise<WithId<PostType> | null> {
+    async findPostByPostId(postId: string): Promise<PostDBType | null> {
 
         return dbPostsCollection.findOne({_id: new ObjectId(postId)})
     },

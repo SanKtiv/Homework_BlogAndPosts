@@ -1,6 +1,6 @@
 import {routePaths} from "../../../src/setting";
 import {getRequest} from "../comments.e2e.test";
-import {BlogBodyType, BlogType} from "../../../src/types/typesForMongoDB";
+import {InputBlogModelType, BlogType} from "../../../src/types/posts-types";
 import {viewModelBlogsDefaultPaging_TRUE} from "../utility/blogs-utility";
 
 export const blogActions = {
@@ -11,7 +11,7 @@ export const blogActions = {
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send(blogSendBody),
 
-    async createManyBlogs(manyBlogSendBody: BlogBodyType[]) {
+    async createManyBlogs(manyBlogSendBody: InputBlogModelType[]) {
 
         for (const blogSendBody of manyBlogSendBody) {
             await getRequest()
@@ -21,7 +21,7 @@ export const blogActions = {
         }
     },
 
-    async expectCreateBlog(blogSendBody: BlogBodyType, blog: BlogType, statusCode: number ) {
+    async expectCreateBlog(blogSendBody: InputBlogModelType, blog: BlogType, statusCode: number ) {
 
         const result = await this.createBlog(blogSendBody)
         await expect(result.statusCode).toBe(statusCode)

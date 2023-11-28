@@ -1,10 +1,10 @@
 import {Router, Response, Request} from "express";
-import {checkCommentModelForUpdate, checkId} from "../validations/comments-validators";
-import {checkCommentById, checkOwnCommentById} from "../middlewares/comment-middleware";
-import {commentsRepository} from "../repositories/mongodb-repository/comments-mongodb";
-import {commentService} from "../services/commets-service";
-import {authorizationJWT} from "../middlewares/authorization-jwt";
-import {errorsOfValidate} from "../middlewares/error-validators-middleware";
+import {checkCommentModelForUpdate, checkId} from "../../validations/comments-validators";
+import {checkCommentById, checkOwnCommentById} from "../../middlewares/comment-middleware";
+import {commentsRepository} from "../../repositories/mongodb-repository/comments-mongodb/comments-mongodb";
+import {commentService} from "../../services/commets-service";
+import {authorizationJWT} from "../../middlewares/authorization-jwt";
+import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 
 export const commentRouter = Router({})
 

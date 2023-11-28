@@ -1,11 +1,11 @@
 import {Request, Response, Router} from 'express';
-import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
-import {validId, validBlog} from "../validations/blogs-validators";
-import {validPost} from "../validations/posts-validators";
-import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
-import {checkBlogByBlogId} from "../middlewares/blogs-middlewares";
-import {errorsOfValidate} from "../middlewares/error-validators-middleware";
-import {basicAuth} from "../middlewares/authorization-basic";
+import {blogsRepository} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-mongodb";
+import {validId, validBlog} from "../../validations/blogs-validators";
+import {validPost} from "../../validations/posts-validators";
+import {postsRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-mongodb";
+import {checkBlogByBlogId} from "../../middlewares/blogs-middlewares";
+import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
+import {basicAuth} from "../../middlewares/authorization-basic";
 
 export const blogRouter = Router ({})
 

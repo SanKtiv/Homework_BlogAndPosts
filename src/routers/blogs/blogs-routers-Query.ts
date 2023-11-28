@@ -1,20 +1,21 @@
 import {Request, Response, Router} from 'express';
-import {blogsRepositoryQuery} from "../repositories/mongodb-repository/blogs-mongodb-Query";
-import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb";
-import {blogsPaginatorDefault} from "../middlewares/blogs-middlewares";
-import {BlogsInputPagingType, PostsByBlogIdInputPagingType} from "../types/typesForQuery";
+import {blogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-mongodb-Query";
+import {blogsRepository} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-mongodb";
+import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
+import {InputPostsPagingType} from "../../types/posts-types";
+import {InputBlogsPagingType} from "../../types/blogs-types";
 
 export const blogRouterQuery = Router ({})
 
 blogRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
-    const blogsPaging = await blogsRepositoryQuery.getBlogsWithPaging(req.query as BlogsInputPagingType)
+    const blogsPaging = await blogsRepositoryQuery.getBlogsWithPaging(req.query as InputBlogsPagingType)
     res.status(200).send(blogsPaging)
 })
 
 blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
-    const postsByBlogId = await blogsRepositoryQuery.getPostsByBlogId(req.params.blogId, req.query as PostsByBlogIdInputPagingType)
+    const postsByBlogId = await blogsRepositoryQuery.getPostsByBlogId(req.params.blogId, req.query as InputPostsPagingType)
     if (postsByBlogId) return res.status(200).send(postsByBlogId)
     return res.sendStatus(404)
 })

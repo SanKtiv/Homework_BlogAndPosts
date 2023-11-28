@@ -1,12 +1,12 @@
 import {Request, Response, Router} from 'express';
-import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb";
-import {validId} from "../validations/blogs-validators";
-import {validPostBlogId} from "../validations/posts-validators";
-import {checkPostByPostId} from "../middlewares/posts-middlewares";
-import {checkInputFormComment} from "../validations/comments-validators";
-import {authorizationJWT} from "../middlewares/authorization-jwt";
-import {errorsOfValidate} from "../middlewares/error-validators-middleware";
-import {basicAuth} from "../middlewares/authorization-basic";
+import {postsRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-mongodb";
+import {validId} from "../../validations/blogs-validators";
+import {validPostBlogId} from "../../validations/posts-validators";
+import {checkPostByPostId} from "../../middlewares/posts-middlewares";
+import {checkInputFormComment} from "../../validations/comments-validators";
+import {authorizationJWT} from "../../middlewares/authorization-jwt";
+import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
+import {basicAuth} from "../../middlewares/authorization-basic";
 
 export const postRouter = Router ({})
 

@@ -1,12 +1,11 @@
 import jwt from 'jsonwebtoken'
-import {WithId} from 'mongodb'
-import {OutputModelTokenType, User_Type, UserDbType} from "../types/types-users";
+import {ViewTokenModelType, UserDBType} from "../types/users-types";
 
 const secret = process.env.SECRET_KEY || "undefined"
 
 export const jwtService = {
 
-    async createJWT(user: WithId<User_Type>): Promise<OutputModelTokenType> {
+    async createJWT(user: UserDBType): Promise<ViewTokenModelType> {
 
         const token = await jwt.sign({userId: user._id}, secret, {expiresIn: '1h'})
         return {accessToken: token}

@@ -1,20 +1,6 @@
 import {WithId} from "mongodb";
 
 export type UserType = {
-    _id: string
-    login: string
-    email: string
-    createdAt: string
-    passwordHash: string
-}
-
-export type IdUserType = {
-    id: string
-    login: string
-    email: string
-    createdAt: string
-}
-export type User_Type = {
     accountData: AccountDataType
     emailConfirmation: EmailConfirmationType
 }
@@ -32,38 +18,31 @@ type EmailConfirmationType = {
     isConfirmed: boolean
 }
 
-export type UserViewModelType = {
+export type InputUserAuthModelType = {
+    loginOrEmail: string
+    password: string
+}
+
+export type InputUserModelType = {
+    login: string
+    password: string
+    email: string
+}
+
+export type ViewUserModelType = {
     id: string
     login: string
     email: string
     createdAt: string
 }
 
-export type UserDBType = WithId<User_Type>
+export type UserDBType = WithId<UserType>
 
-export type UserDbType = {
-    login: string
-    email: string
-    createdAt: string
-    passwordHash: string
-}
-
-export type InputUserType = {
-    login: string
-    password: string
-    email: string
-}
-
-export type InputUserAuthType = {
-    loginOrEmail: string
-    password: string
-}
-
-export type OutputModelTokenType = {
+export type ViewTokenModelType = {
     accessToken: string
 }
 
-export type UserQueryType = {
+export type InputUserPagingType = {
     searchLoginTerm: string | null
     searchEmailTerm: string | null
     sortBy: string
@@ -72,15 +51,15 @@ export type UserQueryType = {
     pageSize: string
 }
 
-export type UsersOutputType = {
+export type ViewUsersPagingType = {
     pagesCount: number
     page: number
     pageSize: number
     totalCount: number
-    items: IdUserType[]
+    items: ViewUserModelType[]
 }
 
-export type OutputAcesAuthModelType = {
+export type RequestUserType = {
     email: string
     login: string
     userId: string

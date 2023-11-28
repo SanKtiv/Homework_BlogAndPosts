@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb-Query";
+import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
 import {authService} from "../services/auth-service";
 
 export const emailAdapter = {

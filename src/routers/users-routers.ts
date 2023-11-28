@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {usersRepository} from "../repositories/mongodb-repository/users-mongodb";
+import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
 import {userInputValid} from "../validations/users-validators";
 import {authService} from "../services/auth-service";
 import {basicAuth} from "../middlewares/authorization-basic";
@@ -15,6 +15,6 @@ userRouter.post('/',basicAuth , userInputValid, errorsOfValidate, async (req: Re
 
 userRouter.delete('/:id', basicAuth, async (req: Request, res: Response) => {
 
-    if (await usersRepository.deleteById(req.params.id)) return res.sendStatus(204)
+    if (await usersRepository.deleteUserById(req.params.id)) return res.sendStatus(204)
     return res.sendStatus(404)
 })

@@ -1,11 +1,16 @@
-import {WithId} from "mongodb";
-import {BlogBodyType, BlogModelOutType, BlogType} from "../types/typesForMongoDB";
+import {
+    BlogDBType,
+    BlogType,
+    InputBlogModelType,
+    ViewBlogModelType,
+    InputBlogsPagingType,
+    ViewBlogsPagingType
+} from "../types/blogs-types";
 import {dateNow} from "../variables/variables";
-import {BlogsOutputQueryType, BlogsInputPagingType} from "../types/typesForQuery";
 
 export const blogsService = {
 
-    blogDbInToBlog(blogOutDb: WithId<BlogType>): BlogModelOutType {
+    blogDbInToBlog(blogOutDb: BlogDBType): ViewBlogModelType {
 
         return {
             id: blogOutDb._id.toString(),
@@ -19,8 +24,8 @@ export const blogsService = {
 
     blogsOutputQuery(
         totalBlogs: number,
-        blogsItems: WithId<BlogType>[],
-        query: BlogsInputPagingType): BlogsOutputQueryType {
+        blogsItems: BlogDBType[],
+        query: InputBlogsPagingType): ViewBlogsPagingType {
 
         return {
             pagesCount: Math.ceil(totalBlogs / +query.pageSize),
@@ -31,14 +36,12 @@ export const blogsService = {
         }
     },
 
-    async newBlog(body: BlogBodyType): Promise<BlogType> {
+    async newBlog(body: InputBlogModelType): Promise<BlogType> {
 
-        const newBlog: BlogType = {
+        return {
             createdAt: dateNow().toISOString(),
             isMembership: false,
             ...body
         }
-
-        return newBlog
     }
 }
