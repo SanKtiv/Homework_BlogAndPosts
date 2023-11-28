@@ -1,4 +1,5 @@
 import {InputUserPagingType, ViewUsersPagingType, ViewUserModelType, UserDBType} from "../types/users-types";
+import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
 
 export const userService = {
 
@@ -24,4 +25,8 @@ export const userService = {
             items: usersSearch.map(userDb => this.addIdToUser(userDb))
         }
     },
+
+    async deleteUserById(id: string): Promise<boolean> {
+        return usersRepository.deleteUserById(id)
+    }
 }

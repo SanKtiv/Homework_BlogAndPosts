@@ -1,5 +1,4 @@
-import {InputUserModelType, UserType, ViewUserModelType} from "../types/users-types";
-import {WithId} from "mongodb";
+import {InputUserModelType, UserDBType, UserType, ViewUserModelType} from "../types/users-types";
 import bcrypt from 'bcrypt'
 import {dateNow} from "../variables/variables";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
@@ -38,14 +37,14 @@ export const authService = {
         return superUser
     },
 
-    async addUserInDB(body: InputUserModelType): Promise<ViewUserModelType> {
+    async insertUserInDB(body: InputUserModelType): Promise<ViewUserModelType> {
 
         const user = await this.createUser(body)
         const findUser = await usersRepository.insertUserToDB(user)
-        return userService.addIdToUser(findUser as WithId<UserType>)
+        return userService.addIdToUser(findUser as UserDBType)
     },
 
-    async checkCredentials(loginOrEmail: string, password: string): Promise<WithId<UserType> | null> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<UserDBType | null> {
 
         const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(loginOrEmail)
         if (!user) return user
@@ -54,7 +53,7 @@ export const authService = {
         return null
     },
 
-    async genHash(password: string, salt: string) {
+    async genHash(password: string, salt: string): Promise<string> {
 
         return await bcrypt.hash(password, salt)
     },
@@ -69,7 +68,7 @@ export const authService = {
         return usersRepository.updateUserExpirationDate(user._id)
     },
 
-    async changeConfirmationCode(email: string) {
+    async changeConfirmationCode(email: string): Promise<boolean> {
 
         const newConfirmationCode = uuidv4()
         const newExpirationDate = add(new Date(), {hours: 1, minutes: 5})

@@ -15,8 +15,8 @@ export const usersRepository = {
     },
 
     async deleteUserById(id: string): Promise<boolean> {
-        const delUser = await dbUsersCollection.deleteOne({_id: new ObjectId(id)})
-        return delUser.deletedCount === 1
+        const result = await dbUsersCollection.deleteOne({_id: new ObjectId(id)})
+        return result.deletedCount === 1
     },
     
     async deleteAllUsers(): Promise<void> {
@@ -29,7 +29,7 @@ export const usersRepository = {
         return result.modifiedCount === 1
     },
 
-    async updateUserConfirmationCode(code: string, email: string, date: Date) {
+    async updateUserConfirmationCode(code: string, email: string, date: Date): Promise<boolean> {
         const result = await dbUsersCollection
             .updateOne({'accountData.email': email},
                 {$set: {'emailConfirmation.confirmationCode': code, 'emailConfirmation.expirationDate': date}})

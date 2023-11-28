@@ -8,10 +8,8 @@ import {confirmationEmailCode} from "../validations/confirmation-code-validator"
 export const mailRouter = Router({})
 
 mailRouter.post('/registration', userInputValid, errorsOfValidate, async (req: Request, res: Response) => {
-
-    const user = await authService.addUserInDB(req.body)
+    const user = await authService.insertUserInDB(req.body)
     const sendMessage = await emailAdapter.sendConfirmationCodeByEmail(req.body.email)
-
     res.sendStatus(204)
 
 })
@@ -22,9 +20,6 @@ mailRouter.post('/registration-confirmation', confirmationEmailCode, errorsOfVal
 })
 
 mailRouter.post('/registration-email-resending', userEmailResending, errorsOfValidate, async (req: Request, res: Response) => {
-
-    console.log(req.body.email)
     await emailAdapter.resendNewConfirmationCodeByEmail(req.body.email)
-
     res.sendStatus(204)
 })
