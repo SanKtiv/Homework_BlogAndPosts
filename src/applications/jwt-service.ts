@@ -1,7 +1,7 @@
-import jwt, {Secret} from 'jsonwebtoken'
+import jwt, {JwtPayload, Secret} from 'jsonwebtoken'
 import {ViewTokenModelType, UserDBType} from "../types/users-types";
 
-const secret = process.env.SECRET_KEY || 'String'
+const secret: Secret = process.env.SECRET_KEY!
 
 export const jwtService = {
 
@@ -12,7 +12,6 @@ export const jwtService = {
                 secret,
                 {expiresIn: '60s'})
 
-        console.log('#1', user._id)
         return {accessToken: accessToken}
     },
 
@@ -24,12 +23,15 @@ export const jwtService = {
     },
 
     async getUserIdByToken(token: string) {
+
         try {
-            const userId = await jwt.verify(token, secret)
-            console.log('#3', userId)
-            return userId.toString()
+
+            const result = await jwt.verify(token, secret)
+            if (typeof result !== 'string') return result.userId
+
         } catch (error) {
             return null
         }
+
     }
 }

@@ -8,9 +8,7 @@ export const authorizationJWT = async (req: Request, res: Response, next: NextFu
 
         const token = req.headers.authorization.split(' ')[1]
         const userId = await jwtService.getUserIdByToken(token)
-
         if (!userId) return res.sendStatus(401)
-
         req.user = await userApplication.getUserById(userId)
         return next()
     }
