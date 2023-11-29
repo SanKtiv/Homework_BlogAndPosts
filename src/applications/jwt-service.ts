@@ -25,9 +25,10 @@ export const jwtService = {
 
     async getUserIdByToken(token: string) {
         try {
-            const status = await jwt.verify(token, secret)
-            console.log('#2', status.userId)
-            return status.userId
+            const userId = await jwt.verify(token, secret)
+            console.log('#2', userId.userId)
+            console.log('#3', userId)
+            return userId
         } catch (error) {
             return null
         }
