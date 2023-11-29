@@ -27,7 +27,7 @@ export const jwtService = {
         try {
             const userId = await jwt.verify(token, secret)
             console.log(userId)
-            return userId.toString()
+            return userId
         } catch (error) {
             return null
         }
