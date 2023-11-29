@@ -17,8 +17,8 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
     if (checkUser) {
 
         const accessToken = await jwtService.createAccessJWT(checkUser)
-        const refreshToken = await jwtService.createRefreshJWT(checkUser)
-        res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+        //const refreshToken = await jwtService.createRefreshJWT(checkUser)
+        //res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
         res.status(200).send(accessToken)
         return
     }
