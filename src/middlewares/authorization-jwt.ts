@@ -14,3 +14,10 @@ export const authorizationJWT = async (req: Request, res: Response, next: NextFu
     }
     res.sendStatus(401)
 }
+
+export const checkRefreshJWT = async (req: Request, res: Response, next: NextFunction) => {
+
+    const result = await jwtService.checkRefreshToken(req.cookies.refreshToken)
+    if (!result) return res.sendStatus(401)
+    next()
+}

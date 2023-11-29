@@ -1,7 +1,8 @@
 import jwt, {JwtPayload, Secret} from 'jsonwebtoken'
 import {ViewTokenModelType, UserDBType} from "../types/users-types";
 
-const secret: Secret = process.env.SECRET_KEY!
+const secretAccess: Secret = process.env.SECRET_KEY!
+const secretRefresh: Secret = process.env.SECRET_KEY!
 
 export const jwtService = {
 
@@ -9,8 +10,8 @@ export const jwtService = {
 
         const accessToken = await jwt
             .sign({userId: user._id},
-                secret,
-                {expiresIn: '60s'})
+                secretAccess,
+                {expiresIn: '10s'})
 
         return {accessToken: accessToken}
     },
@@ -18,7 +19,7 @@ export const jwtService = {
     async createRefreshJWT(user: UserDBType): Promise<string> {
         return jwt
             .sign({userId: user._id},
-                secret,
+                secretRefresh,
                 {expiresIn: '20s'})
     },
 
@@ -26,7 +27,20 @@ export const jwtService = {
 
         try {
 
-            const result = await jwt.verify(token, secret)
+            const result = await jwt.verify(token, secretAccess)
+            if (typeof result !== 'string') return result.userId
+
+        } catch (error) {
+            return null
+        }
+
+    },
+
+    async checkRefreshToken(token: string) {
+
+        try {
+
+            const result = await jwt.verify(token, secretRefresh)
             if (typeof result !== 'string') return result.userId
 
         } catch (error) {

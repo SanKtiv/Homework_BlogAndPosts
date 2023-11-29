@@ -4,7 +4,7 @@ import {userAuthValid} from "../validations/users-validators";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 import {jwtService} from "../applications/jwt-service";
 import {UserDBType} from "../types/users-types";
-import {authorizationJWT} from "../middlewares/authorization-jwt";
+import {authorizationJWT, checkRefreshJWT} from "../middlewares/authorization-jwt";
 import {userApplication} from "../applications/user-application";
 
 export const authRouters = Router({})
@@ -17,12 +17,17 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
     if (checkUser) {
 
         const accessToken = await jwtService.createAccessJWT(checkUser)
-        //const refreshToken = await jwtService.createRefreshJWT(checkUser)
-        //res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+        const refreshToken = await jwtService.createRefreshJWT(checkUser)
+        res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
         res.status(200).send(accessToken)
         return
     }
     return res.sendStatus(401)
+})
+
+authRouters.post('/refresh-token', checkRefreshJWT, async (req: Request, res: Response) => {
+
+    const result = await jwtService.checkRefreshToken(req.cookies.refreshToken)
 })
 
 authRouters.get('/me', authorizationJWT, async (req: Request, res: Response) => {
