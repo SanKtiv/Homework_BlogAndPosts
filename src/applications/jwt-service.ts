@@ -12,7 +12,7 @@ export const jwtService = {
                 secret,
                 {expiresIn: '60s'})
 
-        console.log(user._id)
+        console.log('#1', user._id)
         return {accessToken: accessToken}
     },
 
@@ -25,9 +25,9 @@ export const jwtService = {
 
     async getUserIdByToken(token: string) {
         try {
-            const userId = await jwt.verify(token, secret)
-            console.log(userId)
-            return userId
+            const status = await jwt.verify(token, secret)
+            console.log('#2', status.userId)
+            return status.userId
         } catch (error) {
             return null
         }
