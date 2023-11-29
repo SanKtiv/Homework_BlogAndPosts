@@ -9,12 +9,14 @@ import {postRouterQuery} from "./routers/posts/posts-routers-Query";
 import {authRouters} from "./routers/auth-routers";
 import {commentRouter} from "./routers/comments/comments-routers";
 import {mailRouter} from "./routers/mail-router";
+import cookieParser from 'cookie-parser'
 
 export const app = express()
 
 const parserMiddleware = express.json()
 
 app.use(parserMiddleware)
+app.use(cookieParser())
 
 export const routePaths = {
     deleteAllData: '/testing/all-data',
