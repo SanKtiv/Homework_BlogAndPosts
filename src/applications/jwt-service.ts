@@ -39,8 +39,9 @@ export const jwtService = {
     async checkRefreshToken(token: string) {
 
         try {
-
+            console.log('#1', token)
             const result = await jwt.verify(token, secretRefresh)
+            console.log('#2', result)
             if (typeof result !== 'string') return result.userId
 
         } catch (error) {
