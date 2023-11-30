@@ -22,7 +22,7 @@ postRouter.post('/',
 
 postRouter.post('/:postId/comments',
     authorizationJWT,
-    ...checkInputFormComment,
+    checkInputFormComment,
     checkPostByPostId,
     errorsOfValidate,
     async (req: Request, res: Response) => {
