@@ -1,5 +1,6 @@
 import jwt, {JwtPayload, Secret} from 'jsonwebtoken'
 import {ViewTokenModelType, UserDBType} from "../types/users-types";
+import {dateNow} from "../variables/variables";
 
 const secretAccess: Secret = process.env.SECRET_KEY!
 const secretRefresh: Secret = process.env.SECRET_KEY!
@@ -42,6 +43,7 @@ export const jwtService = {
             console.log('#1', token)
             const result = await jwt.verify(token, secretRefresh)
             console.log('#2', result)
+            console.log('#3', dateNow())
             if (typeof result !== 'string') return result.userId
 
         } catch (error) {
