@@ -1,4 +1,4 @@
-import {InputUserModelType, UserDBType, UserType, ViewUserModelType} from "../types/users-types";
+import {InputUserModelType, RequestUserType, UserDBType, UserType, ViewUserModelType} from "../types/users-types";
 import bcrypt from 'bcrypt'
 import {dateNow} from "../variables/variables";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
@@ -6,6 +6,7 @@ import {userService} from "./users-service";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
+import {userApplication} from "../applications/user-application";
 
 export const authService = {
 
@@ -47,10 +48,10 @@ export const authService = {
     async checkCredentials(loginOrEmail: string, password: string): Promise<UserDBType | null> {
 
         const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(loginOrEmail)
-        if (!user) return user
+        if (!user) return null
         const result = await bcrypt.compare(password, user.accountData.passwordHash)
-        if (result) return user
-        return null
+        if (!result) return null
+        return user
     },
 
     async genHash(password: string, salt: string): Promise<string> {

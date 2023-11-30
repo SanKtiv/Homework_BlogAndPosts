@@ -27,7 +27,15 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
 
 authRouters.post('/refresh-token', checkRefreshJWT, async (req: Request, res: Response) => {
 
-    const result = await jwtService.checkRefreshToken(req.cookies.refreshToken)
+    const userDB = await userApplication.getUserByUserId(req.user!.userId)
+    const accessToken = await jwtService.createAccessJWT(userDB!)
+    const refreshToken = await jwtService.createRefreshJWT(userDB!)
+    res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+    res.status(200).send(accessToken)
+})
+
+authRouters.post('/logout', checkRefreshJWT, async (req: Request, res: Response) => {
+    res.sendStatus(204)
 })
 
 authRouters.get('/me', authorizationJWT, async (req: Request, res: Response) => {

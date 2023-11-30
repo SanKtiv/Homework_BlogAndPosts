@@ -1,8 +1,9 @@
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
+import {UserDBType} from "../types/users-types";
 
 export const userApplication = {
 
-    async getUserById(userId: string) {
+    async createReqUserByUserId(userId: string) {
 
         const user = await usersRepositoryReadOnly.getUserById(userId)
         if (!user) return null
@@ -21,5 +22,9 @@ export const userApplication = {
             login: login,
             userId: userId
         }
+    },
+
+    async getUserByUserId(userId: string): Promise<UserDBType | null> {
+        return usersRepositoryReadOnly.getUserById(userId)
     }
 }
