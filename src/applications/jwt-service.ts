@@ -18,10 +18,14 @@ export const jwtService = {
     },
 
     async createRefreshJWT(user: UserDBType): Promise<string> {
-        return jwt
+        const token = await jwt
             .sign({userId: user._id},
                 secretRefresh,
                 {expiresIn: '20s'})
+        /////////////////////////////////////
+        console.log('#1', token, await jwt.verify(token, secretRefresh))
+
+        return token
     },
 
     async getUserIdByToken(token: string) {
@@ -40,10 +44,9 @@ export const jwtService = {
     async checkRefreshToken(token: string) {
 
         try {
-            console.log('#1', token)
+
             const result = await jwt.verify(token, secretRefresh)
-            console.log('#2', result)
-            console.log('#3', dateNow())
+            console.log('#2', token, result, Number(dateNow()))
             if (typeof result !== 'string') return result.userId
 
         } catch (error) {
