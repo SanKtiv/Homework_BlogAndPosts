@@ -11,7 +11,7 @@ export const jwtService = {
         const accessToken = await jwt
             .sign({userId: user._id},
                 secretAccess,
-                {expiresIn: '100s'})
+                {expiresIn: '10s'})
 
         return {accessToken: accessToken}
     },
