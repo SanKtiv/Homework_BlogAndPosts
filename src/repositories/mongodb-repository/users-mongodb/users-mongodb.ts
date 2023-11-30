@@ -1,5 +1,5 @@
-import {UserDBType, UserType} from "../../../types/users-types";
-import {dbUsersCollection} from "../db";
+import {RefreshTokenDBType, UserDBType, UserType} from "../../../types/users-types";
+import {dbTokensCollection, dbUsersCollection} from "../db";
 import {ObjectId} from "mongodb";
 
 export const usersRepository = {
@@ -34,5 +34,13 @@ export const usersRepository = {
             .updateOne({'accountData.email': email},
                 {$set: {'emailConfirmation.confirmationCode': code, 'emailConfirmation.expirationDate': date}})
         return result.modifiedCount === 1
+    },
+
+    async insertInvalidRefreshJWT(refreshJWT: string): Promise<void> {
+        await dbTokensCollection.insertOne({invalidRefreshToken: refreshJWT})
+    },
+
+    async getInvalidRefreshJWT(refreshJWT: string): Promise<RefreshTokenDBType | null> {
+        return dbTokensCollection.findOne({invalidRefreshToken: refreshJWT})
     }
 }

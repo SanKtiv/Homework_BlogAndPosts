@@ -64,3 +64,9 @@ export type RequestUserType = {
     login: string
     userId: string
 }
+
+export type InvalidRefreshTokenType = {
+    invalidRefreshToken: string
+}
+
+export type RefreshTokenDBType = WithId<InvalidRefreshTokenType>

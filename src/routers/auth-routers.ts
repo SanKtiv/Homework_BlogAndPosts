@@ -28,13 +28,19 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
 authRouters.post('/refresh-token', checkRefreshJWT, async (req: Request, res: Response) => {
 
     const userDB = await userApplication.getUserByUserId(req.user!.userId)
+
     const accessToken = await jwtService.createAccessJWT(userDB!)
+
     const refreshToken = await jwtService.createRefreshJWT(userDB!)
+
+    await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
+
     res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
     res.status(200).send(accessToken)
 })
 
 authRouters.post('/logout', checkRefreshJWT, async (req: Request, res: Response) => {
+    await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
     res.sendStatus(204)
 })
 

@@ -7,6 +7,7 @@ import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
 import {userApplication} from "../applications/user-application";
+import {ObjectId} from "mongodb";
 
 export const authService = {
 
@@ -74,5 +75,9 @@ export const authService = {
         const newConfirmationCode = uuidv4()
         const newExpirationDate = add(new Date(), {hours: 1, minutes: 5})
         return usersRepository.updateUserConfirmationCode(newConfirmationCode, email,newExpirationDate)
+    },
+
+    async saveInvalidRefreshJWT(refreshJWT: string) {
+        await usersRepository.insertInvalidRefreshJWT(refreshJWT)
     }
 }

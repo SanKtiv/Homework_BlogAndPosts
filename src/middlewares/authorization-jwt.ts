@@ -18,6 +18,8 @@ export const authorizationJWT = async (req: Request, res: Response, next: NextFu
 
 export const checkRefreshJWT = async (req: Request, res: Response, next: NextFunction) => {
 
+    const invalidRefreshJWT = await jwtService.getInvalidRefreshJWT(req.cookies.refreshToken)
+    if (invalidRefreshJWT) return res.sendStatus(401)
     const result = await jwtService.checkRefreshToken(req.cookies.refreshToken)
     if (!result) return res.sendStatus(401)
     req.user = await userApplication.createReqUserByUserId(result)
