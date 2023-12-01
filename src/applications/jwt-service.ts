@@ -24,9 +24,6 @@ export const jwtService = {
         const token = await jwt
             .sign({userId: user._id}, secretRefresh, {expiresIn: '20s'})
 
-        /////////////////////////////////////
-        console.log('#1', token, await jwt.verify(token, secretRefresh))
-
         return token
     },
 
@@ -48,7 +45,6 @@ export const jwtService = {
         try {
 
             const result = await jwt.verify(token, secretRefresh)
-            console.log('#2', token, result, Number(dateNow()))
             if (typeof result !== 'string') return result.userId
 
         } catch (error) {
