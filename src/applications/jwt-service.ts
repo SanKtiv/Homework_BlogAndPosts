@@ -4,6 +4,7 @@ import {dateNow} from "../variables/variables";
 import {authService} from "../services/auth-service";
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
+import {n} from "../middlewares/authorization-jwt";
 
 const secretAccess: Secret = process.env.SECRET_KEY!
 const secretRefresh: Secret = process.env.SECRET_KEY!
@@ -55,6 +56,7 @@ export const jwtService = {
 
     async getInvalidRefreshJWT (refreshJWT: string): Promise<boolean> {
         const invalidToken = usersRepository.getInvalidRefreshJWT(refreshJWT)
+        console.log(`Запуск №:${n}`, invalidToken)
         return !!invalidToken
     }
 }

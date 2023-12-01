@@ -3,7 +3,7 @@ import {jwtService} from "../applications/jwt-service";
 import {userApplication} from "../applications/user-application";
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
 
-let n = 0
+export let n = 0
 export const authorizationJWT = async (req: Request, res: Response, next: NextFunction) => {
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! if, req.user
     if (req.headers.authorization) {
