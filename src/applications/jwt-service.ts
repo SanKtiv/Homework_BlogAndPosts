@@ -55,7 +55,7 @@ export const jwtService = {
     },
 
     async getInvalidRefreshJWT (refreshJWT: string): Promise<boolean> {
-        const invalidToken = usersRepository.getInvalidRefreshJWT(refreshJWT)
+        const invalidToken = await usersRepository.getInvalidRefreshJWT(refreshJWT)
         console.log(`Запуск №:${n}`, invalidToken)
         return !!invalidToken
     }
