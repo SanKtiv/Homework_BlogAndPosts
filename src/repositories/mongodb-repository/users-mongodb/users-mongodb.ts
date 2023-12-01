@@ -42,5 +42,9 @@ export const usersRepository = {
 
     async getInvalidRefreshJWT(refreshJWT: string): Promise<RefreshTokenDBType | null> {
         return dbTokensCollection.findOne({invalidRefreshToken: refreshJWT})
+    },
+
+    async deleteAllTokens(): Promise<void> {
+        await dbTokensCollection.deleteMany({})
     }
 }
