@@ -70,3 +70,12 @@ export type InvalidRefreshTokenType = {
 }
 
 export type RefreshTokenDBType = WithId<InvalidRefreshTokenType>
+
+export type QueryPagingType = {
+    searchLoginTerm?: string
+    searchEmailTerm?: string
+    pageNumber?: string
+    pageSize?: string
+    sortBy?: string
+    sortDirection?: string
+}

@@ -1,4 +1,4 @@
-import {InputBlogModelType, BlogType} from "../../../src/types/posts-types";
+import {InputBlogModelType, BlogType} from "../../../src/types/blogs-types";
 
 const blog = {
     name_TRUE: "blog_name",

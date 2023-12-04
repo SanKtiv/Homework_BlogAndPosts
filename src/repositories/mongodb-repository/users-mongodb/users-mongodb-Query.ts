@@ -1,4 +1,10 @@
-import {UserType, UserDBType, ViewUsersPagingType} from "../../../types/users-types";
+import {
+    UserType,
+    UserDBType,
+    ViewUsersPagingType,
+    QueryPagingType,
+    InputUserPagingType
+} from "../../../types/users-types";
 import {dbUsersCollection} from "../db";
 import {ObjectId, WithId} from "mongodb";
 import {userService} from "../../../services/users-service";
@@ -6,7 +12,7 @@ import {userService} from "../../../services/users-service";
 
 export const usersRepositoryReadOnly = {
 
-    async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<WithId<UserType>[]> {
+    async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<UserDBType[]> {
 
         const sortBy = `accountData.${query.sortBy}`
         const filter = []
@@ -46,19 +52,7 @@ export const usersRepositoryReadOnly = {
 
             totalUsers = await dbUsersCollection.countDocuments({$or: filter})
         }
-        // else if (query.searchLoginTerm) {
-        //
-        //     totalUsers = await dbUsersCollection
-        //         .countDocuments({'accountData.login': searchLoginTermRegexp})
-        //
-        // } else if (query.searchEmailTerm) {
-        //
-        //     totalUsers = await dbUsersCollection
-        //         .countDocuments({'accountData.email': searchEmailTermRegexp})
-        // } else {
-        //
-        //     totalUsers = await dbUsersCollection.countDocuments({})
-        // }
+
         else {
             totalUsers = await dbUsersCollection.countDocuments(filter[0])
         }

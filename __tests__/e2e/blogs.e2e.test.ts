@@ -51,6 +51,12 @@ describe('TEST for blogs', () => {
         await blogActions.expectCreateBlog(blogSendBody_TRUE, expectBlog_TRUE, 201)
     })
 
+    it('-GET /blogs: id, should return status 200 and blog', async () => {
+        const result = await blogActions.createBlog(blogSendBody_TRUE)
+        await expect(result.statusCode).toBe(200)
+        await expect(result.body).toEqual({...expectBlog_TRUE, id: result.body.id})
+    })
+
     it('-GET /blogs, should return blogs with default paging, status 200', async () => {
         await blogActions.createManyBlogs(manyBlogSendBody_TRUE(10))
         const result = await blogActions.getBlogsPaging()

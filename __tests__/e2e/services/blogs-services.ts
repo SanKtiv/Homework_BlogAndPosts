@@ -1,15 +1,16 @@
 import {routePaths} from "../../../src/setting";
 import {getRequest} from "../comments.e2e.test";
-import {InputBlogModelType, BlogType} from "../../../src/types/posts-types";
+import {InputBlogModelType, BlogType} from "../../../src/types/blogs-types";
 import {viewModelBlogsDefaultPaging_TRUE} from "../utility/blogs-utility";
 
 export const blogActions = {
 
-    createBlog: async (blogSendBody: any) =>
-        getRequest()
+    async createBlog(blogSendBody: InputBlogModelType) {
+        return getRequest()
             .post(`${routePaths.blogs}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .send(blogSendBody),
+            .send(blogSendBody)
+    },
 
     async createManyBlogs(manyBlogSendBody: InputBlogModelType[]) {
 
