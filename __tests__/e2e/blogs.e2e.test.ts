@@ -5,7 +5,8 @@ import {routePaths} from "../../src/setting";
 import {userActions} from "./services/users-services";
 import {userSendBody_TRUE} from "./utility/users-utility";
 import {
-    blogSendBody_TRUE,
+    blog3,
+    blogSendBody_TRUE, countOfWord,
     expectBlog_TRUE,
     manyBlogSendBody_TRUE, viewModelBlogsDefaultPaging_TRUE,
 } from "./utility/blogs-utility";
@@ -47,14 +48,25 @@ describe('TEST for blogs', () => {
         await client.close()
     })
 
-    it('-POST, should return status 201, ', async () => {
-        await blogActions.expectCreateBlog(blogSendBody_TRUE, expectBlog_TRUE, 201)
+    it('-POST, should return status 201 and blog', async () => {
+        console.log(countOfWord(10))
+        const result = await blogActions.createBlog(blog3.sendBody_TRUE)
+        await expect(result.statusCode).toBe(201)
+        await expect(result.body).toEqual({})
     })
 
     it('-GET /blogs: id, should return status 200 and blog', async () => {
-        const result = await blogActions.createBlog(blogSendBody_TRUE)
+        const resBlog = await blogActions.createBlog(blog.sendBody_TRUE)
+        const result = await blogActions.getBlogById(resBlog.body.id)
         await expect(result.statusCode).toBe(200)
-        await expect(result.body).toEqual({...expectBlog_TRUE, id: result.body.id})
+        await expect(result.body).toEqual({...blog.sendBody_TRUE, id: resBlog.body.id})
+    })
+
+    it('-GET /blogs: id, should return status 404', async () => {
+        await blogActions.createBlog(blog.sendBody_TRUE)
+        const result = await blogActions.getBlogById('123456789101112')
+        await expect(result.statusCode).toBe(404)
+        await expect(result.body).toBeUndefined
     })
 
     it('-GET /blogs, should return blogs with default paging, status 200', async () => {

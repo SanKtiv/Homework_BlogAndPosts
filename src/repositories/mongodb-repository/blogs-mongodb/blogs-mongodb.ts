@@ -11,11 +11,17 @@ export const blogsRepository = {
         return allBlogs.map(blogOutDb => blogsService.blogDbInToBlog(blogOutDb))
     },
 
-    async getBlogById(id: string): Promise<ViewBlogModelType | boolean> {
+    async getBlogById(id: string): Promise<ViewBlogModelType | null> {
 
-        const blogOutDb = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
-        if (blogOutDb === null) return false
-        return blogsService.blogDbInToBlog(blogOutDb)
+        try {
+            const blogDB = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
+            if (blogDB) return blogsService.blogDbInToBlog(blogDB)
+            return null
+        } catch (error) {
+            return null
+        }
+        // if (blogOutDb === null) return false
+        // return blogsService.blogDbInToBlog(blogOutDb)
     },
 
     async createBlog(body: InputBlogModelType): Promise<ViewBlogModelType> {

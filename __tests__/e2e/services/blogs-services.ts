@@ -12,6 +12,11 @@ export const blogActions = {
             .send(blogSendBody)
     },
 
+    async getBlogById(id: string) {
+        return getRequest()
+            .get(`${routePaths.blogs}/${id}`)
+    },
+
     async createManyBlogs(manyBlogSendBody: InputBlogModelType[]) {
 
         for (const blogSendBody of manyBlogSendBody) {
