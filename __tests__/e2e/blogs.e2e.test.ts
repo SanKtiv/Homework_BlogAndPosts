@@ -2,13 +2,7 @@ import request from 'supertest'
 import {app} from '../../src/setting'
 import {client} from "../../src/repositories/mongodb-repository/db";
 import {routePaths} from "../../src/setting";
-import {userActions} from "./services/users-services";
-import {userSendBody_TRUE} from "./utility/users-utility";
-import {
-    blogSendBody_TRUE, wordLength,
-    expectBlog_TRUE,
-    manyBlogSendBody_TRUE, viewModelBlogsDefaultPaging_TRUE, blog,
-} from "./utility/blogs-utility";
+import {blog} from "./utility/blogs-utility";
 import {blogActions} from "./services/blogs-services";
 import {auth} from "./utility/auth-utility";
 import {expectError} from "./utility/error-utility";
@@ -55,12 +49,21 @@ describe('TEST for blogs', () => {
         await expect(result.body).toEqual(blog.expectBlog_TRUE())
     })
 
-    it('-POST, should return status 400 and error', async () => {
+    it('-POST, should return status 400 and error errorsMessages: [{message: anyString, field: name}]',
+        async () => {
         const resBlog = await blogActions
             .createBlog(blog.sendBody_FALSE_NAME_LENGTH(), auth.basic_TRUE)
         await expect(resBlog.statusCode).toBe(400)
         await expect(resBlog.body.errorsMessages).toEqual(expectError('name'))
     })
+
+    it('-POST, should return status 400 and error errorsMessages: [{message: anyString, field: description}]',
+        async () => {
+            const resBlog = await blogActions
+                .createBlog(blog.sendBody_FALSE_DESCRIPTION_NUM(), auth.basic_TRUE)
+            await expect(resBlog.statusCode).toBe(400)
+            await expect(resBlog.body.errorsMessages).toEqual(expectError('description'))
+        })
 
     it('-POST, should return status 401', async () => {
         const resBlog = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_FALSE)

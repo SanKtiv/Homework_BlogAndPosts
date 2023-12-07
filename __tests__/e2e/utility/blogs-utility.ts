@@ -85,28 +85,36 @@ export const blog = {
 
     sendBody_FALSE_NAME_NUM() {
         return {
-            ...this.sendBody_TRUE,
+            ...this.sendBody_TRUE(),
             name: this.body.name_FALSE_NUM
         }
     },
 
     sendBody_FALSE_DESCRIPTION_LENGTH() {
         return {
-            ...this.sendBody_TRUE,
+            ...this.sendBody_TRUE(),
             description: this.body.description_FALSE_LENGTH
         }
     },
 
     sendBody_FALSE_DESCRIPTION_NUM() {
         return {
-            ...this.sendBody_TRUE,
+            ...this.sendBody_TRUE(),
             description: this.body.description_FALSE_NUM
         }
     },
 
     sendBody_FALSE_WEBSITEURL_NUM() {
         return {
-            ...this.sendBody_TRUE,
+            ...this.sendBody_TRUE(),
+            websiteUrl: this.body.websiteUrl_FALSE_NUM
+        }
+    },
+
+    sendBody_FALSE_ALL() {
+        return {
+            name: this.body.name_FALSE_NUM,
+            description: this.body.description_FALSE_NUM,
             websiteUrl: this.body.websiteUrl_FALSE_NUM
         }
     },

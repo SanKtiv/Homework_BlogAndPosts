@@ -6,7 +6,7 @@ import {auth, AuthType, BasicType} from "../utility/auth-utility";
 
 export const blogActions = {
 
-    async createBlog(blogSendBody: InputBlogModelType, authBasic: BasicType) {
+    async createBlog(blogSendBody: any, authBasic: BasicType) {
         return getRequest()
             .post(`${routePaths.blogs}`)
             .set(authBasic.type, authBasic.password)
