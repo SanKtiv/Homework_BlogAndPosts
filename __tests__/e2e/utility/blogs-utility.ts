@@ -16,28 +16,6 @@ type SendBody_TRUETYPE = {
     websiteUrl: string
 }
 
-type Blog3TYPE = {
-    name_TRUE: string
-    description_TRUE: string
-    websiteUrl_TRUE: string
-    sendBody_TRUE(): SendBody_TRUETYPE
-}
-
-// export const blog3: Blog3TYPE = {
-//     name_TRUE: "blog_name",
-//     description_TRUE: "Qwerty12",
-//     websiteUrl_TRUE: "https://someurl.com",
-//     sendBody_TRUE() {
-//         return {
-//             name: this.name_TRUE,
-//             description: this.description_TRUE,
-//             websiteUrl: this.websiteUrl_TRUE
-//         }
-//     }
-//     ,
-// }
-
-
 export const blog = {
     id: {
         FALSE_NUM: NUM,
@@ -116,6 +94,27 @@ export const blog = {
             name: this.body.name_FALSE_NUM,
             description: this.body.description_FALSE_NUM,
             websiteUrl: this.body.websiteUrl_FALSE_NUM
+        }
+    },
+
+    manyBlogSendBody_TRUE(blogsCount: number) {
+      const arr = []
+      for (let i = 1; i <= blogsCount; i++) {
+          arr.push({...blogSendBody_TRUE, name: blog1.name_TRUE + `${i}`})
+      }
+      return arr
+    },
+
+    viewModelBlogsDefaultPaging_TRUE(blogsCount: number, items: BlogType[]) {
+        const f = (sort: any) => Number(new Date(sort.createdAt))
+        const newItems = [...items]
+        const itemsDefaultSort = newItems.sort((a, b) => f(b) - f(a))
+        return {
+            pagesCount: Math.ceil(blogsCount / 10),
+            page: 1,
+            pageSize: 10,
+            totalCount: blogsCount,
+            items: itemsDefaultSort
         }
     },
 }

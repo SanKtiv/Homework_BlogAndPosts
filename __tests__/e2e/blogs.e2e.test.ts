@@ -85,6 +85,16 @@ describe('TEST for blogs', () => {
         await expect(result.body).toBeUndefined
     })
 
+    it('-GET /blogs, should return blogs with default paging, status 200', async () => {
+        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(14))
+        const result = await blogActions.getBlogsPaging()
+        const expectBody = await blog.viewModelBlogsDefaultPaging_TRUE(14, result.body.items)
+        await expect(result.statusCode).toBe(200)
+        await expect(result.body).toEqual(expectBody)
+    })
+
+    // '-GET /blogs, should return blogs with paging, status 200'
+
     // it('-GET /blogs, should return blogs with default paging, status 200', async () => {
     //     await blogActions.createManyBlogs(manyBlogSendBody_TRUE(10))
     //     const result = await blogActions.getBlogsPaging()

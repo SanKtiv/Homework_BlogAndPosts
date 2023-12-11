@@ -23,7 +23,7 @@ export const blogActions = {
         for (const blogSendBody of manyBlogSendBody) {
             await getRequest()
                 .post(`${routePaths.blogs}`)
-                .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
+                .set(auth.basic_TRUE.type, auth.basic_TRUE.password)
                 .send(blogSendBody)
         }
     },
