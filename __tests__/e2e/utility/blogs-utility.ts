@@ -1,4 +1,4 @@
-import {InputBlogModelType, BlogType} from "../../../src/types/blogs-types";
+import {InputBlogModelType, BlogType, InputBlogsPagingType} from "../../../src/types/blogs-types";
 
 export const wordLength = (count: number): string => {
     let words: string = ''
@@ -33,6 +33,22 @@ export const blog = {
         description_FALSE_LENGTH: wordLength(101),
         description_FALSE_NUM: NUM,
         websiteUrl_FALSE_NUM: NUM
+    },
+
+    pagingDefaultSettings: {
+        searchNameTerm: null,
+        sortBy: 'createdAt',
+        sortDirection: 'desc',
+        pageNumber: 1,
+        pageSize: 10
+    },
+
+    pagingSettings: {
+        searchNameTerm: 'e1',
+        sortBy: 'createdAt',
+        sortDirection: 'asc',
+        pageNumber: 1,
+        pageSize: 4
     },
 
     sendBody_TRUE() {
@@ -105,14 +121,23 @@ export const blog = {
       return arr
     },
 
-    viewModelBlogsDefaultPaging_TRUE(blogsCount: number, items: BlogType[]) {
-        const f = (sort: any) => Number(new Date(sort.createdAt))
+    viewModelBlogsPaging_TRUE(blogsCount: number, items: BlogType[], pagingSettings: any) {
+        const f = (sort: any) => Number(new Date(sort[pagingSettings.sortBy]))
         const newItems = [...items]
-        const itemsDefaultSort = newItems.sort((a, b) => f(b) - f(a))
+        let itemsDefaultSort
+
+        if (pagingSettings.sortDirection === 'asc' && pagingSettings.searchNameTerm === 'e1') {
+            const regexp = new RegExp('e1', 'i')
+            itemsDefaultSort = newItems.filter(el => regexp.test(el.name))
+            itemsDefaultSort.sort((a, b) => f(a) - f(b))
+            blogsCount = itemsDefaultSort.length
+        } else {
+            itemsDefaultSort = newItems.sort((a, b) => f(b) - f(a))
+        }
         return {
-            pagesCount: Math.ceil(blogsCount / 10),
-            page: 1,
-            pageSize: 10,
+            pagesCount: Math.ceil(blogsCount / pagingSettings.pageSize),
+            page: pagingSettings.pageNumber,
+            pageSize: pagingSettings.pageSize,
             totalCount: blogsCount,
             items: itemsDefaultSort
         }

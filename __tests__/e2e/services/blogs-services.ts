@@ -35,19 +35,29 @@ export const blogActions = {
         await expect(result.body).toEqual(blog)
     },
 
-    async getBlogsPaging() {
+    async getBlogsPagingDefault() {
         return getRequest()
             .get(`${routePaths.blogs}`)
     },
 
-    async expectGetBlogsPaging(statusCode: number) {
-        const result = await this.getBlogsPaging()
-        const expectItems = viewModelBlogsDefaultPaging_TRUE(10, result.body.items)
-        await expect(result.statusCode).toBe(statusCode)
-        await expect(result.body.pagesCount).toBe(expectItems.pagesCount)
-        await expect(result.body.page).toBe(expectItems.page)
-        await expect(result.body.pageSize).toBe(expectItems.pageSize)
-        await expect(result.body.totalCount).toBe(expectItems.totalCount)
-        await expect(result.body.items).toStrictEqual(expectItems.items)
-    }
+    async getBlogsPaging(pagingSettings: any) {
+        return getRequest()
+            .get(`${routePaths.blogs}?`
+                +`searchNameTerm=${pagingSettings.searchNameTerm}`
+                +`&sortBy=${pagingSettings.sortBy}`
+                +`&sortDirection=${pagingSettings.sortDirection}`
+                +`&pageNumber=${pagingSettings.pageNumber}`
+                +`&pageSize=${pagingSettings.pageSize}`)
+    },
+
+    // async expectGetBlogsPaging(statusCode: number) {
+    //     const result = await this.getBlogsPaging()
+    //     const expectItems = viewModelBlogsDefaultPaging_TRUE(10, result.body.items)
+    //     await expect(result.statusCode).toBe(statusCode)
+    //     await expect(result.body.pagesCount).toBe(expectItems.pagesCount)
+    //     await expect(result.body.page).toBe(expectItems.page)
+    //     await expect(result.body.pageSize).toBe(expectItems.pageSize)
+    //     await expect(result.body.totalCount).toBe(expectItems.totalCount)
+    //     await expect(result.body.items).toStrictEqual(expectItems.items)
+    // }
 }
