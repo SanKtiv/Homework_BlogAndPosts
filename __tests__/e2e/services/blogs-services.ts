@@ -40,14 +40,9 @@ export const blogActions = {
             .get(`${routePaths.blogs}`)
     },
 
-    async getBlogsPaging(pagingSettings: any) {
+    async getBlogsPaging(queryPresets: string) {
         return getRequest()
-            .get(`${routePaths.blogs}?`
-                +`searchNameTerm=${pagingSettings.searchNameTerm}`
-                +`&sortBy=${pagingSettings.sortBy}`
-                +`&sortDirection=${pagingSettings.sortDirection}`
-                +`&pageNumber=${pagingSettings.pageNumber}`
-                +`&pageSize=${pagingSettings.pageSize}`)
+            .get(`${routePaths.blogs}`+`${queryPresets}`)
     },
 
     // async expectGetBlogsPaging(statusCode: number) {

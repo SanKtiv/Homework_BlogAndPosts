@@ -88,17 +88,18 @@ describe('TEST for blogs', () => {
     it('-GET /blogs, should return blogs with default paging, status 200', async () => {
         await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(14))
         const result = await blogActions.getBlogsPagingDefault()
-        const expectBody = await blog.viewModelBlogsPaging_TRUE(14, result.body.items, blog.pagingDefaultSettings)
+        const expectBody = await blog
+            .viewModelBlogsPaging_TRUE(14, result.body.items, blog.pagingDefaultSettings)
         await expect(result.statusCode).toBe(200)
         await expect(result.body).toEqual(expectBody)
     })
 
     it ('-GET /blogs, should return blogs with paging, sortDirection is asc, status 200', async () => {
-        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(14))
-        const result = await blogActions.getBlogsPaging(blog.pagingSettings)
-        const expectBody = await blog.viewModelBlogsPaging_TRUE(14, result.body.items, blog.pagingSettings)
-        console.log(result.body)
-        console.log(expectBody)
+        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        const resultDefault = await blogActions.getBlogsPaging(blog.queryPresets(blog.pagingDefaultSettings))
+        const result = await blogActions.getBlogsPaging(blog.queryPresets(blog.pagingSettings))
+        const expectBody = await blog
+            .viewModelBlogsPaging_TRUE(10, resultDefault.body.items, blog.pagingSettings)
         await expect(result.statusCode).toBe(200)
         await expect(result.body).toEqual(expectBody)
     })

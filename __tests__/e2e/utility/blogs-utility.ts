@@ -51,6 +51,20 @@ export const blog = {
         pageSize: 4
     },
 
+    queryPresets(pagingSettings: any) {
+        if (pagingSettings.searchNameTerm) {
+            return `?searchNameTerm=${pagingSettings.searchNameTerm}`
+                +`&sortBy=${pagingSettings.sortBy}`
+                +`&sortDirection=${pagingSettings.sortDirection}`
+                +`&pageNumber=${pagingSettings.pageNumber}`
+                +`&pageSize=${pagingSettings.pageSize}`
+        }
+        return `?sortBy=${pagingSettings.sortBy}`
+            +`&sortDirection=${pagingSettings.sortDirection}`
+            +`&pageNumber=${pagingSettings.pageNumber}`
+            +`&pageSize=${pagingSettings.pageSize}`
+    },
+
     sendBody_TRUE() {
         return {
             name: this.body.name_TRUE,
@@ -122,6 +136,8 @@ export const blog = {
     },
 
     viewModelBlogsPaging_TRUE(blogsCount: number, items: BlogType[], pagingSettings: any) {
+
+        //const itemsTrue = this.manyBlogSendBody_TRUE(blogsCount)
         const f = (sort: any) => Number(new Date(sort[pagingSettings.sortBy]))
         const newItems = [...items]
         let itemsDefaultSort
