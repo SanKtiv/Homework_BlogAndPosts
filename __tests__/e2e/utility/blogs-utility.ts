@@ -1,4 +1,5 @@
-import {InputBlogModelType, BlogType, InputBlogsPagingType} from "../../../src/types/blogs-types";
+import {BlogType} from "../../../src/types/blogs-types";
+import {ObjectId} from "mongodb";
 
 export const wordLength = (count: number): string => {
     let words: string = ''
@@ -19,7 +20,8 @@ type SendBody_TRUETYPE = {
 export const blog = {
     id: {
         FALSE_NUM: NUM,
-        FALSE_STRING: NUM.toString()
+        FALSE_STRING: NUM.toString(),
+        FALSE: new ObjectId(NUM).toString()
     },
 
     body: {
@@ -130,14 +132,13 @@ export const blog = {
     manyBlogSendBody_TRUE(blogsCount: number) {
       const arr = []
       for (let i = 1; i <= blogsCount; i++) {
-          arr.push({...blogSendBody_TRUE, name: blog1.name_TRUE + `${i}`})
+          arr.push({...this.sendBody_TRUE(), name: this.body.name_TRUE + `${i}`})
       }
       return arr
     },
 
     viewModelBlogsPaging_TRUE(blogsCount: number, items: BlogType[], pagingSettings: any) {
 
-        //const itemsTrue = this.manyBlogSendBody_TRUE(blogsCount)
         const f = (sort: any) => Number(new Date(sort[pagingSettings.sortBy]))
         const newItems = [...items]
         let itemsDefaultSort
@@ -158,67 +159,4 @@ export const blog = {
             items: itemsDefaultSort
         }
     },
-}
-
-const blog1 = {
-    name_TRUE: "blog_name",
-    description_TRUE: "Qwerty12",
-    websiteUrl_TRUE: "https://someurl.com",
-    name_FALSE_LENGTH: wordLength(31),
-    name_FALSE_NUM: 1234567,
-    description_FALSE_LENGTH: wordLength(101),
-    description_FALSE_NUM: 1234567,
-    websiteUrl_FALSE_NUM: 1234567
-}
-
-export const blogSendBody_TRUE = {
-    name: blog1.name_TRUE,
-    description: blog1.description_TRUE,
-    websiteUrl: blog1.websiteUrl_TRUE
-}
-
-export const expectBlog_TRUE = {
-    id: expect.any(String),
-    name: blog1.name_TRUE,
-    description: blog1.description_TRUE,
-    websiteUrl: blog1.websiteUrl_TRUE,
-    createdAt: expect.any(String),
-    isMembership: expect.any(Boolean)
-}
-
-export const manyBlogSendBody_TRUE = (n: number) => {
-    const arr = []
-    while (n > 0) {
-        arr.push({...blogSendBody_TRUE, name: blog1.name_TRUE + `${11 - n}`})
-        n--
-    }
-    return arr
-}
-
-export const expectManyBlog_TRUE = (n: number, sortBy: string) => {
-    const arr = []
-    while (n > 0) {
-        arr.push(
-            {
-                ...expectBlog_TRUE,
-                name: blog1.name_TRUE + `${11 - n}`,
-                createdAt: sortBy
-            })
-        n--
-    }
-    return arr
-}
-
-export const viewModelBlogsDefaultPaging_TRUE = (n: number, items: BlogType[]) => {
-    const fun = (a: any, b: any) => Number(new Date(a.createdAt)) - Number(new Date(b.createdAt))
-    //const fun = (a: any, b: any) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt))
-    const itemsSort = items.sort(fun)
-    console.log('#2', itemsSort)
-    return {
-        pagesCount: 1,
-        page: 1,
-        pageSize: 10,
-        totalCount: 10,
-        items: itemsSort
-    }
 }

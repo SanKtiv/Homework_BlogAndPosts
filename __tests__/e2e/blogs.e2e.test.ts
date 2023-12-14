@@ -12,23 +12,7 @@ const getRequest = () => {
     return request(app)
 }
 
-const viewModelQueryIsEmpty = {
-    pagesCount: 0,
-    page: 1, pageSize: 10,
-    totalCount: 0, items: []
-}
-
-    const blogOutputModel = {
-    id: "string",
-    name: "blog name",
-    description: "string",
-    websiteUrl: "string",
-    createdAt: "2023-11-14T09:41:01.385Z",
-    isMembership: true
-
-}
-
-describe('TEST for blogs', () => {
+describe('TEST for BLOGS', () => {
 
     beforeAll(async () => {
         await client.connect()
@@ -97,6 +81,7 @@ describe('TEST for blogs', () => {
     it ('-GET /blogs, should return blogs with paging, sortDirection is asc, status 200', async () => {
         await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
         const resultDefault = await blogActions.getBlogsPaging(blog.queryPresets(blog.pagingDefaultSettings))
+
         const result = await blogActions.getBlogsPaging(blog.queryPresets(blog.pagingSettings))
         const expectBody = await blog
             .viewModelBlogsPaging_TRUE(10, resultDefault.body.items, blog.pagingSettings)
@@ -104,11 +89,79 @@ describe('TEST for blogs', () => {
         await expect(result.body).toEqual(expectBody)
     })
 
-    // it('-GET /blogs, should return blogs with default paging, status 200', async () => {
-    //     await blogActions.createManyBlogs(manyBlogSendBody_TRUE(10))
-    //     const result = await blogActions.getBlogsPaging()
-    //     console.log('#1', result.body)
-    //     await blogActions.expectGetBlogsPaging(200)
-    // })
+    it('-PUT /blogs: id, should return status 204', async () => {
 
+        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        const resultDefault = await blogActions
+            .getBlogsPaging(blog.queryPresets(blog.pagingDefaultSettings))
+        const result = await blogActions
+            .updateBlogById(resultDefault.body.items[3].id, blog.sendBody_TRUE(), auth.basic_TRUE)
+        const changedBlog = await blogActions.getBlogById(resultDefault.body.items[3].id)
+
+        await expect(result.statusCode).toBe(204)
+        await expect(changedBlog.body).toEqual(blog.expectBlog_TRUE())
+    })
+
+    it('-PUT /blogs: id, should return status 400 and errorMessage', async () => {
+        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        const resultDefault = await blogActions.getBlogsPagingDefault()
+        const result = await blogActions
+            .updateBlogById(resultDefault.body.items[3].id, blog.sendBody_FALSE_NAME_LENGTH(), auth.basic_TRUE)
+
+        await expect(result.statusCode).toBe(400)
+        await expect(result.body.errorsMessages).toEqual(expectError('name'))
+    })
+
+    it('-PUT /blogs: id, should return status 401', async () => {
+        const createdBlog = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+        const result = await blogActions
+            .updateBlogById(createdBlog.body.id, blog.sendBody_TRUE(), auth.basic_FALSE)
+        await expect(result.statusCode).toBe(401)
+    })
+
+    it('-PUT /blogs: id, should return status 404', async () => {
+        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        const result = await blogActions
+            .updateBlogById(blog.id.FALSE, blog.sendBody_TRUE(), auth.basic_TRUE)
+
+        await expect(result.statusCode).toBe(404)
+    })
+
+    it('-DELETE /blogs: id, should return status 204', async () => {
+        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        const resultDefault = await blogActions.getBlogsPagingDefault()
+        const blogByIdBefore = await blogActions.getBlogById(resultDefault.body.items[0].id)
+        const result = await blogActions
+            .deleteBlogById(resultDefault.body.items[0].id, auth.basic_TRUE)
+        const blogByIdAfter = await blogActions.getBlogById(resultDefault.body.items[0].id)
+
+        await expect(result.statusCode).toBe(204)
+        await expect(blogByIdBefore.body.id).toEqual(resultDefault.body.items[0].id)
+        await expect(blogByIdAfter.body.id).toBeUndefined()
+    })
+
+    it('-DELETE /blogs: id, should return status 401', async () => {
+        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        const resultDefault = await blogActions.getBlogsPagingDefault()
+        const blogByIdBefore = await blogActions.getBlogById(resultDefault.body.items[0].id)
+        const result = await blogActions
+            .deleteBlogById(resultDefault.body.items[0].id, auth.basic_FALSE)
+        const blogByIdAfter = await blogActions.getBlogById(resultDefault.body.items[0].id)
+
+        await expect(result.statusCode).toBe(401)
+        await expect(blogByIdBefore.body.id).toEqual(resultDefault.body.items[0].id)
+        await expect(blogByIdAfter.body.id).toEqual(resultDefault.body.items[0].id)
+    })
+
+    it('-DELETE /blogs: id, should return status 404', async () => {
+        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        const resultDefault = await blogActions.getBlogsPagingDefault()
+        const result = await blogActions
+            .deleteBlogById(blog.id.FALSE, auth.basic_TRUE)
+        const resultDefaultAfter = await blogActions.getBlogsPagingDefault()
+
+        await expect(result.statusCode).toBe(404)
+        await expect(resultDefault.body.items).toEqual(resultDefaultAfter.body.items)
+
+    })
 })

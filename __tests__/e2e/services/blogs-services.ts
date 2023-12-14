@@ -1,8 +1,7 @@
 import {routePaths} from "../../../src/setting";
 import {getRequest} from "../comments.e2e.test";
 import {InputBlogModelType, BlogType} from "../../../src/types/blogs-types";
-import {viewModelBlogsDefaultPaging_TRUE} from "../utility/blogs-utility";
-import {auth, AuthType, BasicType} from "../utility/auth-utility";
+import {auth, BasicType} from "../utility/auth-utility";
 
 export const blogActions = {
 
@@ -19,7 +18,6 @@ export const blogActions = {
     },
 
     async createManyBlogs(manyBlogSendBody: InputBlogModelType[]) {
-
         for (const blogSendBody of manyBlogSendBody) {
             await getRequest()
                 .post(`${routePaths.blogs}`)
@@ -45,14 +43,16 @@ export const blogActions = {
             .get(`${routePaths.blogs}`+`${queryPresets}`)
     },
 
-    // async expectGetBlogsPaging(statusCode: number) {
-    //     const result = await this.getBlogsPaging()
-    //     const expectItems = viewModelBlogsDefaultPaging_TRUE(10, result.body.items)
-    //     await expect(result.statusCode).toBe(statusCode)
-    //     await expect(result.body.pagesCount).toBe(expectItems.pagesCount)
-    //     await expect(result.body.page).toBe(expectItems.page)
-    //     await expect(result.body.pageSize).toBe(expectItems.pageSize)
-    //     await expect(result.body.totalCount).toBe(expectItems.totalCount)
-    //     await expect(result.body.items).toStrictEqual(expectItems.items)
-    // }
+    async updateBlogById(id: string, blogSendBody: any, authBasic: BasicType) {
+        return getRequest()
+            .put(`${routePaths.blogs}/${id}`)
+            .set(authBasic.type, authBasic.password)
+            .send(blogSendBody)
+    },
+
+    async deleteBlogById(id: string, authBasic: BasicType) {
+        return getRequest()
+            .delete(`${routePaths.blogs}/${id}`)
+            .set(authBasic.type, authBasic.password)
+        },
 }
