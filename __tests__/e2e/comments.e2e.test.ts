@@ -6,7 +6,7 @@ import {blogActions} from "./services/blogs-services";
 import {postActions} from "./services/posts-services";
 import {userActions} from "./services/users-services";
 import {commentAction} from "./services/comments-services";
-import {postSendBody_TRUE} from "./utility/posts-utility";
+//import {postSendBody_TRUE} from "./utility/posts-utility";
 import {userSendBody_TRUE, userSendAuthBody_TRUE} from "./utility/users-utility";
 import {commentSendBody_TRUE, commentCorrect, comment} from "./utility/comments-utility";
 import {codesHTTP} from "../../src/utility/constants";
