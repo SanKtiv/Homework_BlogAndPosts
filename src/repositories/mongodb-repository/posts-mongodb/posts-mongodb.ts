@@ -11,6 +11,7 @@ import {ObjectId} from "mongodb";
 import {postsService} from "../../../services/posts-service";
 import {CommentDBType, CommentType, ViewCommentModelType} from "../../../types/comments-types";
 import {commentService} from "../../../services/commets-service";
+import {blogsRepository} from "../blogs-mongodb/blogs-mongodb";
 
 export const postsRepository = {
 
@@ -26,9 +27,10 @@ export const postsRepository = {
     },
 
     async createPost(body: InputPostModelType): Promise<ViewPostModelType> {
+        const blog = await blogsRepository.getBlogById(body.blogId)
         const newPost: PostType = {
             createdAt: dateNow().toISOString(),
-            blogName: 'name',
+            blogName: blog!.name,
             ...body
         }
         await dbPostsCollection.insertOne(newPost)

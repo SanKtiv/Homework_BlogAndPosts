@@ -8,5 +8,9 @@ export const postActions = {
         getRequest()
             .post(`${routePaths.posts}`)
             .set(authBasic.type, authBasic.password)
-            .send(postSendBody)
+            .send(postSendBody),
+
+    getPostDefaultPaging: async () =>
+        getRequest()
+            .get(`${routePaths.posts}`)
 }
