@@ -24,6 +24,25 @@ export const post = {
         blogId: new ObjectId(NUM).toString()
     },
 
+    paging: {
+        preset1: {
+            pageNumber: 1,
+            pageSize: 5,
+            sortBy:  'createdAt',
+            sortDirection: 'desc'
+        },
+        preset2: {
+            pageNumber: 2,
+            pageSize: 5,
+            sortBy:  'createdAt',
+            sortDirection: 'asc'
+        }
+    },
+
+    query(paging: any) {
+        return `?` + Object.keys(paging).map(e => e + `${paging[e]}`).join('&')
+    },
+
     sendBody(body: PostBodyType, blogId?: string) {
         return {
             title: body.title,
@@ -31,6 +50,14 @@ export const post = {
             content: body.content,
             blogId: !blogId ? body.blogId : blogId
         }
+    },
+
+    sendManyBody(body: PostBodyType, postsCount: number, blogId?: string) {
+        const arr = []
+        for (let i = 1; i <= postsCount; i++) {
+            arr.push({...this.sendBody(body, blogId), title: body.title + `${i}`})
+        }
+        return arr
     },
 
     expectPost_TRUE() {
@@ -41,7 +68,50 @@ export const post = {
         }
     },
 
+    expectDefaultPaging(sendManyBody: any) {
+        const arr = []
 
+        return {
+            pagesCount: 1,
+            page: 1,
+            pageSize: 10,
+            totalCount: 10,
+            items: [
+                {
+                    id: "string",
+                    title: "string",
+                    shortDescription: "string",
+                    content: "string",
+                    blogId: "string",
+                    blogName: "string",
+                    createdAt: "2023-12-19T06:46:40.542Z"
+                }
+            ]
+        }
+    },
+
+    expectPostsPaging(body: PostBodyType, postsCount: number, paging?: any, blogId?: string) {
+        if (paging) {
+
+        }
+        return {
+            pagesCount: Math.ceil(postsCount / paging.pageSize),
+            page: paging.pageNumber,
+            pageSize: paging.pageSize,
+            totalCount: postsCount,
+            items: [
+                {
+                id: "string",
+                title: "string",
+                shortDescription: "string",
+                content: "string",
+                blogId: "string",
+                blogName: "string",
+                createdAt: "2023-12-19T06:46:40.542Z"
+                }
+            ]
+        }
+    }
 
 
 }

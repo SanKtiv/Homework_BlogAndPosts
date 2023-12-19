@@ -1,6 +1,6 @@
 import {routePaths} from "../../../src/setting";
 import {getRequest} from "../comments.e2e.test";
-import {InputBlogModelType, BlogType} from "../../../src/types/blogs-types";
+import {InputBlogModelType} from "../../../src/types/blogs-types";
 import {auth, BasicType} from "../utility/auth-utility";
 
 export const blogActions = {
@@ -24,13 +24,6 @@ export const blogActions = {
                 .set(auth.basic_TRUE.type, auth.basic_TRUE.password)
                 .send(blogSendBody)
         }
-    },
-
-    async expectCreateBlog(blogSendBody: InputBlogModelType, blog: BlogType, statusCode: number ) {
-
-        const result = await this.createBlog(blogSendBody, auth.basic_TRUE)
-        await expect(result.statusCode).toBe(statusCode)
-        await expect(result.body).toEqual(blog)
     },
 
     async getBlogsPagingDefault() {

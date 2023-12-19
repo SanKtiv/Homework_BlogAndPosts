@@ -10,7 +10,25 @@ export const postActions = {
             .set(authBasic.type, authBasic.password)
             .send(postSendBody),
 
-    getPostDefaultPaging: async () =>
+    getPostsDefaultPaging: async () =>
         getRequest()
-            .get(`${routePaths.posts}`)
+            .get(`${routePaths.posts}`),
+
+    getPostsPaging: async (query: any) =>
+        getRequest()
+            .get(`${routePaths.posts}/${query}`),
+
+    createManyPosts: async (manyPostsSendBody: any, authBasic: BasicType) => {
+        const items = []
+        for (const postSendBody of manyPostsSendBody) {
+            const result = await getRequest()
+                .post(`${routePaths.posts}`)
+                .set(authBasic.type, authBasic.password)
+                .send(postSendBody)
+            items.push(result.body)
+        }
+        return items
+    },
+
+
 }

@@ -46,10 +46,25 @@ describe('TEST for POSTS', () => {
     })
 
     it('-POST /posts, should return status 401', async () => {
-        await getRequest().delete(routePaths.deleteAllData)
-        const result = await postActions.createPost(blog.sendBody_TRUE(), auth.basic_FALSE)
+        const createBlog = await blogActions
+            .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+        const result = await postActions
+            .createPost(post.sendBody(post.body_TRUE, createBlog.body.id), auth.basic_FALSE)
 
         await expect(result.statusCode).toBe(401)
         //await expect(result)
+    })
+
+    it('-GET /posts, should return status 200 and paging', async () => {
+        await getRequest().delete(routePaths.deleteAllData)
+        const createBlog = await blogActions
+            .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+        const createManyPosts = await postActions
+            .createManyPosts(post.sendManyBody(post.body_TRUE, 10, createBlog.body.id), auth.basic_TRUE)
+        const result = await postActions.getPostsPaging(post.query(post.paging.preset1))
+
+        console.log(createManyPosts)
+        await expect(result.statusCode).toBe(200)
+        //await expect(result.body).toEqual()
     })
 })
