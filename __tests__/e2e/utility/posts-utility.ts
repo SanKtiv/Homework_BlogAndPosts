@@ -11,6 +11,8 @@ type PostBodyType = {
 
 export const post = {
 
+    id: new ObjectId(NUM).toString(),
+
     body_TRUE: {
         title: "post_title",
         shortDescription: "Qwerty",
@@ -23,6 +25,15 @@ export const post = {
         content: "content",
         blogId: new ObjectId(NUM).toString()
     },
+
+    bodyUpdate(blogId: string) {
+            return {
+                title: "TITLE",
+                shortDescription: "QWERTY",
+                content: "CONTENT",
+                blogId: blogId
+            }
+        },
 
     paging: {
         preset1: {
@@ -40,7 +51,7 @@ export const post = {
     },
 
     query(paging: any) {
-        return `?` + Object.keys(paging).map(e => e + `${paging[e]}`).join('&')
+        return `?` + Object.keys(paging).map(e => e + `=${paging[e]}`).join('&')
     },
 
     sendBody(body: PostBodyType, blogId?: string) {
@@ -68,48 +79,36 @@ export const post = {
         }
     },
 
-    expectDefaultPaging(sendManyBody: any) {
-        const arr = []
-
+    expectDefaultPaging(manyBody: any) {
+        const f = (sortBy: any) => Number(new Date(sortBy.createdAt))
+        manyBody.sort((a: number, b: number) => f(b) - f(a))
         return {
             pagesCount: 1,
             page: 1,
             pageSize: 10,
-            totalCount: 10,
-            items: [
-                {
-                    id: "string",
-                    title: "string",
-                    shortDescription: "string",
-                    content: "string",
-                    blogId: "string",
-                    blogName: "string",
-                    createdAt: "2023-12-19T06:46:40.542Z"
-                }
-            ]
+            totalCount: manyBody.length,
+            items: manyBody.slice(0, 10)
         }
     },
 
-    expectPostsPaging(body: PostBodyType, postsCount: number, paging?: any, blogId?: string) {
-        if (paging) {
+    expectPaging(manyBody: any, paging: any) {
 
-        }
+        const f = paging.sortBy === 'createdAt' ?
+            (sortBy: any) => Number(new Date(sortBy.createdAt)) :
+            (sortBy: any) => sortBy[paging.sortBy]
+
+        const funcSort = paging.sortDirection === 'desc' ?
+            (a: any, b: any) => f(b) - f(a) :
+            (a: any, b: any) => f(a) - f(b)
+
+        manyBody.sort(funcSort )
+
         return {
-            pagesCount: Math.ceil(postsCount / paging.pageSize),
+            pagesCount: Math.ceil(manyBody.length / paging.pageSize),
             page: paging.pageNumber,
             pageSize: paging.pageSize,
-            totalCount: postsCount,
-            items: [
-                {
-                id: "string",
-                title: "string",
-                shortDescription: "string",
-                content: "string",
-                blogId: "string",
-                blogName: "string",
-                createdAt: "2023-12-19T06:46:40.542Z"
-                }
-            ]
+            totalCount: manyBody.length,
+            items: manyBody.slice(0, paging.pageSize)
         }
     }
 

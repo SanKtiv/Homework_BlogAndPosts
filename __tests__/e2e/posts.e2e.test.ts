@@ -63,8 +63,67 @@ describe('TEST for POSTS', () => {
             .createManyPosts(post.sendManyBody(post.body_TRUE, 10, createBlog.body.id), auth.basic_TRUE)
         const result = await postActions.getPostsPaging(post.query(post.paging.preset1))
 
-        console.log(createManyPosts)
         await expect(result.statusCode).toBe(200)
-        //await expect(result.body).toEqual()
+        await expect(result.body)
+            .toEqual(post.expectPaging(createManyPosts, post.paging.preset1))
     })
+
+    it('-GET /posts: id, should return status 200 and post', async () => {
+        const posts = await postActions.getPostsDefaultPaging()
+        const result = await postActions.getPostById(posts.body.items[2].id)
+
+        await expect(result.statusCode).toBe(200)
+        await expect(result.body).toEqual(posts.body.items[2])
+    })
+
+    it('-GET /posts: id, should return status 404', async () => {
+        const result = await postActions.getPostById(post.id)
+
+        await expect(result.statusCode).toBe(404)
+        await expect(result.body).toEqual({})
+    })
+
+    it('-PUT /posts: id, should return status 204', async () => {
+
+        const blogId = (await blogActions
+            .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)).body.id
+
+        const postBeforeUpdate = (await postActions.getPostsDefaultPaging()).body.items[3]
+
+        const bodyUpdate = post.bodyUpdate(blogId)
+
+        const result = await postActions
+            .updatePostById(bodyUpdate, postBeforeUpdate.id, auth.basic_TRUE)
+
+        const postAfterUpdate = (await postActions.getPostsDefaultPaging()).body.items[3]
+
+        const expectPost = {...postBeforeUpdate, ...bodyUpdate}
+
+        await expect(result.statusCode).toBe(204)
+        await expect(postAfterUpdate).toEqual(expectPost)
+    })
+
+    // it('-PUT /posts: id, should return status 400 and errorsMessages', async () => {
+    //
+    // })
+    //
+    // it('-PUT /posts: id, should return status 401', async () => {
+    //
+    // })
+    //
+    // it('-PUT /posts: id, should return status 404', async () => {
+    //
+    // })
+    //
+    // it('-DELETE /posts: id, should return status 204', async () => {
+    //
+    // })
+    //
+    // it('-DELETE /posts: id, should return status 401', async () => {
+    //
+    // })
+    //
+    // it('-DELETE /posts: id, should return status 404', async () => {
+    //
+    // })
 })
