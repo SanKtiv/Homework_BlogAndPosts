@@ -7,10 +7,10 @@ export const expectError = (field: string) => {
     return arr
 }
 
-export const expectErrors = (body: any) => {
+export const expectErrors = (sendBody: any) => {
     const arr = []
-    for (const key in body) {
-        if (typeof body[key] === "number") {
+    for (const key in sendBody) {
+        if (typeof sendBody[key] === "number") {
             arr.push({
                 message: expect.any(String),
                 field: key

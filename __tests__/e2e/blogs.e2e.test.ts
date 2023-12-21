@@ -1,16 +1,10 @@
-import request from 'supertest'
-import {app} from '../../src/setting'
+import {getRequest} from "./services/test-request";
 import {client} from "../../src/repositories/mongodb-repository/db";
 import {routePaths} from "../../src/setting";
 import {blog} from "./utility/blogs-utility";
 import {blogActions} from "./services/blogs-services";
 import {auth} from "./utility/auth-utility";
 import {expectError} from "./utility/error-utility";
-
-
-const getRequest = () => {
-    return request(app)
-}
 
 describe('TEST for BLOGS', () => {
 

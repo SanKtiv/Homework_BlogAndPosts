@@ -1,5 +1,5 @@
 import {routePaths} from "../../../src/setting";
-import {getRequest} from "../comments.e2e.test";
+import {getRequest} from './test-request'
 import {BasicType} from "../utility/auth-utility";
 
 export const postActions = {
@@ -36,4 +36,9 @@ export const postActions = {
             .put(`${routePaths.posts}/${id}`)
             .set(authBasic.type, authBasic.password)
             .send(bodyUpdate),
+
+    deletePostById: async (id: string, authBasic: BasicType) =>
+        getRequest()
+            .delete(`${routePaths.posts}/${id}`)
+            .set(authBasic.type, authBasic.password),
 }

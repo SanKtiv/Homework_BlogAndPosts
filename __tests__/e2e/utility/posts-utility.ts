@@ -26,7 +26,7 @@ export const post = {
         blogId: new ObjectId(NUM).toString()
     },
 
-    bodyUpdate(blogId: string) {
+    bodyUpdate(blogId: string | number) {
             return {
                 title: "TITLE",
                 shortDescription: "QWERTY",

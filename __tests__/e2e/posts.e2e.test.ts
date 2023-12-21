@@ -1,16 +1,12 @@
-import request from 'supertest'
-import {app, routePaths} from "../../src/setting";
+import {getRequest} from "./services/test-request";
+import {routePaths} from "../../src/setting";
 import {client} from "../../src/repositories/mongodb-repository/db";
 import {postActions} from "./services/posts-services";
 import {post} from "./utility/posts-utility";
 import {auth} from "./utility/auth-utility";
 import {blogActions} from "./services/blogs-services";
-import {blogsRepositoryQuery} from "../../src/repositories/mongodb-repository/blogs-mongodb/blogs-mongodb-Query";
 import {blog} from "./utility/blogs-utility";
-import {ObjectId} from "mongodb";
 import {expectErrors} from "./utility/error-utility";
-
-const getRequest = ()=> request(app)
 
 describe('TEST for POSTS', () => {
 
@@ -103,27 +99,85 @@ describe('TEST for POSTS', () => {
         await expect(postAfterUpdate).toEqual(expectPost)
     })
 
-    // it('-PUT /posts: id, should return status 400 and errorsMessages', async () => {
-    //
-    // })
-    //
-    // it('-PUT /posts: id, should return status 401', async () => {
-    //
-    // })
-    //
-    // it('-PUT /posts: id, should return status 404', async () => {
-    //
-    // })
-    //
-    // it('-DELETE /posts: id, should return status 204', async () => {
-    //
-    // })
-    //
-    // it('-DELETE /posts: id, should return status 401', async () => {
-    //
-    // })
-    //
-    // it('-DELETE /posts: id, should return status 404', async () => {
-    //
-    // })
+    it('-PUT /posts: id, should return status 400 and errorsMessages', async () => {
+
+        const postBeforeUpdate = (await postActions.getPostsDefaultPaging()).body.items[1]
+
+        const bodyUpdate = post.bodyUpdate(blog.id.FALSE_NUM)
+
+        const result = await postActions
+            .updatePostById(bodyUpdate, postBeforeUpdate.id, auth.basic_TRUE)
+
+        const postAfterUpdate = (await postActions.getPostsDefaultPaging()).body.items[1]
+
+        await expect(result.statusCode).toBe(400)
+        await expect(result.body).toEqual(expectErrors(bodyUpdate))
+        await expect(postBeforeUpdate).toEqual(postAfterUpdate)
+    })
+
+    it('-PUT /posts: id, should return status 401', async () => {
+
+        const blogId = (await blogActions.getBlogsPagingDefault()).body.items[0].id
+
+        const postBeforeUpdate = (await postActions.getPostsDefaultPaging()).body.items[2]
+
+        const bodyUpdate = post.bodyUpdate(blogId)
+
+        const result = await postActions
+            .updatePostById(bodyUpdate, postBeforeUpdate.id, auth.basic_FALSE)
+
+        const postAfterUpdate = (await postActions.getPostsDefaultPaging()).body.items[2]
+
+        await expect(result.statusCode).toBe(401)
+        await expect(result.body).toEqual({})
+        await expect(postBeforeUpdate).toEqual(postAfterUpdate)
+    })
+
+    it('-PUT /posts: id, should return status 404', async () => {
+
+        const blogId = (await blogActions.getBlogsPagingDefault()).body.items[0].id
+
+        const bodyUpdate = post.bodyUpdate(blogId)
+
+        const result = await postActions
+            .updatePostById(bodyUpdate, post.id, auth.basic_TRUE)
+
+        await expect(result.statusCode).toBe(404)
+        await expect(result.body).toEqual({})
+    })
+
+    it('-DELETE /posts: id, should return status 204', async () => {
+
+        const postId = (await postActions.getPostsDefaultPaging()).body.items[2].id
+
+        const result = await postActions.deletePostById(postId, auth.basic_TRUE)
+
+        const postAfterDelete = (await postActions.getPostById(postId)).body
+
+        await expect(result.statusCode).toBe(204)
+        await expect(postAfterDelete).toEqual({})
+    })
+
+    it('-DELETE /posts: id, should return status 401', async () => {
+
+        const postId = (await postActions.getPostsDefaultPaging()).body.items[1].id
+
+        const postBeforeDelete = (await postActions.getPostById(postId)).body
+
+        const result = await postActions.deletePostById(postId, auth.basic_FALSE)
+
+        const postAfterDelete = (await postActions.getPostById(postId)).body
+
+        await expect(result.statusCode).toBe(401)
+        await expect(postBeforeDelete).toEqual(postAfterDelete)
+    })
+
+    it('-DELETE /posts: id, should return status 404', async () => {
+
+        const result = await postActions.deletePostById(post.id, auth.basic_TRUE)
+
+        await expect(result.statusCode).toBe(404)
+
+    })
+
 })

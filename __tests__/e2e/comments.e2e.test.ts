@@ -13,7 +13,7 @@
 // import {auth} from "./utility/auth-utility";
 //
 //
-// export const getRequest = () => request(app)
+//export const getRequest = () => request(app)
 //
 // describe('TEST for comments', () => {
 //     beforeAll(async () => {
