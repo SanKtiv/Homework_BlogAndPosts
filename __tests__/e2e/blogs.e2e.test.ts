@@ -22,8 +22,16 @@ describe('TEST for BLOGS', () => {
     })
 
     it('-POST, should return status 201 and blog', async () => {
+
+        const countBlogsBeforeCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
+
         const result = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+
+        const countBlogsAfterCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
+
         await expect(result.statusCode).toBe(201)
+        await expect(countBlogsBeforeCreate).toEqual(0)
+        await expect(countBlogsAfterCreate).toEqual(1)
         await expect(result.body).toEqual(blog.expectBlog_TRUE())
     })
 
