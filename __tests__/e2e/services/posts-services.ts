@@ -1,6 +1,6 @@
 import {routePaths} from "../../../src/setting";
 import {getRequest} from './test-request'
-import {BasicType} from "../utility/auth-utility";
+import {auth, BasicType} from "../utility/auth-utility";
 
 export const postActions = {
 
@@ -22,13 +22,19 @@ export const postActions = {
         getRequest()
             .get(`${routePaths.posts}/${query}`),
 
-    createManyPosts: async function (manyPostsSendBody: any, authBasic: BasicType) {
-        const items = []
+    getPostsByBlogIdPaging: async (query: any, blogId: string) => {
+
+        return getRequest()
+            .get(`${routePaths.blogs}/${blogId}${routePaths.posts}/${query}`)
+    },
+
+    createManyPosts: async function (manyPostsSendBody: any) {
+        const posts = []
         for (const postSendBody of manyPostsSendBody) {
-            const result = await this.createPost(postSendBody, authBasic)
-            items.push(result.body)
+            const result = await this.createPost(postSendBody, auth.basic_TRUE)
+            posts.push(result.body)
         }
-        return items
+        return posts
     },
 
     updatePostById: async (bodyUpdate: any, id: string, authBasic: BasicType) =>

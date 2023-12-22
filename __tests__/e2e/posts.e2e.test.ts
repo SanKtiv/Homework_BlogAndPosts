@@ -56,7 +56,7 @@ describe('TEST for POSTS', () => {
         const createBlog = await blogActions
             .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
         const createManyPosts = await postActions
-            .createManyPosts(post.sendManyBody(post.body_TRUE, 10, createBlog.body.id), auth.basic_TRUE)
+            .createManyPosts(post.sendManyBody(post.body_TRUE, 10, createBlog.body.id))
         const result = await postActions.getPostsPaging(post.query(post.paging.preset1))
 
         await expect(result.statusCode).toBe(200)

@@ -129,7 +129,7 @@ export const blog = {
         }
     },
 
-    manyBlogSendBody_TRUE(blogsCount: number) {
+    manySendBody(blogsCount: number) {
       const arr = []
       for (let i = 1; i <= blogsCount; i++) {
           arr.push({...this.sendBody_TRUE(), name: this.body.name_TRUE + `${i}`})

@@ -18,12 +18,15 @@ export const blogActions = {
     },
 
     async createManyBlogs(manyBlogSendBody: InputBlogModelType[]) {
+        const blogs = []
         for (const blogSendBody of manyBlogSendBody) {
-            await getRequest()
+            const result = await getRequest()
                 .post(`${routePaths.blogs}`)
                 .set(auth.basic_TRUE.type, auth.basic_TRUE.password)
                 .send(blogSendBody)
+            blogs.push(result.body)
         }
+        return blogs
     },
 
     async getBlogsPagingDefault() {

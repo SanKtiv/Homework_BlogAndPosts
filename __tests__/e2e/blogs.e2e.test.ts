@@ -5,6 +5,8 @@ import {blog} from "./utility/blogs-utility";
 import {blogActions} from "./services/blogs-services";
 import {auth} from "./utility/auth-utility";
 import {expectError} from "./utility/error-utility";
+import {postActions} from "./services/posts-services";
+import {post} from "./utility/posts-utility";
 
 describe('TEST for BLOGS', () => {
 
@@ -72,7 +74,7 @@ describe('TEST for BLOGS', () => {
     })
 
     it('-GET /blogs, should return blogs with default paging, status 200', async () => {
-        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(14))
+        await blogActions.createManyBlogs(blog.manySendBody(14))
         const result = await blogActions.getBlogsPagingDefault()
         const expectBody = await blog
             .viewModelBlogsPaging_TRUE(14, result.body.items, blog.pagingDefaultSettings)
@@ -81,7 +83,7 @@ describe('TEST for BLOGS', () => {
     })
 
     it ('-GET /blogs, should return blogs with paging, sortDirection is asc, status 200', async () => {
-        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        await blogActions.createManyBlogs(blog.manySendBody(10))
         const resultDefault = await blogActions.getBlogsPaging(blog.queryPresets(blog.pagingDefaultSettings))
 
         const result = await blogActions.getBlogsPaging(blog.queryPresets(blog.pagingSettings))
@@ -91,9 +93,33 @@ describe('TEST for BLOGS', () => {
         await expect(result.body).toEqual(expectBody)
     })
 
+    it('-GET /blogs: blogId/posts, should return status 200 and all posts for specified blog', async () => {
+
+        const blogId = (await blogActions
+            .createManyBlogs(blog.manySendBody(10)))[4].id
+
+        const posts = await postActions
+            .createManyPosts(post.sendManyBody(post.body_TRUE, 10, blogId))
+
+        const result = await postActions
+            .getPostsByBlogIdPaging(post.query(post.paging.preset1), blogId)
+
+        await expect(result.statusCode).toBe(200)
+        await expect(result.body).toEqual(post.expectPaging(posts, post.paging.preset1))
+    })
+
+    it('-GET /blogs: blogId/posts, should return status 404', async () => {
+
+        const result = await postActions
+            .getPostsByBlogIdPaging(post.query(post.paging.preset1), blog.id.FALSE)
+
+        await expect(result.statusCode).toBe(404)
+        await expect(result.body).toEqual({})
+    })
+
     it('-PUT /blogs: id, should return status 204', async () => {
 
-        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        await blogActions.createManyBlogs(blog.manySendBody(10))
         const resultDefault = await blogActions
             .getBlogsPaging(blog.queryPresets(blog.pagingDefaultSettings))
         const result = await blogActions
@@ -105,7 +131,7 @@ describe('TEST for BLOGS', () => {
     })
 
     it('-PUT /blogs: id, should return status 400 and errorMessage', async () => {
-        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        await blogActions.createManyBlogs(blog.manySendBody(10))
         const resultDefault = await blogActions.getBlogsPagingDefault()
         const result = await blogActions
             .updateBlogById(resultDefault.body.items[3].id, blog.sendBody_FALSE_NAME_LENGTH(), auth.basic_TRUE)
@@ -122,7 +148,7 @@ describe('TEST for BLOGS', () => {
     })
 
     it('-PUT /blogs: id, should return status 404', async () => {
-        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        await blogActions.createManyBlogs(blog.manySendBody(10))
         const result = await blogActions
             .updateBlogById(blog.id.FALSE, blog.sendBody_TRUE(), auth.basic_TRUE)
 
@@ -130,7 +156,7 @@ describe('TEST for BLOGS', () => {
     })
 
     it('-DELETE /blogs: id, should return status 204', async () => {
-        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        await blogActions.createManyBlogs(blog.manySendBody(10))
         const resultDefault = await blogActions.getBlogsPagingDefault()
         const blogByIdBefore = await blogActions.getBlogById(resultDefault.body.items[0].id)
         const result = await blogActions
@@ -143,7 +169,7 @@ describe('TEST for BLOGS', () => {
     })
 
     it('-DELETE /blogs: id, should return status 401', async () => {
-        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        await blogActions.createManyBlogs(blog.manySendBody(10))
         const resultDefault = await blogActions.getBlogsPagingDefault()
         const blogByIdBefore = await blogActions.getBlogById(resultDefault.body.items[0].id)
         const result = await blogActions
@@ -156,7 +182,7 @@ describe('TEST for BLOGS', () => {
     })
 
     it('-DELETE /blogs: id, should return status 404', async () => {
-        await blogActions.createManyBlogs(blog.manyBlogSendBody_TRUE(10))
+        await blogActions.createManyBlogs(blog.manySendBody(10))
         const resultDefault = await blogActions.getBlogsPagingDefault()
         const result = await blogActions
             .deleteBlogById(blog.id.FALSE, auth.basic_TRUE)
