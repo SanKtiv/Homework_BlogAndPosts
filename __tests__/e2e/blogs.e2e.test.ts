@@ -117,6 +117,22 @@ describe('TEST for BLOGS', () => {
         await expect(result.body).toEqual({})
     })
 
+    // it('-POST /blogs: blogId/posts, should return status 201 and post', async () => {
+    //
+    // })
+    //
+    // it('-POST /blogs: blogId/posts, should return status 400', async () => {
+    //
+    // })
+    //
+    // it('-POST /blogs: blogId/posts, should return status 401', async () => {
+    //
+    // })
+    //
+    // it('-POST /blogs: blogId/posts, should return status 404', async () => {
+    //
+    // })
+
     it('-PUT /blogs: id, should return status 204', async () => {
 
         await blogActions.createManyBlogs(blog.manySendBody(10))
