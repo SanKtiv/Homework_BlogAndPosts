@@ -10,6 +10,12 @@ export const postActions = {
             .set(authBasic.type, authBasic.password)
             .send(postSendBody),
 
+    createPostByBlogId: async (blogId: string, postSendBody: any, authBasic: BasicType) =>
+        getRequest()
+            .post(`${routePaths.blogs}/${blogId}${routePaths.posts}`)
+            .set(authBasic.type, authBasic.password)
+            .send(postSendBody),
+
     getPostById: async (id: string) =>
         getRequest()
             .get(`${routePaths.posts}/${id}`),

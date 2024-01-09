@@ -137,6 +137,7 @@ export const blog = {
       return arr
     },
 
+    //blogsCount: number,
     viewModelBlogsPaging_TRUE(blogsCount: number, items: BlogType[], pagingSettings: any) {
 
         const f = (sort: any) => Number(new Date(sort[pagingSettings.sortBy]))
@@ -151,6 +152,7 @@ export const blog = {
         } else {
             itemsDefaultSort = newItems.sort((a, b) => f(b) - f(a))
         }
+
         return {
             pagesCount: Math.ceil(blogsCount / pagingSettings.pageSize),
             page: pagingSettings.pageNumber,

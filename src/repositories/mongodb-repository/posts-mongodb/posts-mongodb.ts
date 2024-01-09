@@ -38,9 +38,10 @@ export const postsRepository = {
     },
 
     async createPostForBlogId(blogId: string, body: PostBodyWithoutBlogIdType): Promise<ViewPostModelType> {
+        const blog = await blogsRepository.getBlogById(blogId)
         const newPost: PostType = {
             createdAt: dateNow().toISOString(),
-            blogName: 'name',
+            blogName: blog!.name,
             blogId: blogId,
             ...body
         }
