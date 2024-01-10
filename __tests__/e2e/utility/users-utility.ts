@@ -52,6 +52,10 @@ export const user = {
         return arr
     },
 
+    expectPaging(usersCount: number) {
+
+    },
+
     expectBody_TRUE() {
         return {
             id: expect.any(String),
