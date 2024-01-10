@@ -1,15 +1,28 @@
 import {InputUserAuthModelType, InputUserModelType} from "../../../src/types/users-types";
 import {routePaths} from "../../../src/setting";
-import {getRequest} from "../comments.e2e.test";
+import {getRequest} from './test-request';
+import {auth, BasicType} from "../utility/auth-utility";
 
 export const userActions = {
 
-    createUser: async (userSendBody: InputUserModelType) =>
+    createUser: async (userSendBody: InputUserModelType, authBasic: BasicType) =>
 
         getRequest()
             .post(routePaths.users)
-            .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
+            .set(authBasic.type, authBasic.password)
             .send(userSendBody),
+
+    async createManyUsers(sendManyBody: InputUserModelType[]) {
+        for (const sendBody of sendManyBody) {
+            this.createUser(sendBody, auth.basic_TRUE)
+        }
+    },
+
+    getUsersPaging: async (query: string, authBasic: BasicType) =>
+
+        getRequest()
+            .get(`${routePaths.users}${query}`)
+            .set(authBasic.type, authBasic.password),
 
     authUser: async (userSendAuthBody: InputUserAuthModelType) =>
 

@@ -76,7 +76,6 @@ describe('TEST for BLOGS', () => {
     })
 
     it('-GET /blogs: id, should return status 404', async () => {
-        //await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
 
         const result = await blogActions.getBlogById(blog.id.FALSE_STRING)
 
@@ -98,18 +97,19 @@ describe('TEST for BLOGS', () => {
     })
 
     it ('-GET /blogs, should return blogs with paging, sortDirection is asc, status 200', async () => {
-        //await blogActions.createManyBlogs(blog.manySendBody(10))
-        const resultDefault = await blogActions.getBlogsPaging(blog.queryPresets(blog.pagingDefaultSettings))
+
+        const totalCount = (await blogActions.getBlogsPagingDefault()).body.totalCount
+
+        const resultDefault = await blogActions
+            .getBlogsPaging(blog.queryPresets({...blog.pagingDefaultSettings, pageSize: totalCount}))
 
         const result = await blogActions.getBlogsPaging(blog.queryPresets(blog.pagingSettings))
 
         const expectBody = await blog
-            .viewModelBlogsPaging_TRUE(result.body.totalCount, result.body.items, blog.pagingSettings)
+            .viewModelBlogsPaging_TRUE(totalCount, resultDefault.body.items, blog.pagingSettings)
 
         await expect(result.statusCode).toBe(200)
-        console.log(result.body)
-        console.log(expectBody)
-        //await expect(result.body).toEqual(expectBody)
+        await expect(result.body).toEqual(expectBody)
     })
 
     it('-GET /blogs: blogId/posts, should return status 200 and all posts for specified blog', async () => {
@@ -161,10 +161,14 @@ describe('TEST for BLOGS', () => {
 
         await expect(result.statusCode).toBe(401)
     })
-    //
-    // it('-POST /blogs: blogId/posts, should return status 404', async () => {
-    //
-    // })
+
+    it('-POST /blogs: blogId/posts, should return status 404', async () => {
+
+        const result = await postActions
+            .createPostByBlogId(blog.id.FALSE, post.body_TRUE, auth.basic_TRUE)
+
+        await expect(result.statusCode).toBe(404)
+    })
 
     it('-PUT /blogs: id, should return status 204', async () => {
 

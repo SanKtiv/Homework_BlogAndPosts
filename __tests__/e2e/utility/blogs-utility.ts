@@ -144,8 +144,8 @@ export const blog = {
         const newItems = [...items]
         let itemsDefaultSort
 
-        if (pagingSettings.sortDirection === 'asc' && pagingSettings.searchNameTerm === 'e1') {
-            const regexp = new RegExp('e1', 'i')
+        if (pagingSettings.sortDirection === 'asc' && pagingSettings.searchNameTerm) {
+            const regexp = new RegExp(pagingSettings.searchNameTerm, 'i')
             itemsDefaultSort = newItems.filter(el => regexp.test(el.name))
             itemsDefaultSort.sort((a, b) => f(a) - f(b))
             blogsCount = itemsDefaultSort.length
@@ -158,7 +158,7 @@ export const blog = {
             page: pagingSettings.pageNumber,
             pageSize: pagingSettings.pageSize,
             totalCount: blogsCount,
-            items: itemsDefaultSort
+            items: itemsDefaultSort.slice(0, pagingSettings.pageSize)
         }
     },
 }
