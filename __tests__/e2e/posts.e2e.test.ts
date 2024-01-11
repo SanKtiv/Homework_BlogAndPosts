@@ -24,7 +24,9 @@ describe('TEST for POSTS', () => {
     })
 
     it('-POST /posts, should return status 201 and post', async () => {
+
         const createBlog = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+
         const result = await postActions
             .createPost(post.sendBody(post.body_TRUE, createBlog.body.id), auth.basic_TRUE)
 
@@ -34,29 +36,37 @@ describe('TEST for POSTS', () => {
     })
 
     it('-POST /posts, should return status 400 and errorsMessages', async () => {
+
         const createBlog = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+
         const result = await postActions
             .createPost(post.sendBody(post.body_FALSE, createBlog.body.id), auth.basic_TRUE)
+
         await expect(result.statusCode).toBe(400)
         await expect(result.body).toEqual(expectErrors(post.body_FALSE))
     })
 
     it('-POST /posts, should return status 401', async () => {
+
         const createBlog = await blogActions
             .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+
         const result = await postActions
             .createPost(post.sendBody(post.body_TRUE, createBlog.body.id), auth.basic_FALSE)
 
         await expect(result.statusCode).toBe(401)
-        //await expect(result)
     })
 
     it('-GET /posts, should return status 200 and paging', async () => {
+
         await getRequest().delete(routePaths.deleteAllData)
+
         const createBlog = await blogActions
             .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+
         const createManyPosts = await postActions
             .createManyPosts(post.sendManyBody(post.body_TRUE, 10, createBlog.body.id))
+
         const result = await postActions.getPostsPaging(post.query(post.paging.preset1))
 
         await expect(result.statusCode).toBe(200)
@@ -65,7 +75,9 @@ describe('TEST for POSTS', () => {
     })
 
     it('-GET /posts: id, should return status 200 and post', async () => {
+
         const posts = await postActions.getPostsDefaultPaging()
+
         const result = await postActions.getPostById(posts.body.items[2].id)
 
         await expect(result.statusCode).toBe(200)
@@ -73,6 +85,7 @@ describe('TEST for POSTS', () => {
     })
 
     it('-GET /posts: id, should return status 404', async () => {
+
         const result = await postActions.getPostById(post.id)
 
         await expect(result.statusCode).toBe(404)
@@ -177,7 +190,6 @@ describe('TEST for POSTS', () => {
         const result = await postActions.deletePostById(post.id, auth.basic_TRUE)
 
         await expect(result.statusCode).toBe(404)
-
     })
 
 })

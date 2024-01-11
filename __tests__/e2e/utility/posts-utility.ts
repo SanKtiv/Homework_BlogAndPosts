@@ -101,7 +101,7 @@ export const post = {
             (a: any, b: any) => f(b) - f(a) :
             (a: any, b: any) => f(a) - f(b)
 
-        manyBody.sort(funcSort )
+        manyBody.sort(funcSort)
 
         return {
             pagesCount: Math.ceil(manyBody.length / paging.pageSize),

@@ -1,3 +1,5 @@
+import {InputUserModelType, ViewUserModelType, ViewUsersPagingType} from "../../../src/types/users-types";
+
 export const user = {
 
     login_TRUE: 'Qwerty10',
@@ -13,7 +15,7 @@ export const user = {
     paging1: {
         pageNumber: 1,
         pageSize: 5,
-        sortBy:  'createdAt',
+        sortBy: 'createdAt',
         sortDirection: 'desc',
         searchLoginTerm: null,
         searchEmailTerm: null
@@ -22,17 +24,17 @@ export const user = {
     paging2: {
         pageNumber: 2,
         pageSize: 5,
-        sortBy:  'createdAt',
+        sortBy: 'createdAt',
         sortDirection: 'asc',
         searchLoginTerm: 'y12',
         searchEmailTerm: 'om'
     },
 
-    query(paging: any) {
+    query(paging: any): string {
         return `?` + Object.keys(paging).map(e => e + `=${paging[e]}`).join('&')
     },
 
-    sendBody_TRUE() {
+    sendBody_TRUE(): InputUserModelType {
         return {
             login: this.login_TRUE,
             password: this.password_TRUE,
@@ -40,7 +42,7 @@ export const user = {
         }
     },
 
-    sendManyBody(usersCount: number) {
+    sendManyBody(usersCount: number): InputUserModelType[] {
         const arr = []
         for (let i = 1; i <= usersCount; i++) {
             arr.push({
@@ -52,11 +54,38 @@ export const user = {
         return arr
     },
 
-    expectPaging(usersCount: number) {
+    expectPaging(allUsers: ViewUserModelType[], paging: any): ViewUsersPagingType {
 
+        const regexpLog = paging.searchLoginTerm
+            ? new RegExp(paging.searchLoginTerm, 'i')
+            : paging.searchLoginTerm
+
+        const regexpEmail = paging.searchEmailTerm
+            ? new RegExp(paging.searchEmailTerm, 'i')
+            : paging.searchEmailTerm
+
+
+
+        const f = paging.sortBy === 'createdAt'
+            ? (sortBy: any) => Number(new Date(sortBy.createdAt))
+            : (sortBy: any) => sortBy[paging.sortBy]
+
+        const funcSort = paging.sortDirection === 'desc'
+            ? (a: any, b: any) => f(b) - f(a)
+            : (a: any, b: any) => f(a) - f(b)
+
+        allUsers.sort(funcSort)
+
+        return {
+            pagesCount: Math.ceil(allUsers.length / paging.pageSize),
+            page: paging.pageNumber,
+            pageSize: paging.pageSize,
+            totalCount: allUsers.length,
+            items: allUsers.slice(0, paging.pageSize)
+        }
     },
 
-    expectBody_TRUE() {
+    expectBody_TRUE(): ViewUserModelType {
         return {
             id: expect.any(String),
             login: this.login_TRUE,
