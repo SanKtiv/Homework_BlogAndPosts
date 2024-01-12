@@ -17,17 +17,22 @@ export const user = {
         pageSize: 5,
         sortBy: 'createdAt',
         sortDirection: 'desc',
-        searchLoginTerm: null,
-        searchEmailTerm: null
     },
 
     paging2: {
-        pageNumber: 2,
+        pageNumber: 1,
         pageSize: 5,
         sortBy: 'createdAt',
         sortDirection: 'asc',
-        searchLoginTerm: 'y12',
-        searchEmailTerm: 'om'
+        searchLoginTerm: 'y101',
+        searchEmailTerm: '3qw'
+    },
+
+    pagingAll: {
+        pageNumber: 1,
+        pageSize: 100,
+        sortBy: 'createdAt',
+        sortDirection: 'desc',
     },
 
     query(paging: any): string {
@@ -48,7 +53,7 @@ export const user = {
             arr.push({
                 login: this.login_TRUE + `${i}`,
                 password: this.password_TRUE + `${i}`,
-                email: this.email_TRUE
+                email: `${i}` + this.email_TRUE
             })
         }
         return arr
@@ -56,15 +61,20 @@ export const user = {
 
     expectPaging(allUsers: ViewUserModelType[], paging: any): ViewUsersPagingType {
 
-        const regexpLog = paging.searchLoginTerm
-            ? new RegExp(paging.searchLoginTerm, 'i')
-            : paging.searchLoginTerm
+        let filter = null
+        const regexpLog = new RegExp(paging.searchLoginTerm, 'i')
+        const regexpMail = new RegExp(paging.searchEmailTerm, 'i')
 
-        const regexpEmail = paging.searchEmailTerm
-            ? new RegExp(paging.searchEmailTerm, 'i')
-            : paging.searchEmailTerm
+        if (paging.searchLoginTerm && paging.searchEmailTerm) {
+            filter = (el: any) => regexpLog.test(el.login) || regexpMail.test(el.email)
+        } else {
+            if (paging.searchLoginTerm) filter = (el: any) => regexpLog.test(el.login)
+            if (paging.searchEmailTerm) filter = (el: any) => regexpMail.test(el.email)
+        }
 
-
+        if (filter) {
+            allUsers = allUsers.filter(filter)
+        }
 
         const f = paging.sortBy === 'createdAt'
             ? (sortBy: any) => Number(new Date(sortBy.createdAt))
@@ -81,7 +91,7 @@ export const user = {
             page: paging.pageNumber,
             pageSize: paging.pageSize,
             totalCount: allUsers.length,
-            items: allUsers.slice(0, paging.pageSize)
+            items: allUsers.slice((paging.pageNumber - 1) * paging.pageSize, paging.pageSize * paging.pageNumber)
         }
     },
 

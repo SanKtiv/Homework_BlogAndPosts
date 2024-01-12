@@ -13,8 +13,9 @@ export const userActions = {
             .send(userSendBody),
 
     async createManyUsers(sendManyBody: InputUserModelType[]) {
+
         for (const sendBody of sendManyBody) {
-            this.createUser(sendBody, auth.basic_TRUE)
+            await this.createUser(sendBody, auth.basic_TRUE)
         }
     },
 
@@ -22,6 +23,12 @@ export const userActions = {
 
         getRequest()
             .get(`${routePaths.users}${query}`)
+            .set(authBasic.type, authBasic.password),
+
+    deleteUserById: async (id: string, authBasic: BasicType) =>
+
+        getRequest()
+            .delete(`${routePaths.users}/${id}`)
             .set(authBasic.type, authBasic.password),
 
     authUser: async (userSendAuthBody: InputUserAuthModelType) =>
