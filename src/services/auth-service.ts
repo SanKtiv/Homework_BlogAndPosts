@@ -1,4 +1,4 @@
-import {InputUserModelType, RequestUserType, UserDBType, UserType, ViewUserModelType} from "../types/users-types";
+import {InputUserModelType, UserDBType, UserType, ViewUserModelType} from "../types/users-types";
 import bcrypt from 'bcrypt'
 import {dateNow} from "../variables/variables";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
@@ -6,8 +6,6 @@ import {userService} from "./users-service";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
-import {userApplication} from "../applications/user-application";
-import {ObjectId} from "mongodb";
 
 export const authService = {
 
@@ -62,7 +60,7 @@ export const authService = {
 
     async confirmationRegistration(code: string): Promise<boolean> {
 
-        const newCode = code.slice(0, code.length - 1)//!!!!!!!!!!!!!!!!!!!!!
+        const newCode = code.slice(0, code.length - 1)//!!!!!!!!!!!!!!!!!!!!! без этого код не верный приходит
 
         const user = await usersRepositoryReadOnly.getUserByConfirmationCode(newCode)
         if (!user) return false

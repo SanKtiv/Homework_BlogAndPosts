@@ -6,6 +6,8 @@ import {jwtService} from "../applications/jwt-service";
 import {UserDBType} from "../types/users-types";
 import {authorizationJWT, checkRefreshJWT} from "../middlewares/authorization-jwt";
 import {userApplication} from "../applications/user-application";
+import jwt, {JwtPayload, Secret} from "jsonwebtoken";
+
 
 export const authRouters = Router({})
 
@@ -18,9 +20,15 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
 
         const accessToken = await jwtService.createAccessJWT(checkUser)
         const refreshToken = await jwtService.createRefreshJWT(checkUser)
-        res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
-        res.status(200).send(accessToken)
-        return
+
+        const secretRefresh: Secret = process.env.SECRET_KEY!
+        const result = await jwt.verify(refreshToken, secretRefresh) as JwtPayload
+        console.log(Number(new Date(result.iat!)))
+        console.log(result.iat!)
+
+        return res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+            .status(200)
+            .send(accessToken)
     }
     return res.sendStatus(401)
 })
@@ -28,15 +36,14 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
 authRouters.post('/refresh-token', checkRefreshJWT, async (req: Request, res: Response) => {
 
     const userDB = await userApplication.getUserByUserId(req.user!.userId)
-
     const accessToken = await jwtService.createAccessJWT(userDB!)
-
     const refreshToken = await jwtService.createRefreshJWT(userDB!)
 
     await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
 
     res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
-    res.status(200).send(accessToken)
+        .status(200)
+        .send(accessToken)
 })
 
 authRouters.post('/logout', checkRefreshJWT, async (req: Request, res: Response) => {

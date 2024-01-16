@@ -1,9 +1,9 @@
 import {Request, Response, Router} from "express";
-import {userInputValid} from "../validations/users-validators";
-import {authService} from "../services/auth-service";
-import {basicAuth} from "../middlewares/authorization-basic";
-import {errorsOfValidate} from "../middlewares/error-validators-middleware";
-import {userService} from "../services/users-service";
+import {userInputValid} from "../../validations/users-validators";
+import {authService} from "../../services/auth-service";
+import {basicAuth} from "../../middlewares/authorization-basic";
+import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
+import {userService} from "../../services/users-service";
 
 export const userRouter = Router({})
 

@@ -4,6 +4,7 @@ import {PostType} from "../../types/posts-types";
 import {InvalidRefreshTokenType, UserType} from "../../types/users-types";
 import {CommentType} from "../../types/comments-types";
 import {BlogType} from "../../types/blogs-types";
+import {UserSessionType} from "../../types/security-device-types";
 
 dotenv.config()
 
@@ -17,12 +18,14 @@ const blogsCollection: string = 'blogs'
 const usersCollection: string = 'users'
 const commentsCollection: string = 'comments'
 const tokensCollection: string = 'tokens'
+const securityCollection: string = 'users-sessions'
 
 export const dbBlogsCollection = client.db(db).collection<BlogType>(blogsCollection)
 export const dbPostsCollection = client.db(db).collection<PostType>(postsCollection)
 export const dbUsersCollection = client.db(db).collection<UserType>(usersCollection)
 export const dbCommentsCollection = client.db(db).collection<CommentType>(commentsCollection)
 export const dbTokensCollection = client.db(db).collection<InvalidRefreshTokenType>(tokensCollection)
+export const dbSecurityCollection = client.db(db).collection<UserSessionType>(securityCollection)
 
 export async function runDb() {
     try {
