@@ -1,4 +1,4 @@
-import jwt, {Secret} from 'jsonwebtoken'
+import jwt, {JwtPayload, Secret} from 'jsonwebtoken'
 import {ViewTokenModelType, UserDBType} from "../types/users-types";
 
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
@@ -9,21 +9,27 @@ const secretRefresh: Secret = process.env.SECRET_KEY!
 
 export const jwtService = {
 
-    async createAccessJWT(user: UserDBType): Promise<ViewTokenModelType> {
+    async createAccessJWT(userId: string): Promise<ViewTokenModelType> {
 
         const accessToken = await jwt
-            .sign({userId: user._id},
-                secretAccess,
-                {expiresIn: '10s'})
+            .sign({userId: userId}, secretAccess, {expiresIn: '10s'})
 
         return {accessToken: accessToken}
     },
 
-    async createRefreshJWT(user: UserDBType): Promise<string> {
+    async createRefreshJWT(userId: string, deviceId: string): Promise<string> {
+
+        const payload = {deviceId: deviceId, userId: userId}
         const token = await jwt
-            .sign({userId: user._id}, secretRefresh, {expiresIn: '20s'})
+            .sign(payload, secretRefresh, {expiresIn: '20s'})
 
         return token
+    },
+
+    async verifyJWT(token: string): Promise<JwtPayload> {
+
+        const secret: Secret = process.env.SECRET_KEY!
+        return jwt.verify(token, secret) as JwtPayload
     },
 
     async getUserIdByToken(token: string) {

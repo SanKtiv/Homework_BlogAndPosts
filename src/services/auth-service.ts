@@ -44,13 +44,13 @@ export const authService = {
         return userService.addIdToUser(findUser as UserDBType)
     },
 
-    async checkCredentials(loginOrEmail: string, password: string): Promise<UserDBType | null> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<string | null> {
 
         const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(loginOrEmail)
         if (!user) return null
         const result = await bcrypt.compare(password, user.accountData.passwordHash)
         if (!result) return null
-        return user
+        return user._id.toString()
     },
 
     async genHash(password: string, salt: string): Promise<string> {

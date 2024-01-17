@@ -1,3 +1,5 @@
+import {WithId} from "mongodb";
+
 export type UserSessionType = {
     ip: string
     title: string
@@ -5,3 +7,5 @@ export type UserSessionType = {
     lastActiveDate: string
     expirationDate: string
 }
+
+export type UserSessionTypeDB = WithId<UserSessionType>
