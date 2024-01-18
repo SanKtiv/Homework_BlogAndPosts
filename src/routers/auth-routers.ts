@@ -28,6 +28,7 @@ authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request,
         const userSession = await userSessionService.updateUserSession(refreshToken)
 
         console.log(userSession)
+        console.log(req.cookies)
         // console.log(Number(new Date(result.iat!)))
         // console.log(result.iat!.toString())
         // console.log(typeof req.ip.toString())

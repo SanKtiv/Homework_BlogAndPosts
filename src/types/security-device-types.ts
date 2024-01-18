@@ -9,3 +9,10 @@ export type UserSessionType = {
 }
 
 export type UserSessionTypeDB = WithId<UserSessionType>
+
+export type ViewModelUserSessionType = {
+    ip: string
+    title: string
+    deviseId: string
+    lastActiveDate: string
+}

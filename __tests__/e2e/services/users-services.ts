@@ -35,6 +35,15 @@ export const userActions = {
 
         getRequest()
             .post(`${routePaths.auth}/login`)
+            .set({'user-agent': 'android'})
+            .set('Cookie', ['123456790'])
             .send(userSendAuthBody),
+
+    authUserDevice: async (userSendAuthBody: InputUserAuthModelType) =>
+
+        getRequest()
+            .post(`${routePaths.auth}/login`)
+            .set({'user-agent': 'android', 'cookie': '123456'})
+            .send(userSendAuthBody)
 
 }

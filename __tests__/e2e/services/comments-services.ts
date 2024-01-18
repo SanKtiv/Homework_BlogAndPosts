@@ -1,5 +1,5 @@
 import {routePaths} from "../../../src/setting";
-import {getRequest} from "../comments.e2e.test";
+import {getRequest} from './test-request';
 
 type CommentInputType = {
     content: string

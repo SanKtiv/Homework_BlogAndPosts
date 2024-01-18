@@ -1,4 +1,9 @@
-import {InputUserModelType, ViewUserModelType, ViewUsersPagingType} from "../../../src/types/users-types";
+import {
+    InputUserAuthModelType,
+    InputUserModelType,
+    ViewUserModelType,
+    ViewUsersPagingType
+} from "../../../src/types/users-types";
 
 export const user = {
 
@@ -44,6 +49,13 @@ export const user = {
             login: this.login_TRUE,
             password: this.password_TRUE,
             email: this.email_TRUE
+        }
+    },
+
+    sendBodyAuth_TRUE(): InputUserAuthModelType {
+        return {
+            loginOrEmail: this.login_TRUE,
+            password: this.password_TRUE
         }
     },
 

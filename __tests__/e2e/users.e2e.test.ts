@@ -21,7 +21,7 @@ describe('TEST for USERS', () => {
 
         const result = await userActions.createUser(user.sendBody_TRUE(), auth.basic_TRUE)
 
-        await expect(result.statusCode).toBe(constants.HTTP_STATUS_ACCEPTED)
+        await expect(result.statusCode).toBe(constants.HTTP_STATUS_CREATED)
         await expect(result.body).toEqual(user.expectBody_TRUE())
     })
 

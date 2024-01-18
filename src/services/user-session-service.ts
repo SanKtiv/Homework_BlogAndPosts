@@ -1,4 +1,4 @@
-import {UserSessionType, UserSessionTypeDB} from "../types/security-device-types";
+import {UserSessionType, UserSessionTypeDB, ViewModelUserSessionType} from "../types/security-device-types";
 import {userSessionRepository} from "../repositories/mongodb-repository/user-session-mongodb";
 import {jwtService} from "../applications/jwt-service";
 
@@ -25,5 +25,24 @@ export const userSessionService = {
         const result = await jwtService.verifyJWT(refreshToken)
 
         return userSessionRepository.updateUserSession(result.deviceId, result.iat!.toString(), result.exp!.toString())
+    },
+
+    async getAllUserSessions(refreshToken: string) {
+
+        const viewUserSessions = []
+        const userId = (await jwtService.verifyJWT(refreshToken)).userId
+        const userSessions = await userSessionRepository.getAllUserSessionsByUserId(userId)
+
+        for (const userSession of userSessions) {
+            const viewUserSession = {
+                ip: userSession.ip,
+                title: userSession.title,
+                deviseId: userSession._id.toString(),
+                lastActiveDate: userSession.lastActiveDate
+            }
+            viewUserSessions.push(viewUserSession)
+        }
+
+        return viewUserSessions
     }
 }

@@ -7,6 +7,9 @@ import {userActions} from "./services/users-services";
 import {commentAction} from "./services/comments-services";
 import {commentSendBody_TRUE, commentCorrect, comment} from "./utility/comments-utility";
 import {auth} from "./utility/auth-utility";
+import {user} from "./utility/users-utility";
+import {blog} from "./utility/blogs-utility";
+import {post} from "./utility/posts-utility";
 
 
 describe('TEST for comments', () => {
@@ -26,10 +29,11 @@ describe('TEST for comments', () => {
 
     it(`-GET /comments:id, should return code 200 and comment` , async () => {
 
-        await userActions.createUser(userSendBody_TRUE)
-        const token = await userActions.authUser(userSendAuthBody_TRUE)
-        const bodyId = await blogActions.createBlog(blogSendBody_TRUE, auth.basic_TRUE)
-        const postId = await postActions.createPost(postSendBody_TRUE, bodyId.body.id)
+        await userActions.createUser(user.sendBody_TRUE(), auth.basic_TRUE)
+        const token = await userActions.authUser(user.sendBodyAuth_TRUE())
+        const bodyId = (await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)).body.id
+        const postId = await postActions
+            .createPost(post.sendBody(post.body_TRUE, bodyId), auth.basic_TRUE)
         const commentId = await commentAction
             .createComment(token.body.accessToken, commentSendBody_TRUE, postId.body.id)
 
