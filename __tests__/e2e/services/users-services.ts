@@ -35,15 +35,17 @@ export const userActions = {
 
         getRequest()
             .post(`${routePaths.auth}/login`)
-            .set({'user-agent': 'android'})
-            .set('Cookie', ['123456790'])
+            //.set({'user-agent': 'android'})
+            //.set('Cookie', ['refreshToken=123456790'])
             .send(userSendAuthBody),
 
-    authUserDevice: async (userSendAuthBody: InputUserAuthModelType) =>
+    async authUserDevice(userSendAuthBody: InputUserAuthModelType, devices: string[]) {
 
-        getRequest()
-            .post(`${routePaths.auth}/login`)
-            .set({'user-agent': 'android', 'cookie': '123456'})
-            .send(userSendAuthBody)
-
+        for (const device of devices) {
+            await getRequest()
+                .post(`${routePaths.auth}/login`)
+                .set({'user-agent': `${device}`})
+                .send(userSendAuthBody)
+        }
+    }
 }

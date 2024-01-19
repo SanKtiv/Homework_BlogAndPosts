@@ -1,6 +1,7 @@
 import {UserSessionType, UserSessionTypeDB, ViewModelUserSessionType} from "../types/security-device-types";
 import {userSessionRepository} from "../repositories/mongodb-repository/user-session-mongodb";
 import {jwtService} from "../applications/jwt-service";
+import {JwtPayload} from "jsonwebtoken";
 
 export const userSessionService = {
 
@@ -30,8 +31,8 @@ export const userSessionService = {
     async getAllUserSessions(refreshToken: string) {
 
         const viewUserSessions = []
-        const userId = (await jwtService.verifyJWT(refreshToken)).userId
-        const userSessions = await userSessionRepository.getAllUserSessionsByUserId(userId)
+        const result = await jwtService.verifyJWT(refreshToken)
+        const userSessions = await userSessionRepository.getAllUserSessionsByUserId(result.userId)
 
         for (const userSession of userSessions) {
             const viewUserSession = {
