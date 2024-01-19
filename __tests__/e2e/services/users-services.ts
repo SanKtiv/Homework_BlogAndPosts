@@ -41,11 +41,22 @@ export const userActions = {
 
     async authUserDevice(userSendAuthBody: InputUserAuthModelType, devices: string[]) {
 
+        const refreshTokensDevices = []
+
         for (const device of devices) {
-            await getRequest()
+
+            const userDevice = await getRequest()
                 .post(`${routePaths.auth}/login`)
                 .set({'user-agent': `${device}`})
                 .send(userSendAuthBody)
+
+            const refreshToken = userDevice
+                .header['set-cookie']
+                .map((el: string) => el.split(';', 1).join())
+                .join()
+
+            refreshTokensDevices.push(refreshToken)
         }
+        return refreshTokensDevices
     }
 }
