@@ -38,12 +38,23 @@ export const userSessionService = {
             const viewUserSession = {
                 ip: userSession.ip,
                 title: userSession.title,
-                deviseId: userSession._id.toString(),
+                deviceId: userSession._id.toString(),
                 lastActiveDate: userSession.lastActiveDate
             }
             viewUserSessions.push(viewUserSession)
         }
 
         return viewUserSessions
+    },
+
+    async getDeviceIdFromRefreshToken(refreshToken: string) {
+
+        const userSession = await jwtService.verifyJWT(refreshToken)
+        return userSession.deviceId
+    },
+
+    async deleteDeviceSessionByDeviceId(deviceId: string) {
+
+        return userSessionRepository.deleteDeviceSessionByDeviceId(deviceId)
     }
 }

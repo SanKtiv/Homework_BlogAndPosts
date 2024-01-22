@@ -8,4 +8,8 @@ export const userSessionActions = {
             .get(`${routePaths.security}`)
             .set('Cookie', [refreshToken]),
 
+    deleteDeviceSessionByDeviceId: async (deviceId: string, refreshToken: string) =>
+        getRequest()
+            .delete(`${routePaths.security}/${deviceId}`)
+            .set('Cookie', [refreshToken]),
 }

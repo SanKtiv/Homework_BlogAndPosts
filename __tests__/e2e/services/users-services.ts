@@ -35,8 +35,6 @@ export const userActions = {
 
         getRequest()
             .post(`${routePaths.auth}/login`)
-            //.set({'user-agent': 'android'})
-            //.set('Cookie', ['refreshToken=123456790'])
             .send(userSendAuthBody),
 
     async authUserDevice(userSendAuthBody: InputUserAuthModelType, devices: string[]) {
@@ -58,5 +56,17 @@ export const userActions = {
             refreshTokensDevices.push(refreshToken)
         }
         return refreshTokensDevices
+    },
+
+    async updateRefreshTokenForDevice(refreshToken: string) {
+
+        const newRefreshToken = await getRequest()
+            .post(`${routePaths.auth}/refresh-token`)
+            .set('Cookie', [refreshToken])
+
+        return newRefreshToken
+            .header['set-cookie']
+            .map((el: string) => el.split(';', 1).join())
+            .join()
     }
 }
