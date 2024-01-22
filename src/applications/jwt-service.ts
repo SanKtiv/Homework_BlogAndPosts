@@ -1,6 +1,5 @@
 import jwt, {JwtPayload, Secret} from 'jsonwebtoken'
-import {ViewTokenModelType, UserDBType} from "../types/users-types";
-
+import {ViewTokenModelType} from "../types/users-types";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
 //import {n} from "../middlewares/authorization-jwt";
 

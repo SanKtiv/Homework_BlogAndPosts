@@ -32,6 +32,9 @@ export const userSessionRepository = {
 
     async deleteAllDevicesExcludeCurrent(deviceId: string, userId: string) {
 
-        await dbSecurityCollection.deleteMany({userId: userId, $nin: {_id: deviceId}})
+        const result = await dbSecurityCollection
+            .deleteMany({userId: userId, _id: {$nin: [new ObjectId(deviceId)]}})
+
+        return result.acknowledged
     }
 }

@@ -56,5 +56,13 @@ export const userSessionService = {
     async deleteDeviceSessionByDeviceId(deviceId: string) {
 
         return userSessionRepository.deleteDeviceSessionByDeviceId(deviceId)
+    },
+
+    async deleteAllDevicesExcludeCurrent(refreshToken: string) {
+
+        const result = await jwtService.verifyJWT(refreshToken)
+
+        return userSessionRepository
+            .deleteAllDevicesExcludeCurrent(result.deviceId, result.userId)
     }
 }

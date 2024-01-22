@@ -18,3 +18,9 @@ securityRouter.delete('/:deviceId', async (req: Request, res: Response) => {
     if (result) return res.sendStatus(204)
     return res.sendStatus(404)
 })
+
+securityRouter.delete('/', async (req: Request, res: Response) => {
+
+    await userSessionService.deleteAllDevicesExcludeCurrent(req.cookies.refreshToken)
+    return res.sendStatus(204)
+})
