@@ -12,4 +12,9 @@ export const userSessionActions = {
         getRequest()
             .delete(`${routePaths.security}/${deviceId}`)
             .set('Cookie', [refreshToken]),
+
+    deleteAllDevices: async (refreshToken: string) =>
+        getRequest()
+            .delete(`${routePaths.security}`)
+            .set('Cookie', [refreshToken]),
 }
