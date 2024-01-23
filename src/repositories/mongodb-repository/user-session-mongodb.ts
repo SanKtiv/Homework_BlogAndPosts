@@ -26,7 +26,6 @@ export const userSessionRepository = {
     async deleteDeviceSessionByDeviceId(deviceId: string) {
 
         const result = await dbSecurityCollection.deleteOne({_id: new ObjectId(deviceId)})
-        console.log('result.deletedCount', result.deletedCount)
         return result.deletedCount === 1
     },
 
@@ -34,7 +33,6 @@ export const userSessionRepository = {
 
         const result = await dbSecurityCollection
             .deleteMany({userId: userId, _id: {$nin: [new ObjectId(deviceId)]}})
-
         return result.acknowledged
     }
 }
