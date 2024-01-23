@@ -1,7 +1,7 @@
 import {ApiRequestType} from "../types/count-request-types";
 import {apiRequestRepository} from "../repositories/mongodb-repository/count-request-mongodb";
 
-export const requestService = {
+export const apiRequestService = {
 
     async createApiRequest(ip: string, url: string, date: Date) {
         const apiRequest: ApiRequestType = {
@@ -15,6 +15,6 @@ export const requestService = {
     async getCountOfApiRequests(limit: number, apiRequest: ApiRequestType) {
         const countOfRequest = await apiRequestRepository
             .getCountOfApiRequests(apiRequest)
-        return countOfRequest >= limit
+        return countOfRequest.length >= limit
     }
 }
