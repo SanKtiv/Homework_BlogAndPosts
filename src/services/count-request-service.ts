@@ -3,18 +3,15 @@ import {apiRequestRepository} from "../repositories/mongodb-repository/count-req
 
 export const apiRequestService = {
 
-    async createApiRequest(ip: string, url: string, date: Date) {
-        const apiRequest: ApiRequestType = {
-            ip: ip,
-            url: url,
-            date: date
-        }
+    async createApiRequest(apiRequest: ApiRequestType) {
+
         await apiRequestRepository.insertApiRequest(apiRequest)
     },
 
     async getCountOfApiRequests(limit: number, apiRequest: ApiRequestType) {
         const countOfRequest = await apiRequestRepository
             .getCountOfApiRequests(apiRequest)
+        console.log(countOfRequest)
         return countOfRequest.length >= limit
     }
 }

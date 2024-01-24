@@ -6,11 +6,12 @@ import {jwtService} from "../applications/jwt-service";
 import {authorizationJWT, checkRefreshJWT} from "../middlewares/authorization-jwt";
 import {userApplication} from "../applications/user-application";
 import {userSessionService} from "../services/user-session-service";
+import {apiRequests} from "../middlewares/count-api-request-middleware";
 
 
 export const authRouters = Router({})
 
-authRouters.post('/login', userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
+authRouters.post('/login', apiRequests, userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
 
     const userId: string | null = await authService
         .checkCredentials(req.body.loginOrEmail, req.body.password)
@@ -74,7 +75,6 @@ authRouters.post('/logout', checkRefreshJWT, async (req: Request, res: Response)
 })
 
 authRouters.get('/me', authorizationJWT, async (req: Request, res: Response) => {
-
     const userInfo = await userApplication.getUserInfo(req.user!.email, req.user!.login, req.user!.userId)
     return res.status(200).send(userInfo)
 })

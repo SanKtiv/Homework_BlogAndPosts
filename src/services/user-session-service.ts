@@ -25,14 +25,17 @@ export const userSessionService = {
 
         const result = await jwtService.verifyJWT(refreshToken)
 
-        return userSessionRepository.updateUserSession(result.deviceId, result.iat!.toString(), result.exp!.toString())
+        if (result) return userSessionRepository
+            .updateUserSession(result.deviceId, result.iat!.toString(), result.exp!.toString())
+
+        return null
     },
 
     async getAllUserSessions(refreshToken: string) {
 
         const viewUserSessions = []
         const result = await jwtService.verifyJWT(refreshToken)
-        const userSessions = await userSessionRepository.getAllUserSessionsByUserId(result.userId)
+        const userSessions = await userSessionRepository.getAllUserSessionsByUserId(result!.userId)
 
         for (const userSession of userSessions) {
             const viewUserSession = {
@@ -50,7 +53,7 @@ export const userSessionService = {
     async getDeviceIdFromRefreshToken(refreshToken: string) {
 
         const userSession = await jwtService.verifyJWT(refreshToken)
-        return userSession.deviceId
+        return userSession!.deviceId
     },
 
     async deleteDeviceSessionByDeviceId(deviceId: string) {
@@ -63,6 +66,6 @@ export const userSessionService = {
         const result = await jwtService.verifyJWT(refreshToken)
 
         return userSessionRepository
-            .deleteAllDevicesExcludeCurrent(result.deviceId, result.userId)
+            .deleteAllDevicesExcludeCurrent(result!.deviceId, result!.userId)
     }
 }

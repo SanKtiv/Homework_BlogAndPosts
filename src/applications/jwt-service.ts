@@ -25,10 +25,15 @@ export const jwtService = {
         return token
     },
 
-    async verifyJWT(token: string): Promise<JwtPayload> {
+    async verifyJWT(token: string): Promise<JwtPayload | null> {
 
         const secret: Secret = process.env.SECRET_KEY!
-        return jwt.verify(token, secret) as JwtPayload
+        try {
+            return jwt.verify(token, secret) as JwtPayload
+        }
+        catch (error) {
+            return null
+        }
     },
 
     async getUserIdByToken(token: string) {

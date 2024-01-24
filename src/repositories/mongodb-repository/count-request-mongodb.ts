@@ -8,7 +8,6 @@ export const apiRequestRepository = {
     },
 
     async getCountOfApiRequests(request: ApiRequestType) {
-        //const date = new Date(Date.now() - 10)
         return dbRequestCollection
             .find({
                 ip: request.ip,
@@ -16,5 +15,9 @@ export const apiRequestRepository = {
                 date: {$gte: request.date}
                 })
             .toArray()
+    },
+
+    async deleteAllApiRequests() {
+        await dbRequestCollection.deleteMany({})
     }
 }
