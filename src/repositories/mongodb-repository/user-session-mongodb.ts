@@ -18,6 +18,11 @@ export const userSessionRepository = {
                 {returnDocument: 'after'})
     },
 
+    async getUserSessionsByDeviceIdAndUserId(deviceId: string, userId: string) {
+
+        return dbSecurityCollection.find({userId: userId, _id: new ObjectId(deviceId)})
+    },
+
     async getAllUserSessionsByUserId(userId: string): Promise<UserSessionTypeDB[]> {
 
         return dbSecurityCollection.find({userId: userId}).toArray()

@@ -31,10 +31,14 @@ export const checkRefreshJWT = async (req: Request, res: Response, next: NextFun
 
 export const refreshJWT = async (req: Request, res: Response, next: NextFunction) => {
 
+
     if (!req.cookies.refreshToken) return res.sendStatus(401)
+
     const refreshToken = await jwtService.verifyJWT(req.cookies.refreshToken)
+
     if (!refreshToken) return res.sendStatus(401)
-    if (refreshToken.exp! < Date.now()) return res.sendStatus(401)
+
+    if (refreshToken.exp! < Math.floor(Date.now() / 1000)) return res.sendStatus(401)
 
     return next()
 }

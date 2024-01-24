@@ -11,7 +11,6 @@ export const apiRequestService = {
     async getCountOfApiRequests(limit: number, apiRequest: ApiRequestType) {
         const countOfRequest = await apiRequestRepository
             .getCountOfApiRequests(apiRequest)
-        console.log(countOfRequest)
         return countOfRequest.length >= limit
     }
 }
