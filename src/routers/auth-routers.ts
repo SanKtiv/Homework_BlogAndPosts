@@ -28,17 +28,6 @@ authRouters.post('/login', apiRequests, userAuthValid, errorsOfValidate, async (
 
         const userSession = await userSessionService.updateUserSession(refreshToken)
 
-        // console.log(userSession)
-        // console.log(req.cookies)
-        // console.log(req.cookies.refreshToken)
-        // console.log(Number(new Date(result.iat!)))
-        // console.log(result.iat!.toString())
-        // console.log(typeof req.ip.toString())
-        // console.log(req.header('x-forwarded-for'))
-        // console.log(typeof req.socket.remoteAddress)
-        // console.log(userId)
-        // console.log(result.userId)
-
         return res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
             .status(200)
             .send(accessToken)

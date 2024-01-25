@@ -32,8 +32,7 @@ describe('TEST for SecurityDevices', () => {
 
         refreshTokenDevice = refreshTokensDevices[0]
         const resultBefore = await userSessionActions.getDevicesByRefreshToken(refreshTokensDevices[0])
-        //console.log(resultBefore.body)
-
+        console.log(resultBefore.body)
         await expect(resultBefore.statusCode).toBe(200)
 
         await new Promise((resolve, reject) => {
@@ -43,22 +42,21 @@ describe('TEST for SecurityDevices', () => {
         refreshTokenDevice = await userActions
             .updateRefreshTokenForDevice(refreshTokensDevices[0])
 
-        //console.log('#1', refreshTokenDevice)
         const resultAfter = await userSessionActions.getDevicesByRefreshToken(refreshTokensDevices[0])
-        //console.log(resultAfter.body)
+
     })
 
     it('-DELETE /security/devices:deviceId, should return status 204 and remove device by deviceId', async () => {
 
         const resultBefore = await userSessionActions.getDevicesByRefreshToken(refreshTokenDevice)
-        //console.log(resultBefore.body)
 
-        //console.log('deviceId №', resultBefore.body[1].deviceId)
+
+
         const result = await userSessionActions
             .deleteDeviceSessionByDeviceId(resultBefore.body[1].deviceId, refreshTokenDevice)
 
         const resultAfter = await userSessionActions.getDevicesByRefreshToken(refreshTokenDevice)
-        //console.log(resultAfter.body)
+
 
         await expect(result.statusCode).toBe(204)
     })

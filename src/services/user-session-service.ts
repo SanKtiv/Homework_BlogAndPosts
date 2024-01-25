@@ -25,10 +25,13 @@ export const userSessionService = {
 
         const result = await jwtService.verifyJWT(refreshToken)
 
-        if (result) return userSessionRepository
-            .updateUserSession(result.deviceId, result.iat!.toString(), result.exp!.toString())
+        if (!result) return null
 
-        return null
+        const lastActiveDate = new Date(result.iat! * 1000).toISOString()
+        const expirationDate = new Date(result.exp! * 1000).toISOString()
+
+        return userSessionRepository
+            .updateUserSession(result.deviceId, lastActiveDate, expirationDate)
     },
 
     async getAllUserSessions(refreshToken: string) {
