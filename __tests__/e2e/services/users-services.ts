@@ -64,6 +64,12 @@ export const userActions = {
             .join()
     },
 
+    async updateRefreshToken(refreshToken: string) {
+        return getRequest()
+            .post(`${routePaths.auth}/refresh-token`)
+            .set('Cookie', [refreshToken])
+    },
+
     async authFiveUsers(userSendAuthBody: InputUserAuthModelType) {
         let result: any
 

@@ -17,7 +17,7 @@ export const userSessionRepository = {
     },
 
     async getUserSessionsByDeviceIdAndUserId(deviceId: string, userId: string) {
-        return dbSecurityCollection.find({userId: userId, _id: new ObjectId(deviceId)})
+        return dbSecurityCollection.findOne({userId: userId, _id: new ObjectId(deviceId)})
     },
 
     async getAllUserSessionsByUserId(userId: string): Promise<UserSessionTypeDB[]> {
