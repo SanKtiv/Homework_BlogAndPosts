@@ -7,6 +7,12 @@ export const apiRequestRepository = {
         await dbRequestCollection.insertOne(request)
     },
 
+    async getAllApiRequestsByUri(request: ApiRequestType) {
+        return dbRequestCollection
+            .find({ip: request.ip, url: request.url})
+            .toArray()
+    },
+
     async getCountOfApiRequests(request: ApiRequestType) {
         return dbRequestCollection
             .find({

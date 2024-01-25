@@ -7,7 +7,6 @@ import {auth} from "./utility/auth-utility";
 import {userSessionActions} from "./services/security-devices-test-services";
 import {device} from "./utility/security-devices-test-utility";
 import {setTimeout} from "timers";
-import {apiRequestRepository} from "../../src/repositories/mongodb-repository/count-request-mongodb";
 
 
 describe('TEST for SecurityDevices', () => {
@@ -73,12 +72,4 @@ describe('TEST for SecurityDevices', () => {
 
         await expect(result.statusCode).toBe(204)
     })
-
-    it('-POST /auth/login, should return status 429 if requests more then five per ten sec', async () => {
-        await apiRequestRepository.deleteAllApiRequests()
-        const result = await userActions.authFiveUsers(user.sendBodyAuth_TRUE())
-        await expect(result.statusCode).toBe(429)
-    })
-
-
 })

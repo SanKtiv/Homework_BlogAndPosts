@@ -73,7 +73,7 @@ export const userActions = {
     async authFiveUsers(userSendAuthBody: InputUserAuthModelType) {
         let result: any
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i <= 5; i++) {
             result = await this.authUser(userSendAuthBody)
         }
         return result

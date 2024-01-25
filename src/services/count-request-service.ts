@@ -7,6 +7,10 @@ export const apiRequestService = {
         await apiRequestRepository.insertApiRequest(apiRequest)
     },
 
+    async getAllApiRequestsByUri(apiRequest: ApiRequestType) {
+        await apiRequestRepository.getAllApiRequestsByUri(apiRequest)
+    },
+
     async getCountOfApiRequests(limit: number, apiRequest: ApiRequestType) {
         const countOfRequest = await apiRequestRepository
             .getCountOfApiRequests(apiRequest)
