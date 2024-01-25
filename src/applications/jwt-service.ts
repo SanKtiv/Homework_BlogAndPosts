@@ -16,7 +16,7 @@ export const jwtService = {
 
     async createRefreshJWT(userId: string, deviceId: string): Promise<string> {
         const payload = {deviceId: deviceId, userId: userId}
-        return jwt.sign(payload, secretRefresh, {expiresIn: '5m'})
+        return jwt.sign(payload, secretRefresh, {expiresIn: '20s'})
     },
 
     async verifyJWT(token: string): Promise<JwtPayload | null> {
