@@ -3,7 +3,7 @@ import {authService} from "../services/auth-service";
 import {userAuthValid} from "../validations/users-validators";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 import {jwtService} from "../applications/jwt-service";
-import {authorizationJWT, checkRefreshJWT} from "../middlewares/authorization-jwt";
+import {authorizationJWT, checkRefreshJWT, refreshJWT} from "../middlewares/authorization-jwt";
 import {userApplication} from "../applications/user-application";
 import {userSessionService} from "../services/user-session-service";
 import {apiRequests} from "../middlewares/count-api-request-middleware";
@@ -35,7 +35,7 @@ authRouters.post('/login', apiRequests, userAuthValid, errorsOfValidate, async (
     return res.sendStatus(401)
 })
 
-authRouters.post('/refresh-token', checkRefreshJWT, async (req: Request, res: Response) => {
+authRouters.post('/refresh-token', refreshJWT, checkRefreshJWT, async (req: Request, res: Response) => {
 
     const userId = await userApplication.getUserByUserId(req.user!.userId)
     const accessToken = await jwtService.createAccessJWT(userId!)
@@ -58,7 +58,7 @@ authRouters.post('/refresh-token', checkRefreshJWT, async (req: Request, res: Re
         .send(accessToken)
 })
 
-authRouters.post('/logout', checkRefreshJWT, async (req: Request, res: Response) => {
+authRouters.post('/logout', refreshJWT, checkRefreshJWT, async (req: Request, res: Response) => {
     await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
     res.sendStatus(204)
 })

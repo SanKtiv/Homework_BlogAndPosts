@@ -4,7 +4,6 @@ import {apiRequestRepository} from "../repositories/mongodb-repository/count-req
 export const apiRequestService = {
 
     async createApiRequest(apiRequest: ApiRequestType) {
-
         await apiRequestRepository.insertApiRequest(apiRequest)
     },
 
