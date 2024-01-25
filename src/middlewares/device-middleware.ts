@@ -5,9 +5,13 @@ import {userSessionRepository} from "../repositories/mongodb-repository/user-ses
 export const checkDeviceId = async (req: Request, res: Response, next: NextFunction) => {
 
     const deviceId = req.params.deviceId
+    const userSession = await userSessionRepository.getDeviceByDeviceId(deviceId)
+    if (!userSession) return res.sendStatus(404)
+
     const refreshToken = req.cookies.refreshToken
     const payLoadRefreshToken = await jwtService.verifyJWT(refreshToken)
     const userId = payLoadRefreshToken!.userId
+
     const result = await userSessionRepository
         .getUserSessionsByDeviceIdAndUserId(deviceId, userId)
 

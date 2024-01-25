@@ -13,8 +13,8 @@ securityRouter.get('/', refreshJWT, async (req: Request, res: Response) => {
 
 securityRouter.delete('/:deviceId', refreshJWT, checkDeviceId, async (req: Request, res: Response) => {
     const result = await userSessionService.deleteDeviceSessionByDeviceId(req.params.deviceId)
-    if (result) return res.sendStatus(204)
-    return res.sendStatus(404)
+    res.sendStatus(204)
+
 })
 
 securityRouter.delete('/', refreshJWT, async (req: Request, res: Response) => {

@@ -20,6 +20,10 @@ export const userSessionRepository = {
         return dbSecurityCollection.findOne({userId: userId, _id: new ObjectId(deviceId)})
     },
 
+    async getDeviceByDeviceId(deviceId: string) {
+        return dbSecurityCollection.findOne({_id: new ObjectId(deviceId)})
+    },
+
     async getAllUserSessionsByUserId(userId: string): Promise<UserSessionTypeDB[]> {
         return dbSecurityCollection.find({userId: userId}).toArray()
     },
