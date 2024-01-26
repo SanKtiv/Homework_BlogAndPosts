@@ -29,6 +29,12 @@ export const jwtService = {
         }
     },
 
+    async getDeviceIdFromRefreshToken(token: string) {
+        const payloadRefreshToken = await this.verifyJWT(token)
+        if (payloadRefreshToken) return payloadRefreshToken.deviceId
+        return null
+    },
+
     async getUserIdByToken(token: string) {
         try {
             const result = await jwt.verify(token, secretAccess)

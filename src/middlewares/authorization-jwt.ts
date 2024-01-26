@@ -43,7 +43,7 @@ export const refreshJWT = async (req: Request, res: Response, next: NextFunction
 
     const result = await userSessionRepository
         .getUserSessionsByDeviceIdAndUserId(refreshToken.deviceId, refreshToken.userId)
-console.log(result)
+
     if (!result) return res.sendStatus(401)
 
     return next()

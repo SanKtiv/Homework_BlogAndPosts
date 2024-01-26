@@ -6,7 +6,7 @@ export const apiRequests = async (req: Request, res: Response, next: NextFunctio
 
     const apiRequest: ApiRequestType = {
         ip: req.header('x-forwarded-for') || req.ip,
-        url: req.baseUrl || req.originalUrl,
+        url: req.originalUrl || req.baseUrl,
         date: new Date()
     }
 
