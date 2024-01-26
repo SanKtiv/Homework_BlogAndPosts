@@ -73,4 +73,28 @@ describe('TEST for AUTH', () => {
         const result = await authActions.registrationEmailResending(body.email)
         await expect(result.statusCode).toBe(204)
     })
+
+    it('-POST /auth/registration, should return status 429 if requests more then five per ten sec', async () => {
+
+        await getRequest().delete(routePaths.deleteAllData)
+        await authActions.registrationUser(user.sendBody_TRUE())
+        await authActions.registrationUser(user.sendBody_TRUE())
+        await authActions.registrationUser(user.sendBody_TRUE())
+        await authActions.registrationUser(user.sendBody_TRUE())
+        await authActions.registrationUser(user.sendBody_TRUE())
+        const result = await authActions.registrationUser(user.sendBody_TRUE())
+        await expect(result.statusCode).toBe(429)
+
+        await new Promise((resolve, reject) => {
+            setTimeout(() => resolve(Date.now()), 10000)
+        })
+
+        const result2 = await authActions.registrationUser({
+            login: 'LoginTrue',
+            password: 'this.password_TRUE',
+            email: 'this@yandex.com'
+        })
+        console.log(result2.body)
+        await expect(result2.statusCode).toBe(204)
+    })
 })

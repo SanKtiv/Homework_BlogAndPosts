@@ -1,4 +1,4 @@
-import {InputUserModelType} from "../../../src/types/users-types";
+import {InputUserAuthModelType, InputUserModelType} from "../../../src/types/users-types";
 import {BasicType} from "../utility/auth-utility";
 import {getRequest} from "./test-request";
 import {routePaths} from "../../../src/setting";
