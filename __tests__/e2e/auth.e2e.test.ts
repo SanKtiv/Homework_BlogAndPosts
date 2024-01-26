@@ -5,8 +5,9 @@ import {userActions} from "./services/users-services";
 import {user} from "./utility/users-utility";
 import {auth} from "./utility/auth-utility";
 import {apiRequestService} from "../../src/services/count-request-service";
+import {setTimeout} from "timers";
 
-describe('TEST for SecurityDevices', () => {
+describe('TEST for AUTH', () => {
 
     beforeAll(async () => {
         await client.connect()
@@ -19,8 +20,13 @@ describe('TEST for SecurityDevices', () => {
 
     it('-POST /auth/login, should return status 429 if requests more then five per ten sec', async () => {
         await userActions.createUser(user.sendBody_TRUE(), auth.basic_TRUE)
-        const result = await userActions.authFiveUsers(user.sendBodyAuth_TRUE())
-        const countRequests = await apiRequestService.getAllApiRequestsByUri()
+        const result = await userActions.authFiveUsers(user.sendBodyAuth_FALSE())
         await expect(result.statusCode).toBe(429)
+
+        await new Promise((resolve, reject) => {
+            setTimeout(() => resolve(Date.now()), 12000)
+        })
+        const resultAfter12sec = await userActions.authUser(user.sendBodyAuth_FALSE())
+        await expect(resultAfter12sec.statusCode).toBe(401)
     })
 })

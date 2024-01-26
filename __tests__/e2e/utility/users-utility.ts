@@ -59,6 +59,13 @@ export const user = {
         }
     },
 
+    sendBodyAuth_FALSE(): InputUserAuthModelType {
+        return {
+            loginOrEmail: this.login_TRUE,
+            password: this.password_FALSE
+        }
+    },
+
     sendManyBody(usersCount: number): InputUserModelType[] {
         const arr = []
         for (let i = 1; i <= usersCount; i++) {

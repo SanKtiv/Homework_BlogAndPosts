@@ -10,12 +10,14 @@ export const apiRequests = async (req: Request, res: Response, next: NextFunctio
         date: new Date()
     }
 
+    await apiRequestService.createApiRequest(apiRequest)
+
     const apiRequestLimit = {...apiRequest, date: new Date(Date.now() - 10000)}
+
     const limitRequest = await apiRequestService
         .getCountOfApiRequests(5, apiRequestLimit)
 
     if (limitRequest) return res.sendStatus(429)
 
-    await apiRequestService.createApiRequest(apiRequest)
     return next()
 }

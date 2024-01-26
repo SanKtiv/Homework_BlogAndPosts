@@ -8,12 +8,15 @@ export const apiRequestService = {
     },
 
     async getAllApiRequestsByUri(apiRequest: ApiRequestType) {
-        await apiRequestRepository.getAllApiRequestsByUri(apiRequest)
+        return apiRequestRepository.getAllApiRequestsByUri(apiRequest)
+    },
+
+    async getAllApiRequests() {
+        return apiRequestRepository.getAllApiRequests()
     },
 
     async getCountOfApiRequests(limit: number, apiRequest: ApiRequestType) {
-        const countOfRequest = await apiRequestRepository
-            .getCountOfApiRequests(apiRequest)
+        const countOfRequest = await apiRequestRepository.getCountOfApiRequests(apiRequest)
         return countOfRequest.length > limit
     }
 }

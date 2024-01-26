@@ -13,6 +13,12 @@ export const apiRequestRepository = {
             .toArray()
     },
 
+    async getAllApiRequests() {
+        return dbRequestCollection
+            .find({})
+            .toArray()
+    },
+
     async getCountOfApiRequests(request: ApiRequestType) {
         return dbRequestCollection
             .find({
