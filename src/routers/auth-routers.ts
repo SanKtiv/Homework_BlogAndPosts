@@ -31,7 +31,7 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
 
 })
 
-authRouters.post('/refresh-token', refreshJWT, checkRefreshJWT, async (req: Request, res: Response) => {
+authRouters.post('/refresh-token', refreshJWT, /*checkRefreshJWT,*/ async (req: Request, res: Response) => {
 
     const userId = await userApplication.getUserByUserId(req.user!.userId)
     const accessToken = await jwtService.createAccessJWT(userId!)
@@ -47,7 +47,7 @@ authRouters.post('/refresh-token', refreshJWT, checkRefreshJWT, async (req: Requ
     await userSessionService.updateUserSession(newRefreshToken)
     ////
 
-    await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
+    //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
 
     res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
         .status(200)
