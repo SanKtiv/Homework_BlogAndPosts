@@ -1,7 +1,7 @@
 import {routePaths} from "../../../src/setting";
 import {getRequest} from './test-request'
 import {InputBlogModelType} from "../../../src/types/blogs-types";
-import {auth, BasicType} from "../utility/auth-utility";
+import {auth, BasicType} from "../test-utility/test-auth-utility";
 
 export const blogActions = {
 

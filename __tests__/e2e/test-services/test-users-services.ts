@@ -1,7 +1,7 @@
 import {InputUserAuthModelType, InputUserModelType} from "../../../src/types/users-types";
 import {routePaths} from "../../../src/setting";
 import {getRequest} from './test-request';
-import {auth, BasicType} from "../utility/auth-utility";
+import {auth, BasicType} from "../test-utility/test-auth-utility";
 
 export const userActions = {
 

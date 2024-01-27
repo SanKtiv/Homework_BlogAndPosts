@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
-import {NUM} from "./blogs-utility";
-import {blog} from "./blogs-utility";
+import {NUM} from "./test-blogs-utility";
+import {blog} from "./test-blogs-utility";
 
 type PostBodyType = {
     title: string | number

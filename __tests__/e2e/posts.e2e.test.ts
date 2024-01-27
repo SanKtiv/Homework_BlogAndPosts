@@ -1,12 +1,12 @@
-import {getRequest} from "./services/test-request";
+import {getRequest} from "./test-services/test-request";
 import {routePaths} from "../../src/setting";
 import {client} from "../../src/repositories/mongodb-repository/db";
-import {postActions} from "./services/posts-services";
-import {post} from "./utility/posts-utility";
-import {auth} from "./utility/auth-utility";
-import {blogActions} from "./services/blogs-services";
-import {blog} from "./utility/blogs-utility";
-import {expectErrors} from "./utility/error-utility";
+import {postActions} from "./test-services/test-posts-services";
+import {post} from "./test-utility/test-posts-utility";
+import {auth} from "./test-utility/test-auth-utility";
+import {blogActions} from "./test-services/test-blogs-services";
+import {blog} from "./test-utility/test-blogs-utility";
+import {expectErrors} from "./test-utility/test-error-utility";
 
 describe('TEST for POSTS', () => {
 

@@ -1,15 +1,15 @@
-import {getRequest} from "./services/test-request";
+import {getRequest} from "./test-services/test-request";
 import {client} from "../../src/repositories/mongodb-repository/db";
 import {routePaths} from "../../src/setting";
-import {blogActions} from "./services/blogs-services";
-import {postActions} from "./services/posts-services";
-import {userActions} from "./services/users-services";
-import {commentAction} from "./services/comments-services";
-import {commentSendBody_TRUE, commentCorrect, comment} from "./utility/comments-utility";
-import {auth} from "./utility/auth-utility";
-import {user} from "./utility/users-utility";
-import {blog} from "./utility/blogs-utility";
-import {post} from "./utility/posts-utility";
+import {blogActions} from "./test-services/test-blogs-services";
+import {postActions} from "./test-services/test-posts-services";
+import {userActions} from "./test-services/test-users-services";
+import {commentAction} from "./test-services/test-comments-services";
+import {commentSendBody_TRUE, commentCorrect, comment} from "./test-utility/test-comments-utility";
+import {auth} from "./test-utility/test-auth-utility";
+import {user} from "./test-utility/test-users-utility";
+import {blog} from "./test-utility/test-blogs-utility";
+import {post} from "./test-utility/test-posts-utility";
 
 
 describe('TEST for comments', () => {

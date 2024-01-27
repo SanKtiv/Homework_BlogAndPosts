@@ -1,9 +1,9 @@
 import {client} from "../../src/repositories/mongodb-repository/db";
-import {getRequest} from "./services/test-request";
+import {getRequest} from "./test-services/test-request";
 import {routePaths} from "../../src/setting";
-import {userActions} from "./services/users-services";
-import {user} from "./utility/users-utility";
-import {auth} from "./utility/auth-utility";
+import {userActions} from "./test-services/test-users-services";
+import {user} from "./test-utility/test-users-utility";
+import {auth} from "./test-utility/test-auth-utility";
 import {constants} from "http2";
 
 describe('TEST for USERS', () => {
