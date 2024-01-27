@@ -54,10 +54,10 @@ authRouters.post('/refresh-token', refreshJWT, checkRefreshJWT, async (req: Requ
         .send(accessToken)
 })
 
-authRouters.post('/logout', refreshJWT, checkRefreshJWT, async (req: Request, res: Response) => {
+authRouters.post('/logout', refreshJWT /*checkRefreshJWT*/, async (req: Request, res: Response) => {
     const deviceId = await jwtService.getDeviceIdFromRefreshToken(req.cookies.refreshToken)
     await userSessionService.deleteDeviceSessionByDeviceId(deviceId!)
-    await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
+    //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
     res.sendStatus(204)
 })
 
