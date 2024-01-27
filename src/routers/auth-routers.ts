@@ -31,7 +31,7 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
 
 })
 
-authRouters.post('/refresh-token', refreshJWT, /*checkRefreshJWT,*/ async (req: Request, res: Response) => {
+authRouters.post('/refresh-token', refreshJWT, checkRefreshJWT, async (req: Request, res: Response) => {
 
     const userId = await userApplication.getUserByUserId(req.user!.userId)
     const accessToken = await jwtService.createAccessJWT(userId!)
@@ -47,17 +47,17 @@ authRouters.post('/refresh-token', refreshJWT, /*checkRefreshJWT,*/ async (req: 
     await userSessionService.updateUserSession(newRefreshToken)
     ////
 
-    //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
+    await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
 
     res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
         .status(200)
         .send(accessToken)
 })
 
-authRouters.post('/logout', refreshJWT /*checkRefreshJWT*/, async (req: Request, res: Response) => {
+authRouters.post('/logout', refreshJWT , checkRefreshJWT, async (req: Request, res: Response) => {
     const deviceId = await jwtService.getDeviceIdFromRefreshToken(req.cookies.refreshToken)
     await userSessionService.deleteDeviceSessionByDeviceId(deviceId!)
-    //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
+    await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
     res.sendStatus(204)
 })
 
