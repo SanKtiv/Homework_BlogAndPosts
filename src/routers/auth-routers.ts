@@ -12,27 +12,23 @@ import {apiRequests} from "../middlewares/count-api-request-middleware";
 export const authRouters = Router({})
 
 authRouters.post('/login', apiRequests, userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
+    const userId = await authService.checkCredentials(req.body)
 
-    const userId: string | null = await authService
-        .checkCredentials(req.body.loginOrEmail, req.body.password)
+    if (!userId) return res.sendStatus(401)
 
-    if (userId) {
+    const title = req.headers["user-agent"] || 'chrome 105'
+    const ip = req.header('x-forwarded-for') || req.ip
 
-        const title = req.headers["user-agent"] || 'chrome 105'
-        const ip = req.header('x-forwarded-for') || req.ip
+    const deviceId = await userSessionService.createDeviceInUserSession(title, ip, userId)
+    const accessToken = await jwtService.createAccessJWT(userId)
+    const refreshToken = await jwtService.createRefreshJWT(userId, deviceId)
 
-        const deviceId = await userSessionService.createUserSession(title, ip, userId)
+    await userSessionService.updateUserSession(refreshToken)// update dates for refreshToken
 
-        const accessToken = await jwtService.createAccessJWT(userId)
-        const refreshToken = await jwtService.createRefreshJWT(userId, deviceId)
-
-        const userSession = await userSessionService.updateUserSession(refreshToken)
-
-        return res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+    return res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
             .status(200)
             .send(accessToken)
-    }
-    return res.sendStatus(401)
+
 })
 
 authRouters.post('/refresh-token', refreshJWT, checkRefreshJWT, async (req: Request, res: Response) => {
@@ -45,15 +41,15 @@ authRouters.post('/refresh-token', refreshJWT, checkRefreshJWT, async (req: Requ
         .getDeviceIdFromRefreshToken(req.cookies.refreshToken)
     //
 
-    const refreshToken = await jwtService.createRefreshJWT(userId!, deviceId)
+    const newRefreshToken = await jwtService.createRefreshJWT(userId!, deviceId)
 
     //
-    await userSessionService.updateUserSession(refreshToken)
+    await userSessionService.updateUserSession(newRefreshToken)
     ////
 
     await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
 
-    res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+    res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
         .status(200)
         .send(accessToken)
 })

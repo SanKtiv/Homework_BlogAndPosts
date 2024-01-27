@@ -5,7 +5,7 @@ import {JwtPayload} from "jsonwebtoken";
 
 export const userSessionService = {
 
-    async createUserSession(title: string, ip: string, userId: string,): Promise<string> {
+    async createDeviceInUserSession(title: string, ip: string, userId: string,): Promise<string> {
 
         const userSession: UserSessionType = {
             ip: ip,

@@ -9,8 +9,8 @@ import {apiRequests} from "../middlewares/count-api-request-middleware";
 export const mailRouter = Router({})
 
 mailRouter.post('/registration', apiRequests, userInputValid, errorsOfValidate, async (req: Request, res: Response) => {
-    const user = await authService.insertUserInDB(req.body)
-    const sendMessage = await emailAdapter.sendConfirmationCodeByEmail(req.body.email)
+    await authService.insertUserInDB(req.body)
+    await emailAdapter.sendConfirmationCodeByEmail(req.body.email)
     res.sendStatus(204)
 })
 
