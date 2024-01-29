@@ -21,11 +21,11 @@ export const checkRefreshJWT = async (req: Request, res: Response, next: NextFun
 
     if (invalidRefreshJWT) return res.sendStatus(401)
 
-    const result = await jwtService.checkRefreshToken(req.cookies.refreshToken)
+    const result = await jwtService.verifyJWT(req.cookies.refreshToken)
 
     if (!result) return res.sendStatus(401)
 
-    req.user = await userApplication.createReqUserByUserId(result)
+    req.user = await userApplication.createReqUserByUserId(result.userId)
     return next()
 }
 
