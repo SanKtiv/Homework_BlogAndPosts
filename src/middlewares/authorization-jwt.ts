@@ -1,7 +1,6 @@
 import {NextFunction, Response, Request} from "express";
 import {jwtService} from "../applications/jwt-service";
 import {userApplication} from "../applications/user-application";
-import {JwtPayload} from "jsonwebtoken";
 import {userSessionRepository} from "../repositories/mongodb-repository/user-session-mongodb";
 
 export const authorizationJWT = async (req: Request, res: Response, next: NextFunction) => {
@@ -39,7 +38,7 @@ export const refreshJWT = async (req: Request, res: Response, next: NextFunction
 
     if (!refreshToken) return res.sendStatus(401)
 
-    if (refreshToken.exp! < Math.floor(Date.now() / 1000)) return res.sendStatus(401)
+    //if (refreshToken.exp! < Math.floor(Date.now() / 1000)) return res.sendStatus(401)
 
     const result = await userSessionRepository
         .getUserSessionsByDeviceIdAndUserId(refreshToken.deviceId, refreshToken.userId)
