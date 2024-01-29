@@ -97,4 +97,18 @@ describe('TEST for AUTH', () => {
         console.log(result2.body)
         await expect(result2.statusCode).toBe(204)
     })
+
+    it('-POST /refresh-token, should return status 200 and access token', async () => {
+
+        await getRequest().delete(routePaths.deleteAllData)
+        await userActions.createUser(user.sendBody_TRUE(), auth.basic_TRUE)
+        const result = await userActions.authUser(user.sendBodyAuth_TRUE())
+        const refreshToken = result
+            .header['set-cookie']
+            .map((el: string) => el.split(';', 1).join())
+            .join()
+
+        const result1 = await authActions.updateRefreshToken(refreshToken)
+        await expect(result1.statusCode).toBe(200)
+    })
 })

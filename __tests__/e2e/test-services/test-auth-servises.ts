@@ -5,6 +5,12 @@ import {routePaths} from "../../../src/setting";
 
 export const authActions = {
 
+    async updateRefreshToken(refreshToken: string) {
+        return getRequest()
+            .post(`${routePaths.auth}/refresh-token`)
+            .set('Cookie', [refreshToken])
+    },
+
     registrationUser: async (registrationBody: InputUserModelType) =>
         getRequest()
             .post(`${routePaths.auth}/registration`)

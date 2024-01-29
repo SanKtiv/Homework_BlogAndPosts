@@ -34,6 +34,10 @@ export const userSessionService = {
             .updateUserSession(result.deviceId, lastActiveDate, expirationDate)
     },
 
+    async getDeviceSessionByDeviceId(deviceId: string) {
+        return userSessionRepository.getDeviceByDeviceId(deviceId)
+    },
+
     async getAllUserSessions(refreshToken: string) {
 
         const viewUserSessions = []
