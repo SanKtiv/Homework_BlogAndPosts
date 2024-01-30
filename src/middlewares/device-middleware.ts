@@ -9,7 +9,7 @@ export const checkDeviceId = async (req: Request, res: Response, next: NextFunct
     if (!userSession) return res.sendStatus(404)
 
     const refreshToken = req.cookies.refreshToken
-    const payLoadRefreshToken = await jwtService.verifyJWT(refreshToken)
+    const payLoadRefreshToken = await jwtService.getPayloadRefreshToken(refreshToken)
     const userId = payLoadRefreshToken!.userId
 
     const result = await deviceSessionRepository

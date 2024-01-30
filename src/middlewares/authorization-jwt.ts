@@ -8,11 +8,11 @@ export const authAccessToken = async (req: Request, res: Response, next: NextFun
     if (!req.headers.authorization) return res.sendStatus(401)
 
     const token = req.headers.authorization.split(' ')[1]
-    const userId = await jwtService.getUserIdByToken(token)
+    const payload = await jwtService.getPayloadAccessToken(token)
 
-    if (!userId) return res.sendStatus(401)
+    if (!payload) return res.sendStatus(401)
 
-    req.user = await userApplication.createReqUserByUserId(userId)
+    req.user = await userApplication.createReqUserByUserId(payload.userId)
 
     return next()
 }
@@ -35,7 +35,7 @@ export const checkRefreshToken = async (req: Request, res: Response, next: NextF
 
     if (!req.cookies.refreshToken) return res.sendStatus(401)
 
-    const tokenPayload = await jwtService.verifyJWT(req.cookies.refreshToken)
+    const tokenPayload = await jwtService.getPayloadRefreshToken(req.cookies.refreshToken)
 
     if (!tokenPayload) return res.sendStatus(401)
 

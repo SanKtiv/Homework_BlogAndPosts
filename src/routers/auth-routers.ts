@@ -32,7 +32,7 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
 
 authRouters.post('/refresh-token', checkRefreshToken, async (req: Request, res: Response) => {
 
-    const userId = (await jwtService.verifyJWT(req.cookies.refreshToken))!.userId
+    const userId = (await jwtService.getPayloadRefreshToken(req.cookies.refreshToken))!.userId
     const accessToken = await jwtService.createAccessToken(userId)
 
     const deviceId = await deviceSessionService

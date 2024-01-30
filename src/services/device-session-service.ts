@@ -22,7 +22,7 @@ export const deviceSessionService = {
 
     async updateDatesDeviceSession(refreshToken: string) {
 
-        const result = await jwtService.verifyJWT(refreshToken)
+        const result = await jwtService.getPayloadRefreshToken(refreshToken)
 
         if (!result) return null
 
@@ -40,7 +40,7 @@ export const deviceSessionService = {
     async getAllUserSessions(refreshToken: string) {
 
         const viewUserSessions = []
-        const result = await jwtService.verifyJWT(refreshToken)
+        const result = await jwtService.getPayloadRefreshToken(refreshToken)
         const userSessions = await deviceSessionRepository.getDeviceSessionsByUserId(result!.userId)
 
         for (const userSession of userSessions) {
@@ -56,7 +56,7 @@ export const deviceSessionService = {
     },
 
     async getDeviceIdFromRefreshToken(refreshToken: string) {
-        const userSession = await jwtService.verifyJWT(refreshToken)
+        const userSession = await jwtService.getPayloadRefreshToken(refreshToken)
         return userSession!.deviceId
     },
 
@@ -65,7 +65,7 @@ export const deviceSessionService = {
     },
 
     async deleteAllDevicesExcludeCurrent(refreshToken: string) {
-        const result = await jwtService.verifyJWT(refreshToken)
+        const result = await jwtService.getPayloadRefreshToken(refreshToken)
         return deviceSessionRepository
             .deleteAllDevicesExcludeCurrent(result!.deviceId, result!.userId)
     }

@@ -20,7 +20,17 @@ export const jwtService = {
         return jwt.sign(payload, secretRefresh, {expiresIn: '20s'})
     },
 
-    async verifyJWT(token: string): Promise<JwtPayload | null> {
+    async getPayloadRefreshToken(token: string): Promise<JwtPayload | null> {
+        const secret: Secret = process.env.SECRET_KEY!
+        try {
+            return jwt.verify(token, secret) as JwtPayload
+        }
+        catch (error) {
+            return null
+        }
+    },
+
+    async getPayloadAccessToken(token: string): Promise<JwtPayload | null> {
         const secret: Secret = process.env.SECRET_KEY!
         try {
             return jwt.verify(token, secret) as JwtPayload
@@ -31,7 +41,7 @@ export const jwtService = {
     },
 
     async getDeviceIdFromRefreshToken(token: string) {
-        const payloadRefreshToken = await this.verifyJWT(token)
+        const payloadRefreshToken = await this.getPayloadRefreshToken(token)
         if (payloadRefreshToken) return payloadRefreshToken.deviceId
         return null
     },
