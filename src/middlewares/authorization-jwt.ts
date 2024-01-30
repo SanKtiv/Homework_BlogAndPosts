@@ -32,20 +32,21 @@ export const checkRefreshJWT = async (req: Request, res: Response, next: NextFun
 
 export const refreshJWT = async (req: Request, res: Response, next: NextFunction) => {
 
-
     if (!req.cookies.refreshToken) return res.sendStatus(401)
 
-    const refreshToken = await jwtService.verifyJWT(req.cookies.refreshToken)
+    const tokenPayload = await jwtService.verifyJWT(req.cookies.refreshToken)
 
-    if (!refreshToken) return res.sendStatus(401)
+    if (!tokenPayload) return res.sendStatus(401)
 
     //if (refreshToken.exp! < Math.floor(Date.now() / 1000)) return res.sendStatus(401)
 
-    const result = await userSessionService.getDeviceSessionByDeviceId(refreshToken.deviceId)
+    const session = await userSessionService.getDeviceSessionByDeviceId(tokenPayload.deviceId)
     //const result = await userSessionRepository
       //  .getUserSessionsByDeviceIdAndUserId(refreshToken.deviceId, refreshToken.userId)
 
-    if (!result || result.userId !== refreshToken.userId) return res.sendStatus(401)
+    if (!session || session.userId !== tokenPayload.userId) return res.sendStatus(401)
+    if (session.expirationDate !== new Date(tokenPayload.iat! * 1000).toISOString()) return res.sendStatus(401)
+
 
     return next()
 }

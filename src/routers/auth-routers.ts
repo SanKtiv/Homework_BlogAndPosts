@@ -31,23 +31,24 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
 
 })
 
-authRouters.post('/refresh-token', refreshJWT, checkRefreshJWT, async (req: Request, res: Response) => {
+authRouters.post('/refresh-token', refreshJWT, /*checkRefreshJWT,*/ async (req: Request, res: Response) => {
 
-    const userId = await userApplication.getUserByUserId(req.user!.userId)
-    const accessToken = await jwtService.createAccessJWT(userId!)
+    //const userId = await userApplication.getUserByUserId(req.user!.userId)
+    const userId = (await jwtService.verifyJWT(req.cookies.refreshToken))!.userId
+    const accessToken = await jwtService.createAccessJWT(userId)
 
     //
     const deviceId = await userSessionService
         .getDeviceIdFromRefreshToken(req.cookies.refreshToken)
     //
 
-    const newRefreshToken = await jwtService.createRefreshJWT(userId!, deviceId)
+    const newRefreshToken = await jwtService.createRefreshJWT(userId, deviceId)
 
     //
     await userSessionService.updateUserSession(newRefreshToken)
     ////
 
-    await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
+    //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
 
     res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
         .status(200)
