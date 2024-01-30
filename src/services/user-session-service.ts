@@ -21,7 +21,7 @@ export const userSessionService = {
         return userSessionDB._id.toString()
     },
 
-    async updateUserSession(refreshToken: string) {
+    async updateDatesDeviceSession(refreshToken: string) {
 
         const result = await jwtService.verifyJWT(refreshToken)
 

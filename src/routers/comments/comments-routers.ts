@@ -3,7 +3,7 @@ import {checkCommentModelForUpdate, checkId} from "../../validations/comments-va
 import {checkCommentById, checkOwnCommentById} from "../../middlewares/comment-middleware";
 import {commentsRepository} from "../../repositories/mongodb-repository/comments-mongodb/comments-mongodb";
 import {commentService} from "../../services/commets-service";
-import {authorizationJWT} from "../../middlewares/authorization-jwt";
+import {authAccessToken} from "../../middlewares/authorization-jwt";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 
 export const commentRouter = Router({})
@@ -20,7 +20,7 @@ commentRouter.get('/:id',
 })
 
 commentRouter.put('/:commentId',
-    authorizationJWT,
+    authAccessToken,
     checkCommentModelForUpdate,
     errorsOfValidate,
     checkOwnCommentById,
@@ -31,7 +31,7 @@ commentRouter.put('/:commentId',
 })
 
 commentRouter.delete('/:commentId',
-    authorizationJWT,
+    authAccessToken,
     checkOwnCommentById,
     async (req: Request, res: Response) => {
 

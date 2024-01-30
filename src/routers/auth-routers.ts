@@ -3,7 +3,7 @@ import {authService} from "../services/auth-service";
 import {userAuthValid} from "../validations/users-validators";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 import {jwtService} from "../applications/jwt-service";
-import {authorizationJWT, checkRefreshJWT, refreshJWT} from "../middlewares/authorization-jwt";
+import {authAccessToken, refreshJWT} from "../middlewares/authorization-jwt";
 import {userApplication} from "../applications/user-application";
 import {userSessionService} from "../services/user-session-service";
 import {apiRequests} from "../middlewares/count-api-request-middleware";
@@ -23,7 +23,7 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
     const accessToken = await jwtService.createAccessJWT(userId)
     const refreshToken = await jwtService.createRefreshJWT(userId, deviceId)
 
-    await userSessionService.updateUserSession(refreshToken)// update dates for refreshToken
+    await userSessionService.updateDatesDeviceSession(refreshToken)// update dates for refreshToken
 
     return res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
             .status(200)
@@ -31,22 +31,17 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
 
 })
 
-authRouters.post('/refresh-token', refreshJWT, /*checkRefreshJWT,*/ async (req: Request, res: Response) => {
+authRouters.post('/refresh-token', refreshJWT, async (req: Request, res: Response) => {
 
-    //const userId = await userApplication.getUserByUserId(req.user!.userId)
     const userId = (await jwtService.verifyJWT(req.cookies.refreshToken))!.userId
     const accessToken = await jwtService.createAccessJWT(userId)
 
-    //
     const deviceId = await userSessionService
         .getDeviceIdFromRefreshToken(req.cookies.refreshToken)
-    //
 
     const newRefreshToken = await jwtService.createRefreshJWT(userId, deviceId)
 
-    //
-    await userSessionService.updateUserSession(newRefreshToken)
-    ////
+    await userSessionService.updateDatesDeviceSession(newRefreshToken)
 
     //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
 
@@ -55,14 +50,14 @@ authRouters.post('/refresh-token', refreshJWT, /*checkRefreshJWT,*/ async (req: 
         .send(accessToken)
 })
 
-authRouters.post('/logout', refreshJWT , /*checkRefreshJWT,*/ async (req: Request, res: Response) => {
+authRouters.post('/logout', refreshJWT, async (req: Request, res: Response) => {
     const deviceId = await jwtService.getDeviceIdFromRefreshToken(req.cookies.refreshToken)
     await userSessionService.deleteDeviceSessionByDeviceId(deviceId!)
     //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
     res.sendStatus(204)
 })
 
-authRouters.get('/me', authorizationJWT, async (req: Request, res: Response) => {
+authRouters.get('/me', authAccessToken, async (req: Request, res: Response) => {
     const userInfo = await userApplication.getUserInfo(req.user!.email, req.user!.login, req.user!.userId)
     return res.status(200).send(userInfo)
 })

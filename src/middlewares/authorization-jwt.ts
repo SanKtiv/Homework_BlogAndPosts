@@ -4,7 +4,7 @@ import {userApplication} from "../applications/user-application";
 import {userSessionRepository} from "../repositories/mongodb-repository/user-session-mongodb";
 import {userSessionService} from "../services/user-session-service";
 
-export const authorizationJWT = async (req: Request, res: Response, next: NextFunction) => {
+export const authAccessToken = async (req: Request, res: Response, next: NextFunction) => {
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! if, req.user
     if (req.headers.authorization) {
         const token = req.headers.authorization.split(' ')[1]
@@ -38,11 +38,8 @@ export const refreshJWT = async (req: Request, res: Response, next: NextFunction
 
     if (!tokenPayload) return res.sendStatus(401)
 
-    //if (refreshToken.exp! < Math.floor(Date.now() / 1000)) return res.sendStatus(401)
-
     const session = await userSessionService.getDeviceSessionByDeviceId(tokenPayload.deviceId)
-    //const result = await userSessionRepository
-      //  .getUserSessionsByDeviceIdAndUserId(refreshToken.deviceId, refreshToken.userId)
+
     if (!session || session.userId !== tokenPayload.userId) return res.sendStatus(401)
     if (session.lastActiveDate !== new Date(tokenPayload.iat! * 1000).toISOString()) return res.sendStatus(401)
 
