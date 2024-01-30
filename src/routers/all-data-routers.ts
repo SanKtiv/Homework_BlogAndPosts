@@ -4,7 +4,7 @@ import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb/
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
 import {commentsRepository} from "../repositories/mongodb-repository/comments-mongodb/comments-mongodb";
 import {apiRequestRepository} from "../repositories/mongodb-repository/count-request-mongodb";
-import {userSessionRepository} from "../repositories/mongodb-repository/user-session-mongodb";
+import {deviceSessionRepository} from "../repositories/mongodb-repository/user-session-mongodb";
 
 export const dellAllRouter = Router ({})
 
@@ -16,7 +16,7 @@ dellAllRouter.delete('/', async (req: Request, res: Response) => {
     await commentsRepository.deleteAll()
     await usersRepository.deleteAllTokens()
     await apiRequestRepository.deleteAllApiRequests()
-    await userSessionRepository.deleteAllDevices()
+    await deviceSessionRepository.deleteAllDevices()
 
     return res.sendStatus(204)
 })

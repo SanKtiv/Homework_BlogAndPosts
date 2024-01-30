@@ -7,13 +7,15 @@ const secretRefresh: Secret = process.env.SECRET_KEY!
 
 export const jwtService = {
 
-    async createAccessJWT(userId: string): Promise<ViewTokenModelType> {
+    async createAccessToken(userId: string): Promise<ViewTokenModelType> {
+        const secretAccess: Secret = process.env.SECRET_KEY!
         const accessToken = await jwt
             .sign({userId: userId}, secretAccess, {expiresIn: '10s'})
         return {accessToken: accessToken}
     },
 
-    async createRefreshJWT(userId: string, deviceId: string): Promise<string> {
+    async createRefreshToken(userId: string, deviceId: string): Promise<string> {
+        const secretRefresh: Secret = process.env.SECRET_KEY!
         const payload = {deviceId: deviceId, userId: userId}
         return jwt.sign(payload, secretRefresh, {expiresIn: '20s'})
     },

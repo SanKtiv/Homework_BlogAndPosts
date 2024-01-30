@@ -1,23 +1,23 @@
 import {Request, Response, Router} from "express";
-import {userSessionService} from "../services/user-session-service";
-import {refreshJWT} from "../middlewares/authorization-jwt";
+import {deviceSessionService} from "../services/device-session-service";
+import {checkRefreshToken} from "../middlewares/authorization-jwt";
 import {checkDeviceId} from "../middlewares/device-middleware";
 
 export const securityRouter = Router({})
 
-securityRouter.get('/', refreshJWT, async (req: Request, res: Response) => {
-    const viewUserSessions = await userSessionService
+securityRouter.get('/', checkRefreshToken, async (req: Request, res: Response) => {
+    const viewUserSessions = await deviceSessionService
         .getAllUserSessions(req.cookies.refreshToken)
     return res.status(200).send(viewUserSessions)
 })
 
-securityRouter.delete('/:deviceId', refreshJWT, checkDeviceId, async (req: Request, res: Response) => {
-    const result = await userSessionService.deleteDeviceSessionByDeviceId(req.params.deviceId)
+securityRouter.delete('/:deviceId', checkRefreshToken, checkDeviceId, async (req: Request, res: Response) => {
+    const result = await deviceSessionService.deleteDeviceSessionByDeviceId(req.params.deviceId)
     res.sendStatus(204)
 
 })
 
-securityRouter.delete('/', refreshJWT, async (req: Request, res: Response) => {
-    await userSessionService.deleteAllDevicesExcludeCurrent(req.cookies.refreshToken)
+securityRouter.delete('/', checkRefreshToken, async (req: Request, res: Response) => {
+    await deviceSessionService.deleteAllDevicesExcludeCurrent(req.cookies.refreshToken)
     return res.sendStatus(204)
 })

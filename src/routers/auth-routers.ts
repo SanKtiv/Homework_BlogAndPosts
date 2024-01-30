@@ -3,15 +3,15 @@ import {authService} from "../services/auth-service";
 import {userAuthValid} from "../validations/users-validators";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 import {jwtService} from "../applications/jwt-service";
-import {authAccessToken, refreshJWT} from "../middlewares/authorization-jwt";
+import {authAccessToken, checkRefreshToken} from "../middlewares/authorization-jwt";
 import {userApplication} from "../applications/user-application";
-import {userSessionService} from "../services/user-session-service";
+import {deviceSessionService} from "../services/device-session-service";
 import {apiRequests} from "../middlewares/count-api-request-middleware";
-
 
 export const authRouters = Router({})
 
 authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
+
     const userId = await authService.checkCredentials(req.body)
 
     if (!userId) return res.sendStatus(401)
@@ -19,29 +19,28 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
     const title = req.headers["user-agent"] || 'chrome 105'
     const ip = req.header('x-forwarded-for') || req.ip
 
-    const deviceId = await userSessionService.createDeviceInUserSession(title, ip, userId)
-    const accessToken = await jwtService.createAccessJWT(userId)
-    const refreshToken = await jwtService.createRefreshJWT(userId, deviceId)
+    const deviceId = await deviceSessionService.createDeviceSession(title, ip, userId)
+    const accessToken = await jwtService.createAccessToken(userId)
+    const refreshToken = await jwtService.createRefreshToken(userId, deviceId)
 
-    await userSessionService.updateDatesDeviceSession(refreshToken)// update dates for refreshToken
+    await deviceSessionService.updateDatesDeviceSession(refreshToken)// update dates for refreshToken
 
     return res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
             .status(200)
             .send(accessToken)
-
 })
 
-authRouters.post('/refresh-token', refreshJWT, async (req: Request, res: Response) => {
+authRouters.post('/refresh-token', checkRefreshToken, async (req: Request, res: Response) => {
 
     const userId = (await jwtService.verifyJWT(req.cookies.refreshToken))!.userId
-    const accessToken = await jwtService.createAccessJWT(userId)
+    const accessToken = await jwtService.createAccessToken(userId)
 
-    const deviceId = await userSessionService
+    const deviceId = await deviceSessionService
         .getDeviceIdFromRefreshToken(req.cookies.refreshToken)
 
-    const newRefreshToken = await jwtService.createRefreshJWT(userId, deviceId)
+    const newRefreshToken = await jwtService.createRefreshToken(userId, deviceId)
 
-    await userSessionService.updateDatesDeviceSession(newRefreshToken)
+    await deviceSessionService.updateDatesDeviceSession(newRefreshToken)
 
     //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
 
@@ -50,9 +49,9 @@ authRouters.post('/refresh-token', refreshJWT, async (req: Request, res: Respons
         .send(accessToken)
 })
 
-authRouters.post('/logout', refreshJWT, async (req: Request, res: Response) => {
+authRouters.post('/logout', checkRefreshToken, async (req: Request, res: Response) => {
     const deviceId = await jwtService.getDeviceIdFromRefreshToken(req.cookies.refreshToken)
-    await userSessionService.deleteDeviceSessionByDeviceId(deviceId!)
+    await deviceSessionService.deleteDeviceSessionByDeviceId(deviceId!)
     //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
     res.sendStatus(204)
 })

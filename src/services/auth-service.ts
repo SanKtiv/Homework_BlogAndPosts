@@ -51,7 +51,6 @@ export const authService = {
     },
 
     async checkCredentials(LoginBody: InputUserAuthModelType): Promise<string | null> {
-        //async checkCredentials(loginOrEmail: string, password: string): Promise<string | null> {
 
         const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(LoginBody.loginOrEmail)
         if (!user) return null

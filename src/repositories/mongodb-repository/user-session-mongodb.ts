@@ -2,21 +2,21 @@ import {UserSessionType, UserSessionTypeDB} from "../../types/security-device-ty
 import {dbSecurityCollection} from "./db";
 import {ObjectId} from "mongodb";
 
-export const userSessionRepository = {
+export const deviceSessionRepository = {
 
-    async insertUserSession(userSession: UserSessionType): Promise<UserSessionTypeDB> {
+    async insertDeviceSession(userSession: UserSessionType): Promise<UserSessionTypeDB> {
         await dbSecurityCollection.insertOne(userSession)
         return userSession as UserSessionTypeDB
     },
 
-    async updateUserSession(deviceId: string, lastActiveDate: string, expirationDate: string) {
+    async updateDeviceSession(deviceId: string, lastActiveDate: string, expirationDate: string) {
         return dbSecurityCollection
             .findOneAndUpdate({_id: new ObjectId(deviceId)},
                 {$set: {lastActiveDate: lastActiveDate, expirationDate: expirationDate}},
                 {returnDocument: 'after'})
     },
 
-    async getUserSessionsByDeviceIdAndUserId(deviceId: string, userId: string) {
+    async getDeviceSessionsByDeviceIdAndUserId(deviceId: string, userId: string) {
         return dbSecurityCollection.findOne({userId: userId, _id: new ObjectId(deviceId)})
     },
 
@@ -24,7 +24,7 @@ export const userSessionRepository = {
         return dbSecurityCollection.findOne({_id: new ObjectId(deviceId)})
     },
 
-    async getAllUserSessionsByUserId(userId: string): Promise<UserSessionTypeDB[]> {
+    async getDeviceSessionsByUserId(userId: string): Promise<UserSessionTypeDB[]> {
         return dbSecurityCollection.find({userId: userId}).toArray()
     },
 
