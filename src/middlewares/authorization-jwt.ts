@@ -1,19 +1,20 @@
 import {NextFunction, Response, Request} from "express";
 import {jwtService} from "../applications/jwt-service";
 import {userApplication} from "../applications/user-application";
-import {userSessionRepository} from "../repositories/mongodb-repository/user-session-mongodb";
 import {userSessionService} from "../services/user-session-service";
 
 export const authAccessToken = async (req: Request, res: Response, next: NextFunction) => {
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! if, req.user
-    if (req.headers.authorization) {
-        const token = req.headers.authorization.split(' ')[1]
-        const userId = await jwtService.getUserIdByToken(token)
-        if (!userId) return res.sendStatus(401)
-        req.user = await userApplication.createReqUserByUserId(userId)
-        return next()
-    }
-    res.sendStatus(401)
+    if (!req.headers.authorization) return res.sendStatus(401)
+
+    const token = req.headers.authorization.split(' ')[1]
+    const userId = await jwtService.getUserIdByToken(token)
+
+    if (!userId) return res.sendStatus(401)
+
+    req.user = await userApplication.createReqUserByUserId(userId)
+
+    return next()
 }
 
 export const checkRefreshJWT = async (req: Request, res: Response, next: NextFunction) => {
