@@ -43,10 +43,8 @@ export const refreshJWT = async (req: Request, res: Response, next: NextFunction
     const session = await userSessionService.getDeviceSessionByDeviceId(tokenPayload.deviceId)
     //const result = await userSessionRepository
       //  .getUserSessionsByDeviceIdAndUserId(refreshToken.deviceId, refreshToken.userId)
-
     if (!session || session.userId !== tokenPayload.userId) return res.sendStatus(401)
-    if (session.expirationDate !== new Date(tokenPayload.iat! * 1000).toISOString()) return res.sendStatus(401)
-
+    if (session.lastActiveDate !== new Date(tokenPayload.iat! * 1000).toISOString()) return res.sendStatus(401)
 
     return next()
 }
