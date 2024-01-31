@@ -80,8 +80,4 @@ export const authService = {
         const newExpirationDate = add(new Date(), {hours: 1, minutes: 5})
         return usersRepository.updateUserConfirmationCode(newConfirmationCode, email,newExpirationDate)
     },
-
-    async saveInvalidRefreshJWT(refreshJWT: string) {
-        await usersRepository.insertInvalidRefreshJWT(refreshJWT)
-    }
 }

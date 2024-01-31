@@ -1,4 +1,4 @@
-import {RefreshTokenDBType, UserDBType, UserType} from "../../../types/users-types";
+import {UserDBType, UserType} from "../../../types/users-types";
 import {dbTokensCollection, dbUsersCollection} from "../db";
 import {ObjectId} from "mongodb";
 
@@ -36,13 +36,13 @@ export const usersRepository = {
         return result.modifiedCount === 1
     },
 
-    async insertInvalidRefreshJWT(refreshJWT: string): Promise<void> {
-        await dbTokensCollection.insertOne({invalidRefreshToken: refreshJWT})
-    },
+    // async insertInvalidRefreshJWT(refreshJWT: string): Promise<void> {
+    //     await dbTokensCollection.insertOne({invalidRefreshToken: refreshJWT})
+    // },
 
-    async getInvalidRefreshJWT(refreshJWT: string): Promise<RefreshTokenDBType | null> {
-        return dbTokensCollection.findOne({invalidRefreshToken: refreshJWT})
-    },
+    // async getInvalidRefreshJWT(refreshJWT: string): Promise<RefreshTokenDBType | null> {
+    //     return dbTokensCollection.findOne({invalidRefreshToken: refreshJWT})
+    // },
 
     async deleteAllTokens(): Promise<void> {
         await dbTokensCollection.deleteMany({})
