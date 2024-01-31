@@ -47,7 +47,7 @@ export const authService = {
 
         const user = await this.createUser(body)
         const findUser = await usersRepository.insertUserToDB(user)
-        return userService.addIdToUser(findUser as UserDBType)
+        return userService.createViewUserModel(findUser as UserDBType)
     },
 
     async checkCredentials(LoginBody: InputUserAuthModelType): Promise<string | null> {

@@ -1,4 +1,3 @@
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
 import {userService} from "../services/users-service";
 
 export const userApplication = {
@@ -23,11 +22,4 @@ export const userApplication = {
             userId: userId
         }
     },
-
-    // async getUserByUserId(userId: string): Promise<string | null> {
-    //
-    //     const user = await usersRepositoryReadOnly.getUserById(userId)
-    //     if (user) return user._id.toString()
-    //     return null
-    // }
 }

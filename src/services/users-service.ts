@@ -4,7 +4,7 @@ import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-
 
 export const userService = {
 
-    addIdToUser(user: UserDBType): ViewUserModelType {
+    createViewUserModel(user: UserDBType): ViewUserModelType {
 
         return {
             id: user._id.toString(),
@@ -23,7 +23,7 @@ export const userService = {
             page: +query.pageNumber,
             pageSize: +query.pageSize,
             totalCount: totalUsers,
-            items: usersSearch.map(userDb => this.addIdToUser(userDb))
+            items: usersSearch.map(userDb => this.createViewUserModel(userDb))
         }
     },
 
