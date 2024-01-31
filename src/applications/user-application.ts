@@ -23,10 +23,10 @@ export const userApplication = {
         }
     },
 
-    async getUserByUserId(userId: string): Promise<string | null> {
-
-        const user = await usersRepositoryReadOnly.getUserById(userId)
-        if (user) return user._id.toString()
-        return null
-    }
+    // async getUserByUserId(userId: string): Promise<string | null> {
+    //
+    //     const user = await usersRepositoryReadOnly.getUserById(userId)
+    //     if (user) return user._id.toString()
+    //     return null
+    // }
 }

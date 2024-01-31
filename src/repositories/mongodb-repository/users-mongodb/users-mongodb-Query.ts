@@ -1,12 +1,6 @@
-import {
-    UserType,
-    UserDBType,
-    ViewUsersPagingType,
-    QueryPagingType,
-    InputUserPagingType
-} from "../../../types/users-types";
+import {UserDBType, ViewUsersPagingType} from "../../../types/users-types";
 import {dbUsersCollection} from "../db";
-import {ObjectId, WithId} from "mongodb";
+import {ObjectId} from "mongodb";
 import {userService} from "../../../services/users-service";
 
 
