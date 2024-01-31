@@ -17,20 +17,6 @@ export const authAccessToken = async (req: Request, res: Response, next: NextFun
     return next()
 }
 
-// export const checkRefreshJWT = async (req: Request, res: Response, next: NextFunction) => {
-//
-//     const invalidRefreshJWT = await jwtService.getInvalidRefreshJWT(req.cookies.refreshToken)
-//
-//     if (invalidRefreshJWT) return res.sendStatus(401)
-//
-//     const result = await jwtService.verifyJWT(req.cookies.refreshToken)
-//
-//     if (!result) return res.sendStatus(401)
-//
-//     req.user = await userApplication.createReqUserByUserId(result.userId)
-//     return next()
-// }
-
 export const checkRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!req.cookies.refreshToken) return res.sendStatus(401)

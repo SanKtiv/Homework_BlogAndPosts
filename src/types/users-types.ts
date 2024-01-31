@@ -65,12 +65,6 @@ export type RequestUserType = {
     userId: string
 }
 
-export type InvalidRefreshTokenType = {
-    invalidRefreshToken: string
-}
-
-export type RefreshTokenDBType = WithId<InvalidRefreshTokenType>
-
 export type QueryPagingType = {
     searchLoginTerm?: string
     searchEmailTerm?: string

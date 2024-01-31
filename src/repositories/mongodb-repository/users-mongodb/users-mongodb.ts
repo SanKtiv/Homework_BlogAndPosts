@@ -35,16 +35,4 @@ export const usersRepository = {
                 {$set: {'emailConfirmation.confirmationCode': code, 'emailConfirmation.expirationDate': date}})
         return result.modifiedCount === 1
     },
-
-    // async insertInvalidRefreshJWT(refreshJWT: string): Promise<void> {
-    //     await dbTokensCollection.insertOne({invalidRefreshToken: refreshJWT})
-    // },
-
-    // async getInvalidRefreshJWT(refreshJWT: string): Promise<RefreshTokenDBType | null> {
-    //     return dbTokensCollection.findOne({invalidRefreshToken: refreshJWT})
-    // },
-
-    // async deleteAllTokens(): Promise<void> {
-    //     await dbTokensCollection.deleteMany({})
-    // }
 }

@@ -46,6 +46,6 @@ authRouters.post('/logout', checkRefreshToken, async (req: Request, res: Respons
 })
 
 authRouters.get('/me', authAccessToken, async (req: Request, res: Response) => {
-    const userInfo = await userApplication.getUserInfo(req.user!.email, req.user!.login, req.user!.userId)
+    const userInfo = await userApplication.createUserInfo(req.user!.email, req.user!.login, req.user!.userId)
     return res.status(200).send(userInfo)
 })

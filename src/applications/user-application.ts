@@ -1,5 +1,4 @@
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
-import {UserDBType} from "../types/users-types";
 
 export const userApplication = {
 
@@ -15,7 +14,7 @@ export const userApplication = {
         }
     },
 
-    async getUserInfo(email: string, login: string, userId: string) {
+    async createUserInfo(email: string, login: string, userId: string) {
 
         return {
             email: email,
