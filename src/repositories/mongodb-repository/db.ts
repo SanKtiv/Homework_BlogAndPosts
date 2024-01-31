@@ -19,7 +19,7 @@ const postsCollection: string = 'posts'
 const blogsCollection: string = 'blogs'
 const usersCollection: string = 'users'
 const commentsCollection: string = 'comments'
-const tokensCollection: string = 'tokens'
+//const tokensCollection: string = 'tokens'
 const securityCollection: string = 'users-sessions'
 const countReqCollection: string = 'requests'
 
@@ -27,7 +27,7 @@ export const dbBlogsCollection = client.db(db).collection<BlogType>(blogsCollect
 export const dbPostsCollection = client.db(db).collection<PostType>(postsCollection)
 export const dbUsersCollection = client.db(db).collection<UserType>(usersCollection)
 export const dbCommentsCollection = client.db(db).collection<CommentType>(commentsCollection)
-export const dbTokensCollection = client.db(db).collection<InvalidRefreshTokenType>(tokensCollection)
+//export const dbTokensCollection = client.db(db).collection<InvalidRefreshTokenType>(tokensCollection)
 export const dbSecurityCollection = client.db(db).collection<UserSessionType>(securityCollection)
 export const dbRequestCollection = client.db(db).collection<ApiRequestType>(countReqCollection)
 

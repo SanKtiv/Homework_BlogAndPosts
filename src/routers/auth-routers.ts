@@ -23,8 +23,6 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
     const accessToken = await jwtService.createAccessToken(userId)
     const refreshToken = await jwtService.createRefreshToken(userId, deviceId)
 
-    //await deviceSessionService.updateDatesDeviceSession(refreshToken)// update dates for refreshToken
-
     return res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
             .status(200)
             .send(accessToken)
@@ -34,12 +32,9 @@ authRouters.post('/refresh-token', checkRefreshToken, async (req: Request, res: 
 
     const payload = await jwtService.getPayloadRefreshToken(req.cookies.refreshToken)
     const accessToken = await jwtService.createAccessToken(payload!.userId)
-
     const newRefreshToken = await jwtService.createRefreshToken(payload!.userId, payload!.deviceId)
 
-    //await deviceSessionService.updateDatesDeviceSession(newRefreshToken)
-
-    res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
+    return res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
         .status(200)
         .send(accessToken)
 })
@@ -47,7 +42,7 @@ authRouters.post('/refresh-token', checkRefreshToken, async (req: Request, res: 
 authRouters.post('/logout', checkRefreshToken, async (req: Request, res: Response) => {
     const payload = await jwtService.getPayloadRefreshToken(req.cookies.refreshToken)
     await deviceSessionService.deleteDeviceSessionByDeviceId(payload!.deviceId)
-    res.sendStatus(204)
+    return res.sendStatus(204)
 })
 
 authRouters.get('/me', authAccessToken, async (req: Request, res: Response) => {

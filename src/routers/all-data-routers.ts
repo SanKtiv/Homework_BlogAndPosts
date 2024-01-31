@@ -14,7 +14,7 @@ dellAllRouter.delete('/', async (req: Request, res: Response) => {
     await postsRepository.deleteAll()
     await usersRepository.deleteAllUsers()
     await commentsRepository.deleteAll()
-    await usersRepository.deleteAllTokens()
+    //await usersRepository.deleteAllTokens()
     await apiRequestRepository.deleteAllApiRequests()
     await deviceSessionRepository.deleteAllDevices()
 

@@ -36,7 +36,7 @@ describe('TEST for SecurityDevices', () => {
 
         await expect(resultBefore.statusCode).toBe(200)
 
-        await new Promise((resolve, reject) => {
+        await new Promise((resolve) => {
             setTimeout(() => resolve(Date.now()), 3000)
         })
 

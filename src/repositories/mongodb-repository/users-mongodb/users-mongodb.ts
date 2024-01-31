@@ -1,5 +1,5 @@
 import {UserDBType, UserType} from "../../../types/users-types";
-import {dbTokensCollection, dbUsersCollection} from "../db";
+import {dbUsersCollection} from "../db";
 import {ObjectId} from "mongodb";
 
 export const usersRepository = {
@@ -44,7 +44,7 @@ export const usersRepository = {
     //     return dbTokensCollection.findOne({invalidRefreshToken: refreshJWT})
     // },
 
-    async deleteAllTokens(): Promise<void> {
-        await dbTokensCollection.deleteMany({})
-    }
+    // async deleteAllTokens(): Promise<void> {
+    //     await dbTokensCollection.deleteMany({})
+    // }
 }
