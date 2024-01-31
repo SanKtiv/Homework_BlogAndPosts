@@ -50,8 +50,8 @@ authRouters.post('/refresh-token', checkRefreshToken, async (req: Request, res: 
 })
 
 authRouters.post('/logout', checkRefreshToken, async (req: Request, res: Response) => {
-    const deviceId = await jwtService.getDeviceIdFromRefreshToken(req.cookies.refreshToken)
-    await deviceSessionService.deleteDeviceSessionByDeviceId(deviceId!)
+    const payload = await jwtService.getPayloadRefreshToken(req.cookies.refreshToken)
+    await deviceSessionService.deleteDeviceSessionByDeviceId(payload!.deviceId)
     //await authService.saveInvalidRefreshJWT(req.cookies.refreshToken)
     res.sendStatus(204)
 })

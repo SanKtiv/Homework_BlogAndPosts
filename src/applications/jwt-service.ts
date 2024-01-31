@@ -40,34 +40,34 @@ export const jwtService = {
         }
     },
 
-    async getDeviceIdFromRefreshToken(token: string) {
-        const payloadRefreshToken = await this.getPayloadRefreshToken(token)
-        if (payloadRefreshToken) return payloadRefreshToken.deviceId
-        return null
-    },
-
-    async getUserIdByToken(token: string) {
-        try {
-            const result = await jwt.verify(token, secretAccess)
-            if (typeof result !== 'string') return result.userId
-        }
-        catch (error) {
-            return null
-        }
-    },
-
-    async checkRefreshToken(token: string) {
-        try {
-            const result = await jwt.verify(token, secretRefresh)
-            if (typeof result !== 'string') return result.userId
-        }
-        catch (error) {
-            return null
-        }
-    },
-
-    async getInvalidRefreshJWT (refreshJWT: string): Promise<boolean> {
-        const invalidToken = await usersRepository.getInvalidRefreshJWT(refreshJWT)
-        return !!invalidToken
-    }
+    // async getDeviceIdFromRefreshToken(token: string) {
+    //     const payloadRefreshToken = await this.getPayloadRefreshToken(token)
+    //     if (payloadRefreshToken) return payloadRefreshToken.deviceId
+    //     return null
+    // },
+    //
+    // async getUserIdByToken(token: string) {
+    //     try {
+    //         const result = await jwt.verify(token, secretAccess)
+    //         if (typeof result !== 'string') return result.userId
+    //     }
+    //     catch (error) {
+    //         return null
+    //     }
+    // },
+    //
+    // async checkRefreshToken(token: string) {
+    //     try {
+    //         const result = await jwt.verify(token, secretRefresh)
+    //         if (typeof result !== 'string') return result.userId
+    //     }
+    //     catch (error) {
+    //         return null
+    //     }
+    // },
+    //
+    // async getInvalidRefreshJWT (refreshJWT: string): Promise<boolean> {
+    //     const invalidToken = await usersRepository.getInvalidRefreshJWT(refreshJWT)
+    //     return !!invalidToken
+    // }
 }
