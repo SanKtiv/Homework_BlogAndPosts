@@ -1,10 +1,11 @@
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
+import {userService} from "../services/users-service";
 
 export const userApplication = {
 
     async createReqUserByUserId(userId: string) {
 
-        const user = await usersRepositoryReadOnly.getUserById(userId)
+        const user = await userService.getUserByUserId(userId)
         if (!user) return null
 
         return {

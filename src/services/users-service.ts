@@ -1,5 +1,6 @@
 import {InputUserPagingType, ViewUsersPagingType, ViewUserModelType, UserDBType} from "../types/users-types";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
+import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
 
 export const userService = {
 
@@ -24,6 +25,10 @@ export const userService = {
             totalCount: totalUsers,
             items: usersSearch.map(userDb => this.addIdToUser(userDb))
         }
+    },
+
+    async getUserByUserId(userId: string) {
+        return usersRepositoryReadOnly.getUserByUserId(userId)
     },
 
     async deleteUserById(id: string): Promise<boolean> {
