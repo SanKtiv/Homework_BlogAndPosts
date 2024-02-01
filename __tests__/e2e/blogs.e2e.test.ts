@@ -7,11 +7,13 @@ import {auth} from "./test-utility/test-auth-utility";
 import {expectError} from "./test-utility/test-error-utility";
 import {postActions} from "./test-services/test-posts-services";
 import {post} from "./test-utility/test-posts-utility";
+import mongoose from 'mongoose'
 
 describe('TEST for BLOGS', () => {
 
     beforeAll(async () => {
         await client.connect()
+        await mongoose.connect('mongodb://0.0.0.0:27017/home_works')
         await getRequest().delete(routePaths.deleteAllData)
     })
 
@@ -21,9 +23,10 @@ describe('TEST for BLOGS', () => {
 
     afterAll(async () => {
         await client.close()
+        await mongoose.connection.close()
     })
 
-    it('-POST, should return status 201 and blog', async () => {
+    it('-POST /blogs, create new blog, should return status 201 and blog', async () => {
 
         const countBlogsBeforeCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
 

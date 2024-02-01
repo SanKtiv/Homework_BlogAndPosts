@@ -11,6 +11,7 @@ export const blogRouter = Router ({})
 
 blogRouter.post( '/', validBlog, basicAuth, errorsOfValidate, async (req: Request, res: Response) => {
     const blog = await blogsRepository.createBlog(req.body)
+    console.log('router res', blog)
     return res.status(201).send(blog)
 })
 

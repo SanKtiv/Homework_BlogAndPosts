@@ -1,5 +1,5 @@
 import {InputBlogModelType, ViewBlogModelType, BlogDBType} from "../../../types/blogs-types";
-import {dbBlogsCollection} from "../db";
+import {BlogModel, dbBlogsCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {blogsService} from "../../../services/blogs-service";
 
@@ -25,9 +25,9 @@ export const blogsRepository = {
     },
 
     async createBlog(body: InputBlogModelType): Promise<ViewBlogModelType> {
-
         const newBlog = await blogsService.newBlog(body)
-        await dbBlogsCollection.insertOne(newBlog)
+        const blog = await BlogModel.insertMany([newBlog])
+        console.log('new blog from DB', blog)
         return blogsService.blogDbInToBlog(newBlog as BlogDBType)
     },
 

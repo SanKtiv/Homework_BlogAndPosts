@@ -1,16 +1,18 @@
 import dotenv from 'dotenv'
-import {MongoClient} from 'mongodb'
+import {MongoClient, WithId} from 'mongodb'
 import {PostType} from "../../types/posts-types";
 import {UserType} from "../../types/users-types";
 import {CommentType} from "../../types/comments-types";
-import {BlogType} from "../../types/blogs-types";
+import {BlogDBType, BlogType} from "../../types/blogs-types";
 import {UserSessionType} from "../../types/security-device-types";
 import {ApiRequestType} from "../../types/count-request-types";
+import mongoose from 'mongoose'
 
 dotenv.config()
 
-const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
-//const mongoURI = 'mongodb://0.0.0.0:27017' || process.env.MONGO_URL
+const dbName = '/home_works'
+//const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+const mongoURI = 'mongodb://0.0.0.0:27017' || process.env.MONGO_URL
 
 export const client = new MongoClient(mongoURI)
 
@@ -21,6 +23,17 @@ const usersCollection: string = 'users'
 const commentsCollection: string = 'comments'
 const securityCollection: string = 'users-sessions'
 const countReqCollection: string = 'requests'
+
+export const BlogSchema = new mongoose.Schema<BlogDBType>({
+    //id: { type: String, require: true },
+    name: { type: String, require: true },
+    description: { type: String, require: true },
+    websiteUrl: String,
+    createdAt: String,
+    isMembership: Boolean
+})
+
+export const BlogModel = mongoose.model('blogs1', BlogSchema)
 
 export const dbBlogsCollection = client.db(db).collection<BlogType>(blogsCollection)
 export const dbPostsCollection = client.db(db).collection<PostType>(postsCollection)
@@ -34,7 +47,11 @@ export async function runDb() {
         await client.connect()
         await client.db(db).command({ping: 1})
         console.log('Connect successfully to mongo server')
-    } catch {
+
+        await mongoose.connect(mongoURI + dbName)
+        console.log('Connect mongoose is ok')
+    } catch(e) {
+        console.log('no connection')
         await client.close()
     }
 }
