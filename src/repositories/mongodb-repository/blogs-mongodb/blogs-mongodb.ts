@@ -8,14 +8,14 @@ export const blogsRepository = {
     async getAllBlogs(): Promise<ViewBlogModelType[]> {
 
         const allBlogs = await dbBlogsCollection.find().toArray()
-        return allBlogs.map(blogOutDb => blogsService.blogDbInToBlog(blogOutDb))
+        return allBlogs.map(blogOutDb => blogsService.createViewBlogModel(blogOutDb))
     },
 
     async getBlogById(id: string): Promise<ViewBlogModelType | null> {
 
         try {
             const blogDB = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
-            if (blogDB) return blogsService.blogDbInToBlog(blogDB)
+            if (blogDB) return blogsService.createViewBlogModel(blogDB)
             return null
         } catch (error) {
             return null
@@ -24,11 +24,8 @@ export const blogsRepository = {
         // return blogsService.blogDbInToBlog(blogOutDb)
     },
 
-    async createBlog(body: InputBlogModelType): Promise<ViewBlogModelType> {
-        const newBlog = await blogsService.newBlog(body)
-        const blog = await BlogModel.insertMany([newBlog])
-        console.log('new blog from DB', blog)
-        return blogsService.blogDbInToBlog(newBlog as BlogDBType)
+    async createBlog(body: InputBlogModelType): Promise<BlogDBType> {
+        return BlogModel.create(body)
     },
 
     async updateBlog(id: string, body: InputBlogModelType): Promise<Boolean> {

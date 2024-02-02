@@ -1,6 +1,6 @@
 import {Router, Request, Response} from "express";
 import {authService} from "../services/auth-service";
-import {userAuthValid} from "../validations/users-validators";
+import {emailPasswordRecovery, userAuthValid} from "../validations/users-validators";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 import {jwtService} from "../applications/jwt-service";
 import {authAccessToken, checkRefreshToken} from "../middlewares/authorization-jwt";
@@ -26,6 +26,15 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
     return res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
             .status(200)
             .send(accessToken)
+})
+
+authRouters.post('/password-recovery',
+    apiRequests,
+    emailPasswordRecovery,
+    errorsOfValidate,
+    async (req: Request, res: Response) => {
+
+
 })
 
 authRouters.post('/refresh-token', checkRefreshToken, async (req: Request, res: Response) => {

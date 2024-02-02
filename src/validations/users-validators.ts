@@ -51,3 +51,8 @@ export const userEmailResending = body('email')
             throw new Error('This email is confirmed')
         }
     })
+
+export const emailPasswordRecovery = body('email')
+    .isString().withMessage('email is not string')
+    .trim()
+    .matches(emailRegex).withMessage('email have invalid characters')

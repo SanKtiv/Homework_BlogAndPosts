@@ -24,14 +24,15 @@ const commentsCollection: string = 'comments'
 const securityCollection: string = 'users-sessions'
 const countReqCollection: string = 'requests'
 
-export const BlogSchema = new mongoose.Schema<BlogDBType>({
+export const BlogSchema = new mongoose.Schema<BlogType>({
     //id: { type: String, require: true },
     name: { type: String, require: true },
     description: { type: String, require: true },
     websiteUrl: String,
     createdAt: String,
-    isMembership: Boolean
-})
+    isMembership: Boolean,
+    //versionKey: false
+}, { versionKey: false })
 
 export const BlogModel = mongoose.model('blogs1', BlogSchema)
 

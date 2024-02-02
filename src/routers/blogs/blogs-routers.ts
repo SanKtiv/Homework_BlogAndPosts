@@ -6,12 +6,12 @@ import {postsRepository} from "../../repositories/mongodb-repository/posts-mongo
 import {checkBlogByBlogId} from "../../middlewares/blogs-middlewares";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
+import {blogsService} from "../../services/blogs-service";
 
 export const blogRouter = Router ({})
 
 blogRouter.post( '/', validBlog, basicAuth, errorsOfValidate, async (req: Request, res: Response) => {
-    const blog = await blogsRepository.createBlog(req.body)
-    console.log('router res', blog)
+    const blog = await blogsService.getCreatedBlog(req.body)
     return res.status(201).send(blog)
 })
 
