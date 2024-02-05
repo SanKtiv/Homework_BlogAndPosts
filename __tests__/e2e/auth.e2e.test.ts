@@ -6,6 +6,7 @@ import {user} from "./test-utility/test-users-utility";
 import {auth} from "./test-utility/test-auth-utility";
 import {setTimeout} from "timers";
 import {authActions} from "./test-services/test-auth-servises";
+import {email} from "./test-utility/test-mail-utility";
 
 describe('TEST for AUTH', () => {
 
@@ -110,5 +111,21 @@ describe('TEST for AUTH', () => {
 
         const result1 = await authActions.updateRefreshToken(refreshToken)
         await expect(result1.statusCode).toBe(200)
+    })
+
+    it('-POST /password-recovery, should return status 204 and send recovery code', async () => {
+        const result = await authActions.sendRecoveryCode(email.correct)
+
+        await expect(result.statusCode).toBe(204)
+    })
+
+    it('-POST /password-recovery, should return status 400 if email incorrect', async () => {
+        const result = await authActions.sendRecoveryCode(email.wrong)
+
+        await expect(result.statusCode).toBe(400)
+    })
+
+    it('-POST /password-recovery, should return status 429 if count of request more then 5 in 10 sec', async () => {
+
     })
 })

@@ -35,4 +35,12 @@ export const usersRepository = {
                 {$set: {'emailConfirmation.confirmationCode': code, 'emailConfirmation.expirationDate': date}})
         return result.modifiedCount === 1
     },
+
+    async addRecoveryCode(email: string, recoveryCode: string) {
+        const result = await dbUsersCollection
+            .updateOne(
+                {'accountData.email': email},
+                {$set: {'passwordRecovery.recoveryCode': recoveryCode}})
+        return result.modifiedCount === 1
+    }
 }

@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
 import {authService} from "../services/auth-service";
-import {sendingData} from "../utility/email-utlits";
+import {passwordRecovery, registrationConfirmation} from "../utility/email-utilits";
 
 export const emailAdapter = {
 
@@ -18,25 +18,29 @@ export const emailAdapter = {
 
         //const subject = 'confirmation registration'
 
-        const mailOptions = {
-            from: 'Aleksandr <aleksandr.mail.test@gmail.com>',
-            to: email,
-            subject: sendingData.confirmRegSubject,
-            html: sendingData.confirmRegMessage(confirmationCode)
-        }
+        // const mailOptions = {
+        //     from: 'Aleksandr <aleksandr.mail.test@gmail.com>',
+        //     to: email,
+        //     subject: mailData.confirmRegSubject,
+        //     html: mailData.confirmRegMessage(confirmationCode)
+        // }
 
-        let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'aleksandr.mail.test@gmail.com',
-                pass: 'rglgkegtcyunuxds'
-            }
-        })
+        const mailOptions = registrationConfirmation.mailOptions(email, confirmationCode)
+
+        let transporter = nodemailer.createTransport(registrationConfirmation.mailTransport)
+
         return transporter.sendMail(mailOptions)
     },
     
     async resendNewConfirmationCodeByEmail(email: string): Promise<void> {
         const result = await authService.changeConfirmationCode(email)
         if (result) await this.sendConfirmationCodeByEmail(email)
+    },
+
+    async sendRecoveryCode(email: string) {
+        const recoveryCode = await authService.createRecoveryCode(email)
+        const mailOptions = passwordRecovery.mailOptions(email, recoveryCode)
+        let transporter = nodemailer.createTransport(passwordRecovery.mailTransport)
+        return transporter.sendMail(mailOptions)
     }
 }

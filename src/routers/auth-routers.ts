@@ -7,6 +7,7 @@ import {authAccessToken, checkRefreshToken} from "../middlewares/authorization-j
 import {userApplication} from "../applications/user-application";
 import {deviceSessionService} from "../services/device-session-service";
 import {apiRequests} from "../middlewares/count-api-request-middleware";
+import {emailAdapter} from "../adapters/mail-adapter";
 
 export const authRouters = Router({})
 
@@ -31,10 +32,10 @@ authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, asyn
 authRouters.post('/password-recovery',
     apiRequests,
     emailPasswordRecovery,
-    errorsOfValidate,
-    async (req: Request, res: Response) => {
+    errorsOfValidate, async (req: Request, res: Response) => {
 
-
+    await emailAdapter.sendRecoveryCode(req.body.email)
+        return res.sendStatus(204)
 })
 
 authRouters.post('/refresh-token', checkRefreshToken, async (req: Request, res: Response) => {

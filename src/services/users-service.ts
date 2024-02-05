@@ -33,5 +33,5 @@ export const userService = {
 
     async deleteUserById(id: string): Promise<boolean> {
         return usersRepository.deleteUserById(id)
-    }
+    },
 }

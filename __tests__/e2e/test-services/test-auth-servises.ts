@@ -1,5 +1,4 @@
-import {InputUserAuthModelType, InputUserModelType} from "../../../src/types/users-types";
-import {BasicType} from "../test-utility/test-auth-utility";
+import {InputUserModelType} from "../../../src/types/users-types";
 import {getRequest} from "./test-request";
 import {routePaths} from "../../../src/setting";
 
@@ -10,6 +9,11 @@ export const authActions = {
             .post(`${routePaths.auth}/refresh-token`)
             .set('Cookie', [refreshToken])
     },
+
+    sendRecoveryCode: async (email: string) =>
+        getRequest()
+            .post(`${routePaths.auth}/password-recovery`)
+            .send({email: email}),
 
     registrationUser: async (registrationBody: InputUserModelType) =>
         getRequest()

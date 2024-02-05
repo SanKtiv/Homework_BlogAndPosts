@@ -80,4 +80,11 @@ export const authService = {
         const newExpirationDate = add(new Date(), {hours: 1, minutes: 5})
         return usersRepository.updateUserConfirmationCode(newConfirmationCode, email,newExpirationDate)
     },
+
+    async createRecoveryCode(email: string): Promise<string> {
+
+        const recoveryCode = uuidv4()
+        await usersRepository.addRecoveryCode(email, recoveryCode)
+        return recoveryCode
+    }
 }

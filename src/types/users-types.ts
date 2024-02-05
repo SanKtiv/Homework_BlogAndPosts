@@ -3,6 +3,7 @@ import {WithId} from "mongodb";
 export type UserType = {
     accountData: AccountDataType
     emailConfirmation: EmailConfirmationType
+    passwordRecovery?: {recoveryCode: string}
 }
 
 type AccountDataType = {
