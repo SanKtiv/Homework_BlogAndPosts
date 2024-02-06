@@ -24,14 +24,14 @@ export const blogsRepository = {
         // return blogsService.blogDbInToBlog(blogOutDb)
     },
 
-    async createBlog(body: BlogType): Promise<BlogDBType> {
-        return await BlogModel.create(body)
-    },
-
     // async createBlog(body: BlogType): Promise<BlogDBType> {
-    //     await dbBlogsCollection.insertOne(body)
-    //     return body as BlogDBType
+    //     return await BlogModel.create(body)
     // },
+
+    async createBlog(body: BlogType): Promise<BlogDBType> {
+        await dbBlogsCollection.insertOne(body)
+        return body as BlogDBType
+    },
 
     async updateBlog(id: string, body: InputBlogModelType): Promise<Boolean> {
 
