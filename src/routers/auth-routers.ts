@@ -4,10 +4,10 @@ import {emailPasswordRecovery, userAuthValid} from "../validations/users-validat
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 import {jwtService} from "../applications/jwt-service";
 import {authAccessToken, checkRefreshToken} from "../middlewares/authorization-jwt";
-import {userApplication} from "../applications/user-application";
 import {deviceSessionService} from "../services/device-session-service";
 import {apiRequests} from "../middlewares/count-api-request-middleware";
 import {emailAdapter} from "../adapters/mail-adapter";
+import {recoveryPassValid} from "../validations/recovery-password-validators";
 
 export const authRouters = Router({})
 
@@ -36,6 +36,11 @@ authRouters.post('/password-recovery',
 
     await emailAdapter.sendRecoveryCode(req.body.email)
         return res.sendStatus(204)
+})
+
+authRouters.post('/new-password', apiRequests, recoveryPassValid, errorsOfValidate, async (req: Request, res: Response) => {
+    await authService.createNewPassword(req.body)
+    return res.sendStatus(204)
 })
 
 authRouters.post('/refresh-token', checkRefreshToken, async (req: Request, res: Response) => {

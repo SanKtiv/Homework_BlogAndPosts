@@ -1,4 +1,4 @@
-import {UserDBType, UserType} from "../../../types/users-types";
+import {PasswordRecoveryType, UserDBType, UserType} from "../../../types/users-types";
 import {dbUsersCollection} from "../db";
 import {ObjectId} from "mongodb";
 
@@ -36,11 +36,19 @@ export const usersRepository = {
         return result.modifiedCount === 1
     },
 
-    async addRecoveryCode(email: string, recoveryCode: string) {
+    async addRecoveryCode(email: string, passwordRecovery: PasswordRecoveryType) {
         const result = await dbUsersCollection
-            .updateOne(
-                {'accountData.email': email},
-                {$set: {'passwordRecovery.recoveryCode': recoveryCode}})
+            .updateOne({'accountData.email': email},
+                {$set: {'passwordRecovery': passwordRecovery}})
+
+        return result.modifiedCount === 1
+    },
+
+    async insertNewPasswordHash(recoveryCode: string, passwordHsh: string) {
+        const result = await dbUsersCollection
+            .updateOne({'passwordRecovery.recoveryCode': recoveryCode},
+                {$set: {'accountData.passwordHash': passwordHsh}})
+
         return result.modifiedCount === 1
     }
 }

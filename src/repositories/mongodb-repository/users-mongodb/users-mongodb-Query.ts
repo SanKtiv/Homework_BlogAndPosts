@@ -2,6 +2,8 @@ import {UserDBType, ViewUsersPagingType} from "../../../types/users-types";
 import {dbUsersCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {userService} from "../../../services/users-service";
+import {throws} from "assert";
+import {errorsOfValidate} from "../../../middlewares/error-validators-middleware";
 
 
 export const usersRepositoryReadOnly = {
@@ -66,5 +68,18 @@ export const usersRepositoryReadOnly = {
 
     async getUserByConfirmationCode(code: string): Promise<UserDBType | null> {
         return dbUsersCollection.findOne({'emailConfirmation.confirmationCode': code})
+    },
+
+    async getUserByRecoveryCode(recoveryCode: string): Promise<UserDBType | null> {
+        const user = await dbUsersCollection
+            .findOne({'passwordRecovery.recoveryCode': recoveryCode})
+
+        try {
+            if (!user) return null
+            return user
+        }
+        catch (e) {
+            throw new Error('ExpDateOfRecoveryCode is not read')
+        }
     }
 }

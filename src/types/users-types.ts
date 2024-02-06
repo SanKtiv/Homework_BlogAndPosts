@@ -3,7 +3,12 @@ import {WithId} from "mongodb";
 export type UserType = {
     accountData: AccountDataType
     emailConfirmation: EmailConfirmationType
-    passwordRecovery?: {recoveryCode: string}
+    passwordRecovery?: PasswordRecoveryType
+}
+
+export type PasswordRecoveryType = {
+    recoveryCode: string,
+    expirationDate: Date
 }
 
 type AccountDataType = {
@@ -73,4 +78,9 @@ export type QueryPagingType = {
     pageSize?: string
     sortBy?: string
     sortDirection?: string
+}
+
+export type PasswordRecoveryInputType = {
+    newPassword: string
+    recoveryCode: string
 }

@@ -11,8 +11,8 @@ import mongoose from 'mongoose'
 dotenv.config()
 
 const dbName = '/home_works'
-//const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
-const mongoURI = 'mongodb://0.0.0.0:27017' || process.env.MONGO_URL
+const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+//const mongoURI = 'mongodb://0.0.0.0:27017' || process.env.MONGO_URL
 
 export const client = new MongoClient(mongoURI)
 

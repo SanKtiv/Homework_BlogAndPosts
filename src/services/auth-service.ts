@@ -1,6 +1,6 @@
 import {
     InputUserAuthModelType,
-    InputUserModelType,
+    InputUserModelType, PasswordRecoveryInputType, PasswordRecoveryType,
     UserDBType,
     UserType,
     ViewUserModelType
@@ -81,10 +81,28 @@ export const authService = {
         return usersRepository.updateUserConfirmationCode(newConfirmationCode, email,newExpirationDate)
     },
 
-    async createRecoveryCode(email: string): Promise<string> {
+    async createRecoveryCode(email: string): Promise<PasswordRecoveryType> {
 
-        const recoveryCode = uuidv4()
-        await usersRepository.addRecoveryCode(email, recoveryCode)
-        return recoveryCode
+        const passwordRecovery = {
+            recoveryCode: uuidv4(),
+            expirationDate: add(new Date(), {hours: 1, minutes: 5})
+        }
+        console.log(passwordRecovery.expirationDate)
+        console.log(typeof passwordRecovery.expirationDate)
+        await usersRepository.addRecoveryCode(email, passwordRecovery)
+        return passwordRecovery
+    },
+
+    async getExpDateOfRecoveryCode(recoveryCode: string) {
+        const user = await usersRepositoryReadOnly
+            .getUserByRecoveryCode(recoveryCode)
+        if (!user || !user.passwordRecovery) return null
+        return user.passwordRecovery.expirationDate
+    },
+
+    async createNewPassword(passwordRecovery: PasswordRecoveryInputType) {
+        const passwordSalt = await bcrypt.genSalt(10)
+        const passwordHash = await this.genHash(passwordRecovery.newPassword, passwordSalt)
+        await usersRepository.insertNewPasswordHash(passwordRecovery.recoveryCode, passwordHash)
     }
 }

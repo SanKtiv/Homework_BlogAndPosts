@@ -15,6 +15,11 @@ export const authActions = {
             .post(`${routePaths.auth}/password-recovery`)
             .send({email: email}),
 
+    createNewPassword: async (newPassword: string, recoveryCode: string) =>
+        getRequest()
+            .post(`${routePaths.auth}/new-password`)
+            .send({newPassword: newPassword, recoveryCode: recoveryCode}),
+
     registrationUser: async (registrationBody: InputUserModelType) =>
         getRequest()
             .post(`${routePaths.auth}/registration`)

@@ -128,4 +128,15 @@ describe('TEST for AUTH', () => {
     it('-POST /password-recovery, should return status 429 if count of request more then 5 in 10 sec', async () => {
 
     })
+
+    it('-POST /new-password, should return status 204 and change password hash', async () => {
+        await authActions.sendRecoveryCode(email.correct)
+        const result = await authActions.createNewPassword('Qwerty15', '')
+
+        await expect(result.statusCode).toBe(204)
+    })
+
+    it('-POST /new-password, should return status 400 and error', async () => {
+
+    })
 })
