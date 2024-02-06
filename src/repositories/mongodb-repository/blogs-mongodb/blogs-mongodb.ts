@@ -55,7 +55,7 @@ export const blogsRepository = {
         await dbBlogsCollection.deleteMany({})
     },
 
-    async deleteAllBlogs() {
-        await BlogModel.deleteMany({})
-    }
+    // async deleteAllBlogs() {
+    //     await BlogModel.deleteMany({})
+    // }
 }
