@@ -87,8 +87,7 @@ export const authService = {
             recoveryCode: uuidv4(),
             expirationDate: add(new Date(), {hours: 1, minutes: 5})
         }
-        console.log(passwordRecovery.expirationDate)
-        console.log(typeof passwordRecovery.expirationDate)
+        console.log(passwordRecovery.recoveryCode)
         await usersRepository.addRecoveryCode(email, passwordRecovery)
         return passwordRecovery
     },
