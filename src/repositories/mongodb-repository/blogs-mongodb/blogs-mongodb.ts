@@ -25,7 +25,7 @@ export const blogsRepository = {
     },
 
     async createBlog(body: InputBlogModelType): Promise<BlogDBType> {
-        return BlogModel.create(body)
+        return await BlogModel.create(body)
     },
 
     async updateBlog(id: string, body: InputBlogModelType): Promise<Boolean> {
