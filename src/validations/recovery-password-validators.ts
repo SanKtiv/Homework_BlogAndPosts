@@ -1,7 +1,7 @@
 import {body} from "express-validator";
 import {authService} from "../services/auth-service";
 
-const newPassword = body('newPassword')
+export const newPassword = body('newPassword')
     .isString().withMessage('newPassword is not string')
     .trim()
     .isLength({min: 6, max: 20}).withMessage('newPassword length is incorrect')

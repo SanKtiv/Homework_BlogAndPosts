@@ -61,7 +61,7 @@ export const authService = {
 
     async genHash(password: string, salt: string): Promise<string> {
 
-        return await bcrypt.hash(password, salt)
+        return bcrypt.hash(password, salt)
     },
 
     async confirmationRegistration(code: string): Promise<boolean> {
