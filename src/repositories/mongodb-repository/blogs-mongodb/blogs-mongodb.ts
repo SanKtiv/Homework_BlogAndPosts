@@ -1,4 +1,4 @@
-import {InputBlogModelType, ViewBlogModelType, BlogDBType} from "../../../types/blogs-types";
+import {InputBlogModelType, ViewBlogModelType, BlogDBType, BlogType} from "../../../types/blogs-types";
 import {BlogModel, dbBlogsCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {blogsService} from "../../../services/blogs-service";
@@ -24,9 +24,14 @@ export const blogsRepository = {
         // return blogsService.blogDbInToBlog(blogOutDb)
     },
 
-    async createBlog(body: InputBlogModelType): Promise<BlogDBType> {
+    async createBlog(body: BlogType): Promise<BlogDBType> {
         return await BlogModel.create(body)
     },
+
+    // async createBlog(body: BlogType): Promise<BlogDBType> {
+    //     await dbBlogsCollection.insertOne(body)
+    //     return body as BlogDBType
+    // },
 
     async updateBlog(id: string, body: InputBlogModelType): Promise<Boolean> {
 
