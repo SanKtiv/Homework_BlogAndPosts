@@ -38,7 +38,7 @@ export const passwordRecovery = {
     message(recoveryCode: any) {
         const message = '<h1>Password recovery</h1>\n' +
             ' <p>To finish password recovery please follow the link below:\n' +
-            `     <a href=\`https://somesite.com/password-recovery?recoveryCode=${recoveryCode}\`>recovery password</a>\n` +
+            `     <a href=https://somesite.com/password-recovery?recoveryCode=${recoveryCode}>recovery password</a>\n` +
             ' </p>'
         return message
     },
@@ -69,7 +69,7 @@ export const mailData = {
     passwordRecoveryMessage(recoveryCode: any) {
         const message = '<h1>Password recovery</h1>\n' +
             ' <p>To finish password recovery please follow the link below:\n' +
-            `     <a href=\`https://somesite.com/password-recovery?recoveryCode=${recoveryCode}\`>recovery password</a>\n` +
+            `     <a href='https://somesite.com/password-recovery?recoveryCode='${recoveryCode}>recovery password</a>\n` +
             ' </p>'
         return message
     },
