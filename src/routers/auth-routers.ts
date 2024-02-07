@@ -14,7 +14,7 @@ export const authRouters = Router({})
 authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
 
     const userId = await authService.checkCredentials(req.body)
-
+console.log('body in=', req.body, 'userId out=', userId)
     if (!userId) return res.sendStatus(401)
 
     const title = req.headers["user-agent"] || 'chrome 105'
