@@ -40,7 +40,8 @@ authRouters.post('/password-recovery',
 })
 
 authRouters.post('/new-password', apiRequests, newPassword, errorsOfValidate, async (req: Request, res: Response) => {
-    await authService.createNewPassword(req.body)
+    const result = await authService.createNewPassword(req.body)
+    console.log('new password body in:', req.body, 'result db:', result)
     return res.sendStatus(204)
 })
 
