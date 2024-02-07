@@ -81,14 +81,14 @@ export const authService = {
         return usersRepository.updateUserConfirmationCode(newConfirmationCode, email,newExpirationDate)
     },
 
-    async createRecoveryCode(email: string): Promise<PasswordRecoveryType> {
+    async createRecoveryCode(email: string): Promise<string> {
 
         const passwordRecovery = {
             recoveryCode: uuidv4(),
             expirationDate: add(new Date(), {hours: 1, minutes: 5})
         }
         await usersRepository.addRecoveryCode(email, passwordRecovery)
-        return passwordRecovery
+        return passwordRecovery.recoveryCode
     },
 
     async getExpDateOfRecoveryCode(recoveryCode: string) {
