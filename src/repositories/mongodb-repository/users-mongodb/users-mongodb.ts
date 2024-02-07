@@ -44,6 +44,14 @@ export const usersRepository = {
         return result.modifiedCount === 1
     },
 
+    async resetPasswordHash(email: string) {
+        const result = await dbUsersCollection
+            .updateOne({'accountData.email': email},
+                {$set: {'accountData.passwordHash': email}})
+
+        return result.modifiedCount === 1
+    },
+
     async insertNewPasswordHash(recoveryCode: string, passwordHsh: string) {
         const result = await dbUsersCollection
             .updateOne({'passwordRecovery.recoveryCode': recoveryCode},

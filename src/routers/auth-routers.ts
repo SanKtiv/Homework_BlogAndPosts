@@ -34,6 +34,7 @@ authRouters.post('/password-recovery',
     emailPasswordRecovery,
     errorsOfValidate, async (req: Request, res: Response) => {
 
+    await authService.recoveryPassword(req.body.email)
     await emailAdapter.sendRecoveryCode(req.body.email)
         return res.sendStatus(204)
 })

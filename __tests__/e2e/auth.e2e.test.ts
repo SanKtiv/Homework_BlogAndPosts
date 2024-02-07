@@ -7,6 +7,8 @@ import {auth} from "./test-utility/test-auth-utility";
 import {setTimeout} from "timers";
 import {authActions} from "./test-services/test-auth-servises";
 import {email} from "./test-utility/test-mail-utility";
+import {constants} from "http2";
+import {usersRepositoryReadOnly} from "../../src/repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
 
 describe('TEST for AUTH', () => {
 
@@ -134,6 +136,44 @@ describe('TEST for AUTH', () => {
         const result = await authActions.createNewPassword('Qwerty15', '')
 
         await expect(result.statusCode).toBe(204)
+    })
+
+    it('-POST /new-password, should return status 204 and change password hash,' +
+        'then should return status 401 if login with old password', async () => {
+
+        //delete all
+        await getRequest().delete(routePaths.deleteAllData)
+
+        // create user
+        const resultCreateUser = await userActions.createUser(user.sendBody_TRUE(), auth.basic_TRUE)
+        await expect(resultCreateUser.statusCode).toBe(constants.HTTP_STATUS_CREATED)
+
+        //send recovery code for change password
+        await authActions.sendRecoveryCode((user.sendBody_TRUE()).email)
+
+        //get recovery code
+        const userFromDb = await usersRepositoryReadOnly
+            .getUserByLoginOrEmail((user.sendBody_TRUE()).login)
+        console.log('get user from DB=', userFromDb)
+        const recoveryCode = userFromDb!.passwordRecovery!.recoveryCode
+        console.log('recoveryCode=', recoveryCode)
+
+        //change password and password hash
+        const resultNewCreatePassword = await authActions
+            .createNewPassword('Qwerty15', recoveryCode)
+        await expect(resultNewCreatePassword.statusCode).toBe(204)
+
+        //login with old password, should return 401
+        const userFromDbAfter = await usersRepositoryReadOnly
+            .getUserByLoginOrEmail((user.sendBody_TRUE()).login)
+        console.log('get user from DB after=', userFromDbAfter)
+        const resultLoginUser = await userActions.authUser(user.sendBodyAuth_TRUE())
+        await expect(resultLoginUser.statusCode).toBe(401)
+
+        //login with new password
+        const resultNewLoginUser = await userActions
+            .authUser({...user.sendBodyAuth_TRUE(), password: 'Qwerty15'})
+        await expect(resultNewLoginUser.statusCode).toBe(200)
     })
 
     it('-POST /new-password, should return status 400 and error', async () => {

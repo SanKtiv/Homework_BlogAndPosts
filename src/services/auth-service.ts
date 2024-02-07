@@ -87,7 +87,6 @@ export const authService = {
             recoveryCode: uuidv4(),
             expirationDate: add(new Date(), {hours: 1, minutes: 5})
         }
-        console.log(passwordRecovery.recoveryCode)
         await usersRepository.addRecoveryCode(email, passwordRecovery)
         return passwordRecovery
     },
@@ -103,5 +102,9 @@ export const authService = {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this.genHash(passwordRecovery.newPassword, passwordSalt)
         await usersRepository.insertNewPasswordHash(passwordRecovery.recoveryCode, passwordHash)
+    },
+
+    async recoveryPassword(email: string) {
+        await usersRepository.resetPasswordHash(email)
     }
 }
