@@ -8,7 +8,7 @@ import {setTimeout} from "timers";
 import {authActions} from "./test-services/test-auth-servises";
 import {email} from "./test-utility/test-mail-utility";
 import {constants} from "http2";
-import {usersRepositoryReadOnly} from "../../src/repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
+import {usersRepositoryReadOnly} from "../../src/repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 
 describe('TEST for AUTH', () => {
 

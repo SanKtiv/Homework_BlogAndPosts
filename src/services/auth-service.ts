@@ -7,11 +7,11 @@ import {
 } from "../types/users-types";
 import bcrypt from 'bcrypt'
 import {dateNow} from "../variables/variables";
-import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
+import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-command-mongodb";
 import {userService} from "./users-service";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
+import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 
 export const authService = {
 

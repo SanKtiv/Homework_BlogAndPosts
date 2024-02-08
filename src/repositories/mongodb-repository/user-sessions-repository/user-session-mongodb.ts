@@ -1,5 +1,5 @@
-import {UserSessionType, UserSessionTypeDB} from "../../types/security-device-types";
-import {dbSecurityCollection} from "./db";
+import {UserSessionType, UserSessionTypeDB} from "../../../types/security-device-types";
+import {dbSecurityCollection} from "../db";
 import {ObjectId} from "mongodb";
 
 export const deviceSessionRepository = {

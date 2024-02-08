@@ -1,5 +1,5 @@
 import {UserSessionType, UserSessionTypeDB} from "../types/security-device-types";
-import {deviceSessionRepository} from "../repositories/mongodb-repository/user-session-mongodb";
+import {deviceSessionRepository} from "../repositories/mongodb-repository/user-sessions-repository/user-session-mongodb";
 import {jwtService} from "../applications/jwt-service";
 
 export const deviceSessionService = {

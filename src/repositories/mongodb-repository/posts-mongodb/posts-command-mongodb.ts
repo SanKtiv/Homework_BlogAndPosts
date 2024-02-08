@@ -11,7 +11,7 @@ import {ObjectId} from "mongodb";
 import {postsService} from "../../../services/posts-service";
 import {CommentDBType, CommentType, ViewCommentModelType} from "../../../types/comments-types";
 import {commentService} from "../../../services/commets-service";
-import {blogsRepository} from "../blogs-mongodb/blogs-mongodb";
+import {blogsRepository} from "../blogs-mongodb/blogs-command-mongodb";
 
 export const postsRepository = {
 

@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from "express";
-import {commentsRepository} from "../repositories/mongodb-repository/comments-mongodb/comments-mongodb";
+import {commentsRepository} from "../repositories/mongodb-repository/comments-mongodb/comments-command-mongodb";
 
 export const checkCommentById = async (req: Request, res:Response, next: NextFunction) => {
 

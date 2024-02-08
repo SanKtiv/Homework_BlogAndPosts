@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-mongodb";
+import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 
 const validTitle = body('title', 'title length is incorrect')
     .isString()

@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
-import {postsRepositoryQuery} from "../../repositories/mongodb-repository/posts-mongodb/posts-mongodb-Query";
-import {postsRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-mongodb";
+import {postsRepositoryQuery} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
+import {postsRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
 import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
 import {usersPaginatorDefault} from "../../middlewares/users-middleware";
 import {checkPostByPostId} from "../../middlewares/posts-middlewares";

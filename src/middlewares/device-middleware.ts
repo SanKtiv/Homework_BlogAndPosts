@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../applications/jwt-service";
-import {deviceSessionRepository} from "../repositories/mongodb-repository/user-session-mongodb";
+import {deviceSessionRepository} from "../repositories/mongodb-repository/user-sessions-repository/user-session-mongodb";
 
 export const checkDeviceId = async (req: Request, res: Response, next: NextFunction) => {
 

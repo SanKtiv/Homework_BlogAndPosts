@@ -1,5 +1,5 @@
 import {Request, Response, Router} from 'express';
-import {postsRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-mongodb";
+import {postsRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
 import {validId} from "../../validations/blogs-validators";
 import {validPostBlogId} from "../../validations/posts-validators";
 import {checkPostByPostId} from "../../middlewares/posts-middlewares";

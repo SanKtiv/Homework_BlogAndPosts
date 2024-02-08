@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
-import {blogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-mongodb-Query";
-import {blogsRepository} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-mongodb";
+import {blogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
+import {blogsRepository} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
 import {InputPostsPagingType} from "../../types/posts-types";
 import {InputBlogsPagingType} from "../../types/blogs-types";

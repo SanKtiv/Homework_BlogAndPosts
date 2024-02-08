@@ -1,6 +1,6 @@
 import {InputUserPagingType, ViewUsersPagingType, ViewUserModelType, UserDBType} from "../types/users-types";
-import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-mongodb";
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
+import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-command-mongodb";
+import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 
 export const userService = {
 

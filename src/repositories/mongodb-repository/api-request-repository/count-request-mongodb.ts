@@ -1,5 +1,5 @@
-import {dbRequestCollection} from "./db";
-import {ApiRequestType} from "../../types/count-request-types";
+import {dbRequestCollection} from "../db";
+import {ApiRequestType} from "../../../types/count-request-types";
 
 export const apiRequestRepository = {
 

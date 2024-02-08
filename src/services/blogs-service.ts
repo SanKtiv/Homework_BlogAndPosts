@@ -7,7 +7,7 @@ import {
     ViewBlogsPagingType
 } from "../types/blogs-types";
 import {dateNow} from "../variables/variables";
-import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-mongodb";
+import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 
 export const blogsService = {
 

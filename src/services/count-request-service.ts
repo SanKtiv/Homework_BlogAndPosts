@@ -1,5 +1,5 @@
 import {ApiRequestType} from "../types/count-request-types";
-import {apiRequestRepository} from "../repositories/mongodb-repository/count-request-mongodb";
+import {apiRequestRepository} from "../repositories/mongodb-repository/api-request-repository/count-request-mongodb";
 
 export const apiRequestService = {
 

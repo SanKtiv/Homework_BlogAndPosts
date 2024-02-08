@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-mongodb-Query";
+import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 
 const loginRegex: RegExp = /^[a-zA-Z0-9_-]*$/
 const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
