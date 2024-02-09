@@ -14,8 +14,8 @@ export const commentsRepository = {
         }
     },
 
-    async updateCommentById(id: string, content: string): Promise<void> {
-        await dbCommentsCollection.findOneAndUpdate({_id: new ObjectId(id)}, {$set: {content: content}})
+    async updateCommentById(id: string, propertyUpdate: string): Promise<void> {
+        await dbCommentsCollection.findOneAndUpdate({_id: new ObjectId(id)}, {$set: {content: propertyUpdate}})
     },
 
     async deleteCommentById(id: string): Promise<void> {

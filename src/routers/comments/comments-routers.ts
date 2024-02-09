@@ -30,6 +30,10 @@ commentRouter.put('/:commentId',
     res.sendStatus(204)
 })
 
+commentRouter.put('/:commentId/like-status', authAccessToken, async (req: Request, res: Response) => {
+
+})
+
 commentRouter.delete('/:commentId',
     authAccessToken,
     checkOwnCommentById,

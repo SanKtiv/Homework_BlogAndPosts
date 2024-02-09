@@ -3,6 +3,10 @@ import {CommentType, ViewCommentModelType, ViewCommentPagingType} from "../types
 
 export const commentService = {
 
+    async updateLikeStatus(likeStatus: string) {
+
+    },
+
     createCommentViewModel(dbComment: WithId<CommentType>): ViewCommentModelType {
 
         return {

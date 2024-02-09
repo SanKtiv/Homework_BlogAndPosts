@@ -58,7 +58,12 @@ export const postsRepository = {
                 userLogin: userLogin
             },
             createdAt:dateNow().toISOString(),
-            postId: postId
+            postId: postId,
+            likesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: 'None'
+            }
         }
 
         await dbCommentsCollection.insertOne(comment)
