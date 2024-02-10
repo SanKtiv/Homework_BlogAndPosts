@@ -62,7 +62,6 @@ export const postsRepository = {
             likesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
-                myStatus: 'None'
             }
         }
 

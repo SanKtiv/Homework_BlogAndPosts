@@ -26,7 +26,7 @@ commentRouter.put('/:commentId',
     checkOwnCommentById,
     async (req: Request, res: Response) => {
 
-    await commentsRepository.updateCommentById(req.params.commentId, req.body.content)
+    await commentsRepository.updateCommentContentById(req.params.commentId, req.body.content)
     res.sendStatus(204)
 })
 

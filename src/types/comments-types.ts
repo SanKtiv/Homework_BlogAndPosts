@@ -13,6 +13,7 @@ export type CommentType = {
     createdAt: string
     postId: string
     likesInfo: LikesInfoType
+    usersStatuses?: UserStatusType[]
 }
 
 export type CommentDBType = WithId<CommentType>
@@ -25,7 +26,11 @@ type CommentatorInfoType = {
 type LikesInfoType = {
     likesCount: number
     dislikesCount: number
-    myStatus: 'None' | 'Like' | 'Dislike'
+}
+
+type UserStatusType = {
+    userId: string
+    userStatus: 'None' | 'Like' | 'Dislike'
 }
 
 export type ViewCommentPagingType = {
