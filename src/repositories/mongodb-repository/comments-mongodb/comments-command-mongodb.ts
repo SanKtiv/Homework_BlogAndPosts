@@ -55,13 +55,13 @@ export const commentsRepository = {
     async updateCommentLikesInfoByCommentId(commentId: string, userId: string, status: string, likesInfo: LikesInfoType): Promise<void> {
         await dbCommentsCollection
             .findOneAndUpdate({
-                    _id: new ObjectId(commentId), 'likesInfo.usersStatuses.userId': userId
+                    _id: new ObjectId(commentId), 'usersLikeStatuses.userId': userId
                 },
                 {
                     $set: {
                         'likesInfo.likesCount': likesInfo.likesCount,
                         'likesInfo.dislikesCount': likesInfo.dislikesCount,
-                        'likesInfo.usersStatuses.userStatus': status
+                        'usersLikeStatuses.userStatus': status
                     }
                 })
     },
