@@ -20,6 +20,14 @@ export const commentAction = {
             .get(`${routePaths.comments}/${id}`)
     },
 
+    updateCommentLikesStatus: async (commentId: string, token: string, status: string) =>
+
+        getRequest()
+            .put(`${routePaths.comments}/${commentId}/like-status`)
+            .set('Authorization', `Bearer ${token}`)
+            //.auth(token, {type: 'bearer'})
+            .send({likeStatus: status}),
+
     expectGetCommentById: async (id: string, statusCode: number, comment?: any) =>
         getRequest()
             .get(`${routePaths.comments}/${id}`)

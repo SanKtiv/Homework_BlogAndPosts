@@ -12,26 +12,69 @@ import {commentsRepository} from "../repositories/mongodb-repository/comments-mo
 export const commentService = {
 
     async createLikesInfo(commentId: string, likeStatus: string, accessToken: string) {
+
         const token = accessToken.split(' ')[1]
         const payload = await jwtService.getPayloadAccessToken(token)
         const userId: string = payload!.userId
-        const comment = await commentsRepository.findCommentById(commentId)
-        let likesCount = comment!.likesInfo.likesCount
-        let dislikesCount = comment!.likesInfo.dislikesCount
-        const usersStatuses: UserStatusType = {
-            userId,
-            userStatus: likeStatus
+
+        const commentWithUserLikeStatus = await commentsRepository
+            .findCommentWithUserLikeStatus(commentId, userId)
+
+        if (!commentWithUserLikeStatus) {
+
+            const comment = await commentsRepository.findComment(commentId)
+
+            let likesCount = comment!.likesInfo.likesCount
+            let dislikesCount = comment!.likesInfo.dislikesCount
+
+            if (likeStatus === 'Like') likesCount++
+            if (likeStatus === 'Dislike') dislikesCount++
+
+            const likesInfo: LikesInfoType = {
+                likesCount,
+                dislikesCount,
+            }
+
+            return  commentsRepository
+                .updateCommentAddNewUserLikeStatus(commentId, userId, likeStatus, likesInfo)
         }
 
-        if (likeStatus === 'Like') likesCount++
-        if (likeStatus === 'Dislike') dislikesCount++
+        let likesCount = commentWithUserLikeStatus.likesInfo.likesCount
+        let dislikesCount = commentWithUserLikeStatus.likesInfo.dislikesCount
+        let userStatus = commentWithUserLikeStatus.usersLikeStatuses![0].userStatus
+
+
+        if (likeStatus === 'Like' && userStatus === 'Dislike') {
+            likesCount++
+            dislikesCount--
+            //userStatus = likeStatus
+        }
+
+        if (likeStatus === 'Like' && userStatus === 'None') {
+            likesCount++
+            //userStatus = likeStatus
+        }
+
+        if (likeStatus === 'Dislike' && userStatus === 'Like') {
+            likesCount--
+            dislikesCount++
+            //userStatus = likeStatus
+        }
+
+        if (likeStatus === 'Dislike' && userStatus === 'None') {
+            dislikesCount++
+            //userStatus = likeStatus
+        }
+
+        //if (likeStatus === 'None') userStatus = likeStatus
 
         const likesInfo: LikesInfoType = {
             likesCount,
             dislikesCount,
         }
 
-        await commentsRepository.updateCommentLikesInfoByCommentId()
+        return commentsRepository
+            .updateCommentLikesInfoByCommentId(commentId, userId, likeStatus, likesInfo)
     },
 
     createCommentViewModel(dbComment: WithId<CommentType>): ViewCommentModelType {

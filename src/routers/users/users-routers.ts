@@ -10,7 +10,6 @@ export const userRouter = Router({})
 userRouter.post('/',basicAuth , userInputValid, errorsOfValidate, async (req: Request, res: Response) => {
 
     const user = await authService.insertUserInDB(req.body)
-    console.log('user body in:', req.body, 'user in db:', user)
     res.status(201).send(user)
 })
 

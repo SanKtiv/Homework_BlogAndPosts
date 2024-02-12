@@ -31,7 +31,10 @@ commentRouter.put('/:commentId',
 })
 
 commentRouter.put('/:commentId/like-status', authAccessToken, async (req: Request, res: Response) => {
-
+    console.log('commentRouter')
+    await commentService
+        .createLikesInfo(req.params.commentId, req.body.likeStatus, req.headers!.authorization!)
+    res.sendStatus(204)
 })
 
 commentRouter.delete('/:commentId',

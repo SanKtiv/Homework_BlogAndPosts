@@ -27,18 +27,28 @@ describe('TEST for comments', () => {
         await client.close()
     })
 
+    let accessToken = ''
+    let comment: any = {}
+
     it(`-GET /comments:id, should return code 200 and comment` , async () => {
 
         await userActions.createUser(user.sendBody_TRUE(), auth.basic_TRUE)
-        const token = await userActions.authUser(user.sendBodyAuth_TRUE())
+        const result = await userActions.authUser(user.sendBodyAuth_TRUE())
+        accessToken = result.body.accessToken
         const bodyId = (await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)).body.id
         const postId = await postActions
             .createPost(post.sendBody(post.body_TRUE, bodyId), auth.basic_TRUE)
-        const commentId = await commentAction
-            .createComment(token.body.accessToken, commentSendBody_TRUE, postId.body.id)
+        comment = await commentAction
+            .createComment(accessToken, commentSendBody_TRUE, postId.body.id)
 
         await commentAction
-            .expectGetCommentById_(commentId.body.id, 200, commentCorrect)
+            .expectGetCommentById_(comment.body.id, 200, commentCorrect)
+    })
+
+    it(`-PUT /comments:commentId/like-status, should return code 204 and comment` , async () => {
+
+        await commentAction
+            .updateCommentLikesStatus(comment.body.id, accessToken, 'Like')
     })
 
     // it(`-GET /comments:id, should return code 404` , async () => {

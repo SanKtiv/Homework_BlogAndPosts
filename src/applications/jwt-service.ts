@@ -7,14 +7,14 @@ export const jwtService = {
     async createAccessToken(userId: string): Promise<ViewTokenModelType> {
         const secretAccess: Secret = process.env.SECRET_KEY!
         const accessToken = jwt
-            .sign({userId: userId}, secretAccess, {expiresIn: '10s'})
+            .sign({userId: userId}, secretAccess, {expiresIn: '7m'})
         return {accessToken: accessToken}
     },
 
     async createRefreshToken(userId: string, deviceId: string): Promise<string> {
         const secretRefresh: Secret = process.env.SECRET_KEY!
         const payload = {deviceId: deviceId, userId: userId}
-        const refreshToken = jwt.sign(payload, secretRefresh, {expiresIn: '20s'})
+        const refreshToken = jwt.sign(payload, secretRefresh, {expiresIn: '1h'})
         await deviceSessionService.updateDatesDeviceSession(refreshToken)
         return refreshToken
     },
