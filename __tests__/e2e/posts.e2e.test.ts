@@ -7,6 +7,10 @@ import {auth} from "./test-utility/test-auth-utility";
 import {blogActions} from "./test-services/test-blogs-services";
 import {blog} from "./test-utility/test-blogs-utility";
 import {expectErrors} from "./test-utility/test-error-utility";
+import {userActions} from "./test-services/test-users-services";
+import {user} from "./test-utility/test-users-utility";
+import {commentAction} from "./test-services/test-comments-services";
+import {commentSendBody_TRUE} from "./test-utility/test-comments-utility";
 
 describe('TEST for POSTS', () => {
 
@@ -21,6 +25,44 @@ describe('TEST for POSTS', () => {
 
     afterAll(async () => {
         await client.close()
+    })
+
+    it('-GET /posts: postId/comments, should return status 200 and post with comments', async () => {
+
+        await getRequest().delete(routePaths.deleteAllData)
+        await userActions.createManyUsers(user.sendManyBody(2))
+        const accessTokenArray = await userActions.authManyUser(user.sendAuthManyBody(2))
+
+        const accessToken1 = accessTokenArray[0].body.accessToken
+        const accessToken2 = accessTokenArray[1].body.accessToken
+
+        const bodyId = (await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)).body.id
+
+        const postId = (await postActions
+            .createPost(post.sendBody(post.body_TRUE, bodyId), auth.basic_TRUE)).body.id
+
+        const comment1 = await commentAction
+            .createComment(accessToken1, commentSendBody_TRUE, postId)
+
+        const comment2 = await commentAction
+            .createComment(accessToken2, commentSendBody_TRUE, postId)
+
+        const updateResult = await commentAction
+            .updateCommentLikesStatus(comment1.body.id, accessToken1, 'Like')
+
+
+        await commentAction
+            .updateCommentLikesStatus(comment2.body.id, accessToken2, 'Dislike')
+
+        const viewComment3 = await commentAction.getCommentById(comment1.body.id, accessToken1)
+
+        const result = await postActions
+            .getPostWithCommentsByPostIdAndQuery(postId, accessToken1, post.query(post.paging.preset1))
+        console.log(result.body)
+        console.log('items =', result.body.items)
+        console.log('likesInfo1 =', result.body.items[0].likesInfo)
+        console.log('likesInfo2 =', result.body.items[1].likesInfo)
+        console.log('get comment from db',viewComment3.body)
     })
 
     it('-POST /posts, should return status 201 and post', async () => {

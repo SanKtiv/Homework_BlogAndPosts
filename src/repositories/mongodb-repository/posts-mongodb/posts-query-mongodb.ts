@@ -35,7 +35,8 @@ export const postsRepositoryQuery = {
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()
-
+console.log('getCommentsByPostId return', commentsByPostId)
+        console.log('all find', (await dbCommentsCollection.find({postId: postId}).toArray())[0].usersLikeStatuses)
         return  commentService
             .paginatorCommentViewModel(totalCommentsByPostId, commentsByPostId, query)
     }

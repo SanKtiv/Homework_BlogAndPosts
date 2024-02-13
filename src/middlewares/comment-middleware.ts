@@ -3,7 +3,8 @@ import {commentsRepository} from "../repositories/mongodb-repository/comments-mo
 
 export const checkCommentById = async (req: Request, res:Response, next: NextFunction) => {
 
-    const comment = await commentsRepository.findCommentById(req.params.id)
+    const id = req.params.id || req.params.commentId
+    const comment = await commentsRepository.findCommentById(id)
     if (!comment) return res.sendStatus(404)
     return next()
 }

@@ -51,7 +51,8 @@ export const commentsRepository = {
     },
 
     async updateCommentAddNewUserLikeStatus(commentId: string, userId: string, status: string, likesInfo: LikesInfoType): Promise<void> {
-        await dbCommentsCollection.updateOne({_id: new ObjectId(commentId)},
+
+        const result = await dbCommentsCollection.updateOne({_id: new ObjectId(commentId)},
             {
                 $set: {
                     'likesInfo.likesCount': likesInfo.likesCount,

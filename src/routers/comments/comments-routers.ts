@@ -23,7 +23,7 @@ commentRouter.get('/:id',
 
         const commentDB = await commentsRepository
             .findCommentWithUserLikeStatus(req.params.id, userId)
-
+console.log('commentDB',commentDB)
         const comment = commentService.createCommentViewModel(commentDB!)
 
         res.status(200).send(comment)
