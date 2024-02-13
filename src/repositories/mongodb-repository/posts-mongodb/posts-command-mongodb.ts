@@ -62,7 +62,8 @@ export const postsRepository = {
             likesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
-            }
+            },
+            usersLikeStatuses: []
         }
 
         await dbCommentsCollection.insertOne(comment)

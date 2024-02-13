@@ -5,6 +5,13 @@ export type ViewCommentModelType = {
     content: string
     commentatorInfo: CommentatorInfoType
     createdAt: string
+    likesInfo: ViewModelLikesInfoType
+}
+
+type ViewModelLikesInfoType = {
+    likesCount: number
+    dislikesCount: number
+    myStatus: string
 }
 
 export type CommentType = {
@@ -13,7 +20,7 @@ export type CommentType = {
     createdAt: string
     postId: string
     likesInfo: LikesInfoType
-    usersLikeStatuses?: UserStatusType[]
+    usersLikeStatuses: UserStatusType[]
 }
 
 export type CommentDBType = WithId<CommentType>
@@ -29,8 +36,8 @@ export type LikesInfoType = {
 }
 
 export type UserStatusType = {
-    userId: string
-    userStatus: string
+    userId?: string
+    userStatus?: string
 }
 
 export type ViewCommentPagingType = {

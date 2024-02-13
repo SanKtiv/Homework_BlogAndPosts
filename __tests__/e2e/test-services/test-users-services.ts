@@ -33,6 +33,16 @@ export const userActions = {
             .send(userSendAuthBody)
     },
 
+    async authManyUser(userSendManyAuthBody: InputUserAuthModelType[]) {
+
+        const result = []
+
+        for (const userSendAuthBody of userSendManyAuthBody) {
+            result.push(await this.authUser(userSendAuthBody))
+        }
+        return result
+    },
+
     async authUserDevice(userSendAuthBody: InputUserAuthModelType, devices: string[]) {
 
         const refreshTokensDevices = []

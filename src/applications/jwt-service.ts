@@ -38,4 +38,8 @@ export const jwtService = {
             return null
         }
     },
+
+    getAccessTokenFromHeaders(headers: string): string {
+        return headers.split(' ')[1]
+    }
 }

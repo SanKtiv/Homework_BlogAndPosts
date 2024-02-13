@@ -22,7 +22,7 @@ export const commentService = {
 
         if (!commentWithUserLikeStatus) {
 
-            const comment = await commentsRepository.findComment(commentId)
+            const comment = await commentsRepository.findCommentWithOutUsersLikeStatuses(commentId)
 
             let likesCount = comment!.likesInfo.likesCount
             let dislikesCount = comment!.likesInfo.dislikesCount
@@ -43,30 +43,23 @@ export const commentService = {
         let dislikesCount = commentWithUserLikeStatus.likesInfo.dislikesCount
         let userStatus = commentWithUserLikeStatus.usersLikeStatuses![0].userStatus
 
-
         if (likeStatus === 'Like' && userStatus === 'Dislike') {
             likesCount++
             dislikesCount--
-            //userStatus = likeStatus
         }
 
-        if (likeStatus === 'Like' && userStatus === 'None') {
-            likesCount++
-            //userStatus = likeStatus
-        }
+        if (likeStatus === 'Like' && userStatus === 'None') likesCount++
 
         if (likeStatus === 'Dislike' && userStatus === 'Like') {
             likesCount--
             dislikesCount++
-            //userStatus = likeStatus
         }
 
-        if (likeStatus === 'Dislike' && userStatus === 'None') {
-            dislikesCount++
-            //userStatus = likeStatus
-        }
+        if (likeStatus === 'Dislike' && userStatus === 'None') dislikesCount++
 
-        //if (likeStatus === 'None') userStatus = likeStatus
+        if (likeStatus === 'None' && userStatus === 'Like') likesCount--
+
+        if (likeStatus === 'None' && userStatus === 'Dislike') dislikesCount--
 
         const likesInfo: LikesInfoType = {
             likesCount,
@@ -79,6 +72,10 @@ export const commentService = {
 
     createCommentViewModel(dbComment: WithId<CommentType>): ViewCommentModelType {
 
+        const myStatus = dbComment.usersLikeStatuses.length && dbComment.usersLikeStatuses[0].userStatus ?
+            dbComment.usersLikeStatuses[0].userStatus :
+            'None'
+
         return {
             id: dbComment._id.toString(),
             content: dbComment.content,
@@ -86,7 +83,11 @@ export const commentService = {
                 userId: dbComment.commentatorInfo.userId,
                 userLogin: dbComment.commentatorInfo.userLogin
             },
-            createdAt: dbComment.createdAt
+            createdAt: dbComment.createdAt,
+            likesInfo: {
+                ...dbComment.likesInfo,
+                myStatus: myStatus
+            }
         }
     },
 

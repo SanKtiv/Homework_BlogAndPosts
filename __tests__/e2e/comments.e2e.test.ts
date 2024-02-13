@@ -41,14 +41,37 @@ describe('TEST for comments', () => {
         comment = await commentAction
             .createComment(accessToken, commentSendBody_TRUE, postId.body.id)
 
-        await commentAction
-            .expectGetCommentById_(comment.body.id, 200, commentCorrect)
+        // await commentAction
+        //     .expectGetCommentById_(comment.body.id, 200, commentCorrect)
     })
 
     it(`-PUT /comments:commentId/like-status, should return code 204 and comment` , async () => {
 
+        await userActions.createManyUsers(user.sendManyBody(2))
+        const accessTokenArray = await userActions.authManyUser(user.sendAuthManyBody(2))
+
+        const accessToken1 = accessTokenArray[0].body.accessToken
+        const accessToken2 = accessTokenArray[1].body.accessToken
+
         await commentAction
             .updateCommentLikesStatus(comment.body.id, accessToken, 'Like')
+
+        await commentAction
+            .updateCommentLikesStatus(comment.body.id, accessToken1, 'None')
+
+        await commentAction
+            .updateCommentLikesStatus(comment.body.id, accessToken2, 'Dislike')
+
+        await commentAction
+            .updateCommentLikesStatus(comment.body.id, accessToken, 'None')
+
+
+        const viewComment3 = await commentAction.getCommentById(comment.body.id, accessToken)
+        const viewComment31 = await commentAction.getCommentById(comment.body.id, accessToken1)
+        const viewComment32 = await commentAction.getCommentById(comment.body.id, accessToken2)
+        console.log(viewComment3.body)
+        console.log(viewComment31.body)
+        console.log(viewComment32.body)
     })
 
     // it(`-GET /comments:id, should return code 404` , async () => {

@@ -14,5 +14,10 @@ export const commentCorrect = {
         userId: expect.any(String),
         userLogin: expect.any(String)
     },
-    createdAt: expect.any(String)
+    createdAt: expect.any(String),
+    likesInfo: {
+        likesCount: expect.any(Number),
+        dislikesCount: expect.any(Number),
+        myStatus: expect.any(String),
+    },
 }

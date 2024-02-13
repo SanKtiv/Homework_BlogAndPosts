@@ -14,7 +14,7 @@ export const commentsRepository = {
         }
     },
 
-    async findComment(id: string): Promise<CommentDBType | null> {
+    async findCommentWithOutUsersLikeStatuses(id: string): Promise<CommentDBType | null> {
 
         try {
             return dbCommentsCollection
@@ -29,7 +29,17 @@ export const commentsRepository = {
 
         try {
             return dbCommentsCollection
-                .findOne({_id: new ObjectId(commentId), 'usersLikeStatuses.userId': userId})
+                .findOne({_id: new ObjectId(commentId), 'usersLikeStatuses.userId': userId},
+                    {
+                        projection: {
+                            content: 1,
+                            commentatorInfo: 1,
+                            createdAt: 1,
+                            postId: 1,
+                            likesInfo: 1,
+                            'usersLikeStatuses.$': 1
+                        }
+                    })
         }
         catch (error) {
             return null
@@ -46,9 +56,8 @@ export const commentsRepository = {
                 $set: {
                     'likesInfo.likesCount': likesInfo.likesCount,
                     'likesInfo.dislikesCount': likesInfo.dislikesCount,
-                    'usersLikeStatuses.userId': userId,
-                    'usersLikeStatuses.userStatus': status
-                }
+                },
+                $push: {usersLikeStatuses: {userId: userId, userStatus: status}}
             })
     },
 
@@ -61,7 +70,7 @@ export const commentsRepository = {
                     $set: {
                         'likesInfo.likesCount': likesInfo.likesCount,
                         'likesInfo.dislikesCount': likesInfo.dislikesCount,
-                        'usersLikeStatuses.userStatus': status
+                        'usersLikeStatuses.$.userStatus': status
                     }
                 })
     },

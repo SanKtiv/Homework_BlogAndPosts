@@ -78,6 +78,17 @@ export const user = {
         return arr
     },
 
+    sendAuthManyBody(usersCount: number): InputUserAuthModelType[] {
+        const arr = []
+        for (let i = 1; i <= usersCount; i++) {
+            arr.push({
+                loginOrEmail: this.login_TRUE + `${i}`,
+                password: this.password_TRUE + `${i}`,
+            })
+        }
+        return arr
+    },
+
     expectPaging(allUsers: ViewUserModelType[], paging: any): ViewUsersPagingType {
 
         let filter = null

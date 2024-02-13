@@ -17,8 +17,12 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
     return res.sendStatus(404)
 })
 
-postRouterQuery.get('/:postId/comments', checkPostByPostId, usersPaginatorDefault, async (req: Request, res: Response) =>{
-    const paginatorCommentViewModel = await postsRepositoryQuery
-        .getCommentsByPostId(req.params.postId, req.query)
-    res.status(200).send(paginatorCommentViewModel)
-})
+postRouterQuery.get('/:postId/comments',
+    checkPostByPostId,
+    usersPaginatorDefault,
+    async (req: Request, res: Response) => {
+
+        const paginatorCommentViewModel = await postsRepositoryQuery
+            .getCommentsByPostId(req.params.postId, req.query)
+        res.status(200).send(paginatorCommentViewModel)
+    })

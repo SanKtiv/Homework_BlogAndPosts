@@ -5,6 +5,8 @@ import {commentsRepository} from "../../repositories/mongodb-repository/comments
 import {commentService} from "../../services/commets-service";
 import {authAccessToken} from "../../middlewares/authorization-jwt";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
+import {jwtService} from "../../applications/jwt-service";
+import {likeStatusBody} from "../../validations/like-status-validation";
 
 export const commentRouter = Router({})
 
@@ -13,11 +15,19 @@ commentRouter.get('/:id',
     checkCommentById,
     async (req: Request, res: Response) => {
 
-    const commentDB = await commentsRepository.findCommentById(req.params.id)
-    const comment = commentService.createCommentViewModel(commentDB!)
+        const accessToken = jwtService
+            .getAccessTokenFromHeaders(req.headers.authorization as string)
 
-    res.status(200).send(comment)
-})
+        const userId = (await jwtService
+            .getPayloadAccessToken(accessToken))!.userId
+
+        const commentDB = await commentsRepository
+            .findCommentWithUserLikeStatus(req.params.id, userId)
+
+        const comment = commentService.createCommentViewModel(commentDB!)
+
+        res.status(200).send(comment)
+    })
 
 commentRouter.put('/:commentId',
     authAccessToken,
@@ -30,8 +40,13 @@ commentRouter.put('/:commentId',
     res.sendStatus(204)
 })
 
-commentRouter.put('/:commentId/like-status', authAccessToken, async (req: Request, res: Response) => {
-    console.log('commentRouter')
+commentRouter.put('/:commentId/like-status',
+    authAccessToken,
+    checkCommentById,
+    likeStatusBody,
+    errorsOfValidate,
+    async (req: Request, res: Response) => {
+
     await commentService
         .createLikesInfo(req.params.commentId, req.body.likeStatus, req.headers!.authorization!)
     res.sendStatus(204)

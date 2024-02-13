@@ -15,9 +15,10 @@ export const commentAction = {
             //.auth(token, {type: 'bearer'})
             .send(bodyComment),
 
-    async getCommentById(id: string) {
-        await getRequest()
+    async getCommentById(id: string, token: string) {
+        return getRequest()
             .get(`${routePaths.comments}/${id}`)
+            .set('Authorization', `Bearer ${token}`)
     },
 
     updateCommentLikesStatus: async (commentId: string, token: string, status: string) =>
