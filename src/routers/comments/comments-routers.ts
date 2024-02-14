@@ -31,8 +31,12 @@ console.log('get comments by id:', 'start')
 
             return res.status(200).send(comment)
         }
-        const commentDB = await commentsRepository
-            .findCommentWithUserLikeStatus(req.params.id, 'userId')
+        // const commentDB = await commentsRepository
+        //     .findCommentWithUserLikeStatus(req.params.id, 'userId')
+        //
+        // const comment = commentService.createCommentViewModel(commentDB!, 'userId')
+
+        const commentDB = await commentsRepository.findCommentById(req.params.id)
 
         const comment = commentService.createCommentViewModel(commentDB!, 'userId')
 
