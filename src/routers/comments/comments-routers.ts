@@ -15,6 +15,7 @@ commentRouter.get('/:id',
     checkCommentById,
     async (req: Request, res: Response) => {
 console.log('get comments by id:', 'start')
+        console.log('accessToken', req.headers)
         const accessToken = jwtService
             .getAccessTokenFromHeaders(req.headers.authorization!)
         console.log('get comments by id:, accessToken', accessToken)
