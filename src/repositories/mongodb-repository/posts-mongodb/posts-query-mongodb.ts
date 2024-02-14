@@ -24,20 +24,18 @@ export const postsRepositoryQuery = {
 
         return dbPostsCollection.findOne({_id: new ObjectId(postId)})
     },
-
-    async getCommentsByPostId(postId: string, query: any) {
-
-        const totalCommentsByPostId = await dbCommentsCollection.countDocuments({postId: postId})
-
-        const commentsByPostId = await dbCommentsCollection
-            .find({postId: postId})
-            .sort({[query.sortBy]: query.sortDirection})
-            .skip((+query.pageNumber - 1) * +query.pageSize)
-            .limit(+query.pageSize)
-            .toArray()
-console.log('getCommentsByPostId return', commentsByPostId)
-        console.log('all find', (await dbCommentsCollection.find({postId: postId}).toArray())[0].usersLikeStatuses)
-        return  commentService
-            .paginatorCommentViewModel(totalCommentsByPostId, commentsByPostId, query)
-    }
+    // async getCommentsByPostId(postId: string, query: any) {
+    //
+    //     // const totalCommentsByPostId = await dbCommentsCollection.countDocuments({postId: postId})
+    //
+    //     return dbCommentsCollection
+    //         .find({postId: postId})
+    //         .sort({[query.sortBy]: query.sortDirection})
+    //         .skip((+query.pageNumber - 1) * +query.pageSize)
+    //         .limit(+query.pageSize)
+    //         .toArray()
+    //
+    //       // commentService
+    //       //   .paginatorCommentViewModel(totalCommentsByPostId, commentsByPostId, query)
+    // }
 }

@@ -4,6 +4,9 @@ import {postsRepository} from "../../repositories/mongodb-repository/posts-mongo
 import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
 import {usersPaginatorDefault} from "../../middlewares/users-middleware";
 import {checkPostByPostId} from "../../middlewares/posts-middlewares";
+import {postsService} from "../../services/posts-service";
+import {commentService} from "../../services/commets-service";
+import {jwtService} from "../../applications/jwt-service";
 
 export const postRouterQuery = Router ({})
 
@@ -22,7 +25,10 @@ postRouterQuery.get('/:postId/comments',
     usersPaginatorDefault,
     async (req: Request, res: Response) => {
 
-        const paginatorCommentViewModel = await postsRepositoryQuery
-            .getCommentsByPostId(req.params.postId, req.query)
+        const accessToken = jwtService.getAccessTokenFromHeaders(req.headers.authorization!)
+        const payload = await jwtService.getPayloadAccessToken(accessToken)
+        const paginatorCommentViewModel = await commentService
+            .paginatorCommentViewModel(req.params.postId, req.query, payload!.userId)
+
         res.status(200).send(paginatorCommentViewModel)
     })

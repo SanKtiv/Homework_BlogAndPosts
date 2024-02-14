@@ -38,6 +38,7 @@ export const postsRepository = {
     },
 
     async createPostForBlogId(blogId: string, body: PostBodyWithoutBlogIdType): Promise<ViewPostModelType> {
+
         const blog = await blogsRepository.getBlogById(blogId)
         const newPost: PostType = {
             createdAt: dateNow().toISOString(),
@@ -49,29 +50,30 @@ export const postsRepository = {
         return postsService.postDbInToBlog(newPost as PostDBType)
     },
 
-    async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<ViewCommentModelType> {
-
-        const comment: CommentType = {
-            content: content,
-            commentatorInfo: {
-                userId: userId,
-                userLogin: userLogin
-            },
-            createdAt:dateNow().toISOString(),
-            postId: postId,
-            likesInfo: {
-                likesCount: 0,
-                dislikesCount: 0,
-            },
-            usersLikeStatuses: []
-        }
-
-        await dbCommentsCollection.insertOne(comment)
-
-        return commentService.createCommentViewModel(comment as CommentDBType)
-    },
+    // async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<ViewCommentModelType> {
+    //
+    //     const comment: CommentType = {
+    //         content: content,
+    //         commentatorInfo: {
+    //             userId: userId,
+    //             userLogin: userLogin
+    //         },
+    //         createdAt:dateNow().toISOString(),
+    //         postId: postId,
+    //         likesInfo: {
+    //             likesCount: 0,
+    //             dislikesCount: 0,
+    //         },
+    //         usersLikeStatuses: []
+    //     }
+    //
+    //     await dbCommentsCollection.insertOne(comment)
+    //
+    //     return commentService.createCommentViewModel(comment as CommentDBType, userId)
+    // },
 
     async updatePost(id: string, body: InputPostModelType): Promise<Boolean> {
+
         const foundPost = await dbPostsCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
                     title: body.title,
@@ -80,13 +82,16 @@ export const postsRepository = {
                     blogId: body.blogId
             }
         })
+
         return foundPost.matchedCount === 1
     },
+
     async deletePostById(id: string): Promise<Boolean> {
 
         const deletePost = await dbPostsCollection.deleteOne({_id: new ObjectId(id)})
         return deletePost.deletedCount === 1
     },
+
     async deleteAll(): Promise<void> {
         await dbPostsCollection.deleteMany({})
     }

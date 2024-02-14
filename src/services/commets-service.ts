@@ -1,5 +1,6 @@
 import {WithId} from "mongodb";
 import {
+    CommentDBType,
     CommentType,
     LikesInfoType,
     UserStatusType,
@@ -8,8 +9,34 @@ import {
 } from "../types/comments-types";
 import {jwtService} from "../applications/jwt-service";
 import {commentsRepository} from "../repositories/mongodb-repository/comments-mongodb/comments-command-mongodb";
+import {postsRepositoryQuery} from "../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
+import {commentsRepositoryQuery} from "../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
+import {dateNow} from "../variables/variables";
+import {dbCommentsCollection} from "../repositories/mongodb-repository/db";
 
 export const commentService = {
+
+    async createCommentForPost(postId: string, content: string, userId: string, userLogin: string) {
+
+        const comment: CommentType = {
+            content: content,
+            commentatorInfo: {
+                userId: userId,
+                userLogin: userLogin
+            },
+            createdAt:dateNow().toISOString(),
+            postId: postId,
+            likesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+            },
+            usersLikeStatuses: []
+        }
+
+        await dbCommentsCollection.insertOne(comment)
+
+        return this.createCommentViewModel(comment as CommentDBType, userId)
+    },
 
     async createLikesInfo(commentId: string, likeStatus: string, accessToken: string) {
 
@@ -70,11 +97,14 @@ export const commentService = {
             .updateCommentLikesInfoByCommentId(commentId, userId, likeStatus, likesInfo)
     },
 
-    createCommentViewModel(dbComment: WithId<CommentType>): ViewCommentModelType {
+    createCommentViewModel(dbComment: WithId<CommentType>, userId: string): ViewCommentModelType {
 
-        const myStatus = dbComment.usersLikeStatuses.length && dbComment.usersLikeStatuses[0].userStatus ?
-            dbComment.usersLikeStatuses[0].userStatus :
-            'None'
+        const index = dbComment.usersLikeStatuses
+            .findIndex(el => el.userId === userId)
+
+        let myStatus = 'None'
+
+        if (index !== -1) myStatus = dbComment.usersLikeStatuses[index].userStatus!
 
         return {
             id: dbComment._id.toString(),
@@ -91,17 +121,20 @@ export const commentService = {
         }
     },
 
-    paginatorCommentViewModel(
-        totalComments: number,
-        findComments: WithId<CommentType>[],
-        query: any): ViewCommentPagingType {
+    async paginatorCommentViewModel(postId: string, query: any, userId: string): Promise<ViewCommentPagingType> {
+
+        const totalCommentsByPostId = await commentsRepositoryQuery
+            .getTotalCommentsByPostId(postId)
+
+        const commentsPagingByPostId = await commentsRepositoryQuery
+            .getCommentsByPostId(postId, query)
 
         return {
-            pagesCount: Math.ceil(totalComments / +query.pageSize),
+            pagesCount: Math.ceil(totalCommentsByPostId / +query.pageSize),
             page: +query.pageNumber,
             pageSize: +query.pageSize,
-            totalCount: totalComments,
-            items: findComments.map(el => this.createCommentViewModel(el))
+            totalCount: totalCommentsByPostId,
+            items: commentsPagingByPostId.map(el => this.createCommentViewModel(el, userId))
         }
     }
 }

@@ -7,6 +7,7 @@ import {checkInputFormComment} from "../../validations/comments-validators";
 import {authAccessToken} from "../../middlewares/authorization-jwt";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
+import {commentService} from "../../services/commets-service";
 
 export const postRouter = Router ({})
 
@@ -27,8 +28,11 @@ postRouter.post('/:postId/comments',
     errorsOfValidate,
     async (req: Request, res: Response) => {
 
-        const comment = await postsRepository
-            .createComment(req.params.postId, req.body.content, req.user!.userId, req.user!.login)
+            const comment = await commentService
+                .createCommentForPost(req.params.postId, req.body.content, req.user!.userId, req.user!.login)
+
+            // const comment1 = await postsRepository
+            // .createComment(req.params.postId, req.body.content, req.user!.userId, req.user!.login)
 
         res.status(201).send(comment)
 })
