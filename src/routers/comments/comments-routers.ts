@@ -26,6 +26,7 @@ console.log('comment router, headers.authorization', req.headers.authorization)
             console.log('comment router, userId=', userId)
             const commentDB = await commentsRepository
                 .findCommentWithUserLikeStatus(req.params.id, userId)
+                || await commentsRepository.findCommentById(req.params.id)
 
             const comment = commentService.createCommentViewModel(commentDB!, userId)
 
