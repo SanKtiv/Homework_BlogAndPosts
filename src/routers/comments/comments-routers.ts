@@ -16,14 +16,14 @@ commentRouter.get('/:id',
     async (req: Request, res: Response) => {
 
         const accessToken = jwtService
-            .getAccessTokenFromHeaders(req.headers.authorization as string)
+            .getAccessTokenFromHeaders(req.headers.authorization!)
 
         const userId = (await jwtService
             .getPayloadAccessToken(accessToken))!.userId
 
         const commentDB = await commentsRepository
             .findCommentWithUserLikeStatus(req.params.id, userId)
-console.log('commentDB',commentDB)
+
         const comment = commentService.createCommentViewModel(commentDB!, userId)
 
         res.status(200).send(comment)
