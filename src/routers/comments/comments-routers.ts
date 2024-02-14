@@ -14,10 +14,10 @@ commentRouter.get('/:id',
     checkId,
     checkCommentById,
     async (req: Request, res: Response) => {
-
+console.log('get comments by id:', start)
         const accessToken = jwtService
             .getAccessTokenFromHeaders(req.headers.authorization!)
-
+        console.log('get comments by id:, accessToken', accessToken)
         const userId = (await jwtService
             .getPayloadAccessToken(accessToken))!.userId
 
