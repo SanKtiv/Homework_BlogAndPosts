@@ -25,6 +25,7 @@ postRouterQuery.get('/:postId/comments',
     usersPaginatorDefault,
     async (req: Request, res: Response) => {
 
+    console.log('Post router, headers.authorization =', req.headers.authorization)
         const accessToken = jwtService.getAccessTokenFromHeaders(req.headers.authorization!)
         const payload = await jwtService.getPayloadAccessToken(accessToken)
         const paginatorCommentViewModel = await commentService

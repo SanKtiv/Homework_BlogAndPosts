@@ -14,7 +14,7 @@ commentRouter.get('/:id',
     checkId,
     checkCommentById,
     async (req: Request, res: Response) => {
-console.log('get comments by id:', 'start')
+console.log('comment router, headers.authorization', req.headers.authorization)
 
         if (req.headers.authorization) {
 
