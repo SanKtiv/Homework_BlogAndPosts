@@ -23,7 +23,7 @@ console.log('comment router, headers.authorization', req.headers.authorization)
 
             const userId = (await jwtService
                 .getPayloadAccessToken(accessToken))!.userId
-
+            console.log('comment router, userId=', userId)
             const commentDB = await commentsRepository
                 .findCommentWithUserLikeStatus(req.params.id, userId)
 
