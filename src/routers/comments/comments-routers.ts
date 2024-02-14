@@ -15,19 +15,29 @@ commentRouter.get('/:id',
     checkCommentById,
     async (req: Request, res: Response) => {
 console.log('get comments by id:', 'start')
-        console.log('accessToken', req.headers)
-        const accessToken = jwtService
-            .getAccessTokenFromHeaders(req.headers.authorization!)
-        console.log('get comments by id:, accessToken', accessToken)
-        const userId = (await jwtService
-            .getPayloadAccessToken(accessToken))!.userId
 
+        if (req.headers.authorization) {
+
+            const accessToken = jwtService
+                .getAccessTokenFromHeaders(req.headers.authorization)
+
+            const userId = (await jwtService
+                .getPayloadAccessToken(accessToken))!.userId
+
+            const commentDB = await commentsRepository
+                .findCommentWithUserLikeStatus(req.params.id, userId)
+
+            const comment = commentService.createCommentViewModel(commentDB!, userId)
+
+            return res.status(200).send(comment)
+        }
         const commentDB = await commentsRepository
-            .findCommentWithUserLikeStatus(req.params.id, userId)
+            .findCommentWithUserLikeStatus(req.params.id, 'userId')
 
-        const comment = commentService.createCommentViewModel(commentDB!, userId)
+        const comment = commentService.createCommentViewModel(commentDB!, 'userId')
 
-        res.status(200).send(comment)
+        return res.status(200).send(comment)
+
     })
 
 commentRouter.put('/:commentId',
