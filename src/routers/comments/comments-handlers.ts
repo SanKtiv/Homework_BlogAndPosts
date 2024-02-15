@@ -4,37 +4,45 @@ import {WithId} from "mongodb";
 
 export const commentHandlers = {
 
-    createCommentViewModel(dbComment: WithId<CommentType>, userId: string): ViewCommentModelType {
+    createCommentViewModel(dbComment: CommentDBType, userId?: string): ViewCommentModelType {
 
-        const index = dbComment.usersLikeStatuses
-            .findIndex(el => el.userId === userId)
+        let userStatus = 'None'
 
-        let myStatus = 'None'
+        if (userId) {
+            const index = dbComment.usersLikeStatuses.findIndex(el => el.userId === userId)
+            if (index !== -1) userStatus = dbComment.usersLikeStatuses[index].userStatus!
+        }
 
-        if (index !== -1) myStatus = dbComment.usersLikeStatuses[index].userStatus!
+        const {_id, usersLikeStatuses, postId, ...viewModel} = dbComment
+
+        const newLikesInfo = {...dbComment.likesInfo, myStatus: userStatus}
 
         return {
             id: dbComment._id.toString(),
-            content: dbComment.content,
-            commentatorInfo: {
-                userId: dbComment.commentatorInfo.userId,
-                userLogin: dbComment.commentatorInfo.userLogin
-            },
-            createdAt: dbComment.createdAt,
-            likesInfo: {
-                ...dbComment.likesInfo,
-                myStatus: myStatus
-            }
+            ...viewModel,
+            likesInfo: newLikesInfo
         }
+
+        // return {
+        //     id: dbComment._id.toString(),
+        //     content: dbComment.content,
+        //     commentatorInfo: {
+        //         userId: dbComment.commentatorInfo.userId,
+        //         userLogin: dbComment.commentatorInfo.userLogin
+        //     },
+        //     createdAt: dbComment.createdAt,
+        //     likesInfo: {
+        //         ...dbComment.likesInfo,
+        //         myStatus: myStatus
+        //     }
+        // }
     },
 
-    async paginatorCommentViewModel(postId: string, query: any, userId: string, totalComments: number, commentsPaging: CommentDBType[]): Promise<ViewCommentPagingType> {
-
-        // const totalCommentsByPostId = await commentsRepositoryQuery
-        //     .getTotalCommentsByPostId(postId)
-        //
-        // const commentsPagingByPostId = await commentsRepositoryQuery
-        //     .getCommentsByPostId(postId, query)
+    async paginatorCommentViewModel(postId: string,
+                                    query: any,
+                                    totalComments: number,
+                                    commentsPaging: CommentDBType[],
+                                    userId?: string,): Promise<ViewCommentPagingType> {
 
         return {
             pagesCount: Math.ceil(totalComments / +query.pageSize),

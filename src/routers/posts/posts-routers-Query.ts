@@ -45,16 +45,20 @@ postRouterQuery.get('/:postId/comments',
         const postId = req.params.postId
         const query = req.query
 
-        const totalComment = await commentsRepositoryQuery
-            .getTotalCommentsByPostId(postId)
+        const totalComment = await commentsRepositoryQuery.getTotalCommentsByPostId(postId)
 
-        const commentsPaging = await commentsRepositoryQuery
-            .getCommentsByPostId(postId, query)
+        const commentsPaging = await commentsRepositoryQuery.getCommentsByPostId(postId, query)
+
+        if (req.headers.authorization) {
+
+            const payload = await jwtService.getPayloadAccessToken(req.headers.authorization)
+
+        }
 
         if (!req.headers.authorization) {
 
             const paginatorCommentViewModel = await commentHandlers
-                .paginatorCommentViewModel(postId, query, 'userId', totalComment, commentsPaging)
+                .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
 
             return res.status(200).send(paginatorCommentViewModel)
         }
