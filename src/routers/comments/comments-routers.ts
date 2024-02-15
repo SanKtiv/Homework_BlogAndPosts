@@ -2,7 +2,7 @@ import {Router, Response, Request} from "express";
 import {checkCommentModelForUpdate, checkId} from "../../validations/comments-validators";
 import {checkCommentById, checkOwnCommentById} from "../../middlewares/comment-middleware";
 import {commentsRepository} from "../../repositories/mongodb-repository/comments-mongodb/comments-command-mongodb";
-import {commentService} from "../../services/commets-service";
+import {commentService} from "../../services/comments-service";
 import {authAccessToken} from "../../middlewares/authorization-jwt";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 import {jwtService} from "../../applications/jwt-service";
@@ -14,16 +14,12 @@ commentRouter.get('/:id',
     checkId,
     checkCommentById,
     async (req: Request, res: Response) => {
-console.log('comment router, headers.authorization', req.headers.authorization)
 
         if (req.headers.authorization) {
 
-            const accessToken = jwtService
-                .getAccessTokenFromHeaders(req.headers.authorization)
-
             const userId = (await jwtService
-                .getPayloadAccessToken(accessToken))!.userId
-            console.log('comment router, userId=', userId)
+                .getPayloadAccessToken(req.headers.authorization))!.userId
+
             const commentDB = await commentsRepository
                 .findCommentWithUserLikeStatus(req.params.id, userId)
                 || await commentsRepository.findCommentById(req.params.id)
@@ -32,10 +28,6 @@ console.log('comment router, headers.authorization', req.headers.authorization)
 
             return res.status(200).send(comment)
         }
-        // const commentDB = await commentsRepository
-        //     .findCommentWithUserLikeStatus(req.params.id, 'userId')
-        //
-        // const comment = commentService.createCommentViewModel(commentDB!, 'userId')
 
         const commentDB = await commentsRepository.findCommentById(req.params.id)
 
@@ -65,7 +57,8 @@ commentRouter.put('/:commentId/like-status',
 
     await commentService
         .createLikesInfo(req.params.commentId, req.body.likeStatus, req.headers!.authorization!)
-    res.sendStatus(204)
+
+        res.sendStatus(204)
 })
 
 commentRouter.delete('/:commentId',

@@ -7,8 +7,9 @@ export const authAccessToken = async (req: Request, res: Response, next: NextFun
 
     if (!req.headers.authorization) return res.sendStatus(401)
 
-    const token = req.headers.authorization.split(' ')[1]
-    const payload = await jwtService.getPayloadAccessToken(token)
+    // const token = req.headers.authorization.split(' ')[1]
+    const payload = await jwtService
+        .getPayloadAccessToken(req.headers.authorization)
 
     if (!payload) return res.sendStatus(401)
 

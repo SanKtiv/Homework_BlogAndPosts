@@ -1,41 +1,42 @@
-import {dbCommentsCollection, dbPostsCollection} from "../db";
-import {postsService} from "../../../services/posts-service";
+import {dbPostsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {PostDBType, ViewPostsPagingType} from "../../../types/posts-types";
-import {commentService} from "../../../services/commets-service";
+import {PostDBType, ViewPostModelType} from "../../../types/posts-types";
+import {postsService} from "../../../services/posts-service";
 
 export const postsRepositoryQuery = {
 
-    async getPostsWithPaging(query: any): Promise<ViewPostsPagingType> {
+    async getPostsTotalCount(): Promise<number> {
 
-        const totalPosts = await dbPostsCollection.countDocuments()
+        return dbPostsCollection.countDocuments()
+    },
 
-        const postsOutputFromDb = await dbPostsCollection
+    async getPostsWithPaging(query: any): Promise<PostDBType[]> {
+
+        return dbPostsCollection
             .find()
             .sort({createdAt: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()
-
-        return postsService.postsOutputQuery(totalPosts, postsOutputFromDb, query)
     },
-    
+
+    async getPostById(id: string): Promise<PostDBType | null> {
+
+        try {return dbPostsCollection.findOne({_id: new ObjectId(id)})}
+
+        catch (error) {
+            return null
+        }
+        //const postFromDb = await dbPostsCollection.findOne({_id: new ObjectId(id)})
+
+        //if (postFromDb === null) return null
+
+        //return postsService.postDbInToBlog(postFromDb)
+    },
+
+
     async findPostByPostId(postId: string): Promise<PostDBType | null> {
 
         return dbPostsCollection.findOne({_id: new ObjectId(postId)})
     },
-    // async getCommentsByPostId(postId: string, query: any) {
-    //
-    //     // const totalCommentsByPostId = await dbCommentsCollection.countDocuments({postId: postId})
-    //
-    //     return dbCommentsCollection
-    //         .find({postId: postId})
-    //         .sort({[query.sortBy]: query.sortDirection})
-    //         .skip((+query.pageNumber - 1) * +query.pageSize)
-    //         .limit(+query.pageSize)
-    //         .toArray()
-    //
-    //       // commentService
-    //       //   .paginatorCommentViewModel(totalCommentsByPostId, commentsByPostId, query)
-    // }
 }

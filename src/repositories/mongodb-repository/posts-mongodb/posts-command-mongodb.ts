@@ -10,7 +10,7 @@ import {dateNow} from "../../../variables/variables";
 import {ObjectId} from "mongodb";
 import {postsService} from "../../../services/posts-service";
 import {CommentDBType, CommentType, ViewCommentModelType} from "../../../types/comments-types";
-import {commentService} from "../../../services/commets-service";
+import {commentService} from "../../../services/comments-service";
 import {blogsRepository} from "../blogs-mongodb/blogs-command-mongodb";
 
 export const postsRepository = {

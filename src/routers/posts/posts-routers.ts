@@ -7,7 +7,7 @@ import {checkInputFormComment} from "../../validations/comments-validators";
 import {authAccessToken} from "../../middlewares/authorization-jwt";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
-import {commentService} from "../../services/commets-service";
+import {commentService} from "../../services/comments-service";
 
 export const postRouter = Router ({})
 

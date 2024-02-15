@@ -29,17 +29,16 @@ export const jwtService = {
         }
     },
 
-    async getPayloadAccessToken(token: string): Promise<JwtPayload | null> {
+    async getPayloadAccessToken(headersAuthorization: string): Promise<JwtPayload | null> {
+
+        const accessToke = headersAuthorization.split(' ')[1]
         const secret: Secret = process.env.SECRET_KEY!
+
         try {
-            return jwt.verify(token, secret) as JwtPayload
+            return jwt.verify(accessToke, secret) as JwtPayload
         }
         catch (error) {
             return null
         }
-    },
-
-    getAccessTokenFromHeaders(headers: string): string {
-        return headers.split(' ')[1]
     }
 }

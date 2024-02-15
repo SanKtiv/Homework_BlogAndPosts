@@ -38,10 +38,9 @@ export const commentService = {
         return this.createCommentViewModel(comment as CommentDBType, userId)
     },
 
-    async createLikesInfo(commentId: string, likeStatus: string, accessToken: string) {
+    async createLikesInfo(commentId: string, likeStatus: string, headersAuthorization: string) {
 
-        const token = accessToken.split(' ')[1]
-        const payload = await jwtService.getPayloadAccessToken(token)
+        const payload = await jwtService.getPayloadAccessToken(headersAuthorization)
         const userId: string = payload!.userId
 
         const commentWithUserLikeStatus = await commentsRepository
