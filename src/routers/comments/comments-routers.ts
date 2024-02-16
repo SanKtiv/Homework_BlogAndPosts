@@ -16,13 +16,13 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
 
     const id = req.params.id
     const authorization = req.headers.authorization
-
+    console.log('get: id start')
     let commentDB = await commentsRepositoryQuery.getCommentById(id)
 
     if (!commentDB) return res.sendStatus(404)
 
     if (!authorization) {
-
+        console.log('get: id !authorization')
         const comment = commentHandlers.createCommentViewModel(commentDB)
 
         return res.status(200).send(comment)
@@ -31,12 +31,12 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
     const payload = await jwtService.getPayloadAccessToken(authorization)
 
     if (!payload) {
-
+        console.log('get: id !payload')
         const comment = commentHandlers.createCommentViewModel(commentDB)
 
         return res.status(200).send(comment)
     }
-
+    console.log('get: id authorization and payload is ok')
     commentDB = await commentsRepositoryQuery
         .findCommentWithUserLikeStatus(id, payload.userId)
 

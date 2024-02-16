@@ -1,5 +1,5 @@
 import {InputBlogModelType, ViewBlogModelType, BlogDBType, BlogType} from "../../../types/blogs-types";
-import {BlogModel, dbBlogsCollection} from "../db";
+import {dbBlogsCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {blogsService} from "../../../services/blogs-service";
 
@@ -8,6 +8,7 @@ export const blogsRepository = {
     async getAllBlogs(): Promise<ViewBlogModelType[]> {
 
         const allBlogs = await dbBlogsCollection.find().toArray()
+
         return allBlogs.map(blogOutDb => blogsService.createViewBlogModel(blogOutDb))
     },
 
@@ -15,21 +16,19 @@ export const blogsRepository = {
 
         try {
             const blogDB = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
+
             if (blogDB) return blogsService.createViewBlogModel(blogDB)
+
             return null
         } catch (error) {
             return null
         }
-        // if (blogOutDb === null) return false
-        // return blogsService.blogDbInToBlog(blogOutDb)
     },
 
-    // async createBlog(body: BlogType): Promise<BlogDBType> {
-    //     return await BlogModel.create(body)
-    // },
-
     async createBlog(body: BlogType): Promise<BlogDBType> {
+
         await dbBlogsCollection.insertOne(body)
+
         return body as BlogDBType
     },
 
@@ -48,14 +47,12 @@ export const blogsRepository = {
     async deleteBlogById(id: string): Promise<Boolean> {
 
         const deleteBlog = await dbBlogsCollection.deleteOne({_id: new ObjectId(id)})
+
         return deleteBlog.deletedCount === 1
     },
 
     async deleteAll(): Promise<void> {
+
         await dbBlogsCollection.deleteMany({})
     },
-
-    // async deleteAllBlogs() {
-    //     await BlogModel.deleteMany({})
-    // }
 }
