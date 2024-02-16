@@ -18,6 +18,7 @@ postRouter.post('/',
     async (req: Request, res: Response) => {
 
         const post = await postsRepository.createPost(req.body)
+
         return res.status(201).send(post)
 })
 
@@ -28,14 +29,16 @@ postRouter.post('/:postId/comments',
     errorsOfValidate,
     async (req: Request, res: Response) => {
 
-            const comment = await commentService
-                .createCommentForPost(req.params.postId, req.body.content, req.user!.userId, req.user!.login)
+        const postId = req.params.postId
+        const content = req.body.content
+        const userId = req.user!.userId
+        const userLogin = req.user!.login
 
-            // const comment1 = await postsRepository
-            // .createComment(req.params.postId, req.body.content, req.user!.userId, req.user!.login)
+        const comment = await commentService
+            .createCommentForPost(postId, content, userId, userLogin)
 
         res.status(201).send(comment)
-})
+    })
 
 postRouter.put('/:id',
     validPostBlogId,
@@ -45,7 +48,9 @@ postRouter.put('/:id',
     async (req: Request, res: Response) => {
 
         const postIsUpdate = await postsRepository.updatePost(req.params.id, req.body)
+
         if (postIsUpdate) return res.sendStatus(204)
+
         return res.sendStatus(404)
 })
 
@@ -55,6 +60,8 @@ postRouter.delete('/:id',
     async (req: Request, res: Response) => {
 
         const postIsDelete = await postsRepository.deletePostById(req.params.id)
+
         if (postIsDelete) return res.sendStatus(204)
+
         return res.sendStatus(404)
 })

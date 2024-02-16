@@ -1,11 +1,8 @@
 import {Request, Response, Router} from 'express';
 import {postsRepositoryQuery} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
-import {postsRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
 import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
 import {usersPaginatorDefault} from "../../middlewares/users-middleware";
 import {checkPostByPostId} from "../../middlewares/posts-middlewares";
-import {postsService} from "../../services/posts-service";
-import {commentService} from "../../services/comments-service";
 import {jwtService} from "../../applications/jwt-service";
 import {postHandlers} from "./post-handler";
 import {InputPostsPagingType} from "../../types/posts-types";
@@ -49,12 +46,6 @@ postRouterQuery.get('/:postId/comments',
 
         const commentsPaging = await commentsRepositoryQuery.getCommentsByPostId(postId, query)
 
-        if (req.headers.authorization) {
-
-            const payload = await jwtService.getPayloadAccessToken(req.headers.authorization)
-
-        }
-
         if (!req.headers.authorization) {
 
             const paginatorCommentViewModel = await commentHandlers
@@ -67,14 +58,14 @@ postRouterQuery.get('/:postId/comments',
 
         if (!payload) {
 
-            const paginatorCommentViewModel = await commentService
-                .paginatorCommentViewModel(postId, query, 'userId')
+            const paginatorCommentViewModel = await commentHandlers
+                .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
 
             return res.status(200).send(paginatorCommentViewModel)
         }
 
-        const paginatorCommentViewModel = await commentService
-            .paginatorCommentViewModel(postId, query, payload.userId)
+        const paginatorCommentViewModel = await commentHandlers
+            .paginatorCommentViewModel(postId, query, totalComment, commentsPaging, payload.userId)
 
         return res.status(200).send(paginatorCommentViewModel)
     })

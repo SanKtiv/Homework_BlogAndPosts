@@ -1,6 +1,4 @@
-import {CommentDBType, CommentType, ViewCommentModelType, ViewCommentPagingType} from "../../types/comments-types";
-import {commentsRepositoryQuery} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
-import {WithId} from "mongodb";
+import {CommentDBType, ViewCommentModelType, ViewCommentPagingType} from "../../types/comments-types";
 
 export const commentHandlers = {
 
@@ -22,20 +20,6 @@ export const commentHandlers = {
             ...viewModel,
             likesInfo: newLikesInfo
         }
-
-        // return {
-        //     id: dbComment._id.toString(),
-        //     content: dbComment.content,
-        //     commentatorInfo: {
-        //         userId: dbComment.commentatorInfo.userId,
-        //         userLogin: dbComment.commentatorInfo.userLogin
-        //     },
-        //     createdAt: dbComment.createdAt,
-        //     likesInfo: {
-        //         ...dbComment.likesInfo,
-        //         myStatus: myStatus
-        //     }
-        // }
     },
 
     async paginatorCommentViewModel(postId: string,

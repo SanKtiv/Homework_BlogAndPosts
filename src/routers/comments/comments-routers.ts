@@ -7,35 +7,43 @@ import {authAccessToken} from "../../middlewares/authorization-jwt";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 import {jwtService} from "../../applications/jwt-service";
 import {likeStatusBody} from "../../validations/like-status-validation";
+import {commentsRepositoryQuery} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
+import {commentHandlers} from "./comments-handlers";
 
 export const commentRouter = Router({})
 
-commentRouter.get('/:id',
-    checkId,
-    checkCommentById,
-    async (req: Request, res: Response) => {
+commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
 
-        if (req.headers.authorization) {
+    const id = req.params.id
+    const authorization = req.headers.authorization
 
-            const userId = (await jwtService
-                .getPayloadAccessToken(req.headers.authorization))!.userId
+    let commentDB = await commentsRepositoryQuery.getCommentById(id)
 
-            const commentDB = await commentsRepository
-                .findCommentWithUserLikeStatus(req.params.id, userId)
-                || await commentsRepository.findCommentById(req.params.id)
+    if (!commentDB) return res.sendStatus(404)
 
-            const comment = commentService.createCommentViewModel(commentDB!, userId)
+    if (!authorization) {
 
-            return res.status(200).send(comment)
-        }
-
-        const commentDB = await commentsRepository.findCommentById(req.params.id)
-
-        const comment = commentService.createCommentViewModel(commentDB!, 'userId')
+        const comment = commentHandlers.createCommentViewModel(commentDB)
 
         return res.status(200).send(comment)
+    }
 
-    })
+    const payload = await jwtService.getPayloadAccessToken(authorization)
+
+    if (!payload) {
+
+        const comment = commentHandlers.createCommentViewModel(commentDB)
+
+        return res.status(200).send(comment)
+    }
+
+    commentDB = await commentsRepositoryQuery
+        .findCommentWithUserLikeStatus(id, payload.userId)
+
+    const comment = commentHandlers.createCommentViewModel(commentDB!, payload.userId)
+
+    return res.status(200).send(comment)
+})
 
 commentRouter.put('/:commentId',
     authAccessToken,

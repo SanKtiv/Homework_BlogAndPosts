@@ -1,7 +1,6 @@
 import {dbPostsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {PostDBType, ViewPostModelType} from "../../../types/posts-types";
-import {postsService} from "../../../services/posts-service";
+import {PostDBType} from "../../../types/posts-types";
 
 export const postsRepositoryQuery = {
 
@@ -24,19 +23,6 @@ export const postsRepositoryQuery = {
 
         try {return dbPostsCollection.findOne({_id: new ObjectId(id)})}
 
-        catch (error) {
-            return null
-        }
-        //const postFromDb = await dbPostsCollection.findOne({_id: new ObjectId(id)})
-
-        //if (postFromDb === null) return null
-
-        //return postsService.postDbInToBlog(postFromDb)
-    },
-
-
-    async findPostByPostId(postId: string): Promise<PostDBType | null> {
-
-        return dbPostsCollection.findOne({_id: new ObjectId(postId)})
-    },
+        catch (error) {return null}
+    }
 }

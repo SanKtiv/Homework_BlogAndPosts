@@ -36,8 +36,8 @@ export type LikesInfoType = {
 }
 
 export type UserStatusType = {
-    userId?: string
-    userStatus?: string
+    userId: string
+    userStatus: string
 }
 
 export type ViewCommentPagingType = {
