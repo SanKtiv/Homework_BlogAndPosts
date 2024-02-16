@@ -12,8 +12,11 @@ import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/
 export const blogsService = {
 
     async getCreatedBlog(body: InputBlogModelType): Promise<ViewBlogModelType> {
+
         const newBlog = await this.createNewBlog(body)
+
         const blogFromDB = await blogsRepository.createBlog(newBlog)
+
         return this.createViewBlogModel(blogFromDB)
     },
 
