@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import {MongoClient, WithId} from 'mongodb'
 import {PostType} from "../../types/posts-types";
-import {UserType} from "../../types/users-types";
+import {UserDBType, UserType} from "../../types/users-types";
 import {CommentType} from "../../types/comments-types";
 import {BlogType} from "../../types/blogs-types";
 import {UserSessionType} from "../../types/security-device-types";

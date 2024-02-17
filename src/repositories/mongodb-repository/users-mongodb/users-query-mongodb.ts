@@ -1,9 +1,7 @@
 import {UserDBType, ViewUsersPagingType} from "../../../types/users-types";
 import {dbUsersCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {userService} from "../../../services/users-service";
-import {throws} from "assert";
-import {errorsOfValidate} from "../../../middlewares/error-validators-middleware";
+import {userHandlers} from "../../../routers/users/users-handlers";
 
 
 export const usersRepositoryReadOnly = {
@@ -54,10 +52,10 @@ export const usersRepositoryReadOnly = {
         }
 
         const usersSearch = await this.userSearch(query, searchLoginTermRegexp, searchEmailTermRegexp)
-        return userService.usersFormOutput(totalUsers, usersSearch, query)
+        return userHandlers.usersFormOutput(totalUsers, usersSearch, query)
     },
 
-    async getUserByUserId(userId: string): Promise<UserDBType | null> {
+    async findUserByUserId(userId: string): Promise<UserDBType | null> {
         return  dbUsersCollection.findOne({_id: new ObjectId(userId)})
     },
 

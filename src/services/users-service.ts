@@ -1,8 +1,19 @@
-import {InputUserPagingType, ViewUsersPagingType, ViewUserModelType, UserDBType} from "../types/users-types";
+import {ViewUserModelType, UserDBType, InputUserModelType, UserType} from "../types/users-types";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-command-mongodb";
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import {authService} from "./auth-service";
 
 export const userService = {
+
+    async createSuperUser(body: InputUserModelType): Promise<ViewUserModelType> {
+
+        const superUser = await authService.createUser(body)
+
+        superUser.emailConfirmation.isConfirmed = true
+
+        const userFromDB = await usersRepository.insertUserToDB(superUser)
+
+        return this.createViewUserModel(userFromDB)
+    },
 
     createViewUserModel(user: UserDBType): ViewUserModelType {
 
@@ -14,24 +25,8 @@ export const userService = {
         }
     },
 
-    usersFormOutput(totalUsers: number,
-                    usersSearch: UserDBType[],
-                    query: InputUserPagingType): ViewUsersPagingType {
-
-        return {
-            pagesCount: Math.ceil(totalUsers / +query.pageSize),
-            page: +query.pageNumber,
-            pageSize: +query.pageSize,
-            totalCount: totalUsers,
-            items: usersSearch.map(userDb => this.createViewUserModel(userDb))
-        }
-    },
-
-    async getUserByUserId(userId: string) {
-        return usersRepositoryReadOnly.getUserByUserId(userId)
-    },
-
     async deleteUserById(id: string): Promise<boolean> {
+
         return usersRepository.deleteUserById(id)
     },
 }

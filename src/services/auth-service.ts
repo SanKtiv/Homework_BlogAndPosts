@@ -47,7 +47,7 @@ export const authService = {
 
         const user = await this.createUser(body)
         const findUser = await usersRepository.insertUserToDB(user)
-        return userService.createViewUserModel(findUser as UserDBType)
+        return userService.createViewUserModel(findUser)
     },
 
     async checkCredentials(LoginBody: InputUserAuthModelType): Promise<string | null> {
@@ -66,9 +66,7 @@ export const authService = {
 
     async confirmationRegistration(code: string): Promise<boolean> {
 
-        const newCode = code.slice(0, code.length - 1)//!!!!!!!!!!!!!!!!!!!!! без этого код не верный приходит
-
-        const user = await usersRepositoryReadOnly.getUserByConfirmationCode(newCode)
+        const user = await usersRepositoryReadOnly.getUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false
         return usersRepository.updateUserExpirationDate(user._id)

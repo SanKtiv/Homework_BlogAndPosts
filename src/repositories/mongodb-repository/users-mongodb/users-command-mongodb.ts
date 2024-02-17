@@ -4,9 +4,9 @@ import {ObjectId} from "mongodb";
 
 export const usersRepository = {
 
-    async insertUserToDB(user: UserType): Promise<UserType> {
+    async insertUserToDB(user: UserType): Promise<UserDBType> {
         await dbUsersCollection.insertOne(user)
-        return user
+        return user as UserDBType
     },
 
     async findUserByLoginOrEmail(login: string): Promise<UserDBType | null> {

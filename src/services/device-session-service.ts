@@ -55,11 +55,6 @@ export const deviceSessionService = {
         return viewUserSessions
     },
 
-    async getDeviceIdFromRefreshToken(refreshToken: string) {
-        const userSession = await jwtService.getPayloadRefreshToken(refreshToken)
-        return userSession!.deviceId
-    },
-
     async deleteDeviceSessionByDeviceId(deviceId: string) {
         return deviceSessionRepository.deleteDeviceSessionByDeviceId(deviceId)
     },

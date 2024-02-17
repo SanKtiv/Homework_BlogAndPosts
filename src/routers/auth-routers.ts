@@ -14,6 +14,7 @@ export const authRouters = Router({})
 authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
 
     const userId = await authService.checkCredentials(req.body)
+
     if (!userId) return res.sendStatus(401)
 
     const title = req.headers["user-agent"] || 'chrome 105'
@@ -39,8 +40,7 @@ authRouters.post('/password-recovery',
 })
 
 authRouters.post('/new-password', apiRequests, newPassword, recoveryCode, errorsOfValidate, async (req: Request, res: Response) => {
-    const result = await authService.createNewPassword(req.body)
-    console.log('new password body in:', req.body, 'result db:', result)
+    await authService.createNewPassword(req.body)
     return res.sendStatus(204)
 })
 
