@@ -7,6 +7,20 @@ export type PostType = {
     blogId: string
     blogName: string
     createdAt: string
+    extendedLikesInfo: ExtendedLikesInfoType
+    userLikes: UserLikes[]
+}
+
+export type ExtendedLikesInfoType = {
+    likesCount: number
+    dislikesCount: number
+}
+
+type UserLikes = {
+    userStatus: string | null
+    addedAt: string | null
+    userId: string | null
+    login: string | null
 }
 
 export type ViewPostModelType = PostType & {id: string}
