@@ -5,12 +5,10 @@ import {
     PostBodyWithoutBlogIdType,
     PostDBType
 } from "../../../types/posts-types";
-import {dbPostsCollection, dbCommentsCollection} from "../db";
+import {dbPostsCollection} from "../db";
 import {dateNow} from "../../../variables/variables";
 import {ObjectId} from "mongodb";
 import {postsService} from "../../../services/posts-service";
-import {CommentDBType, CommentType, ViewCommentModelType} from "../../../types/comments-types";
-import {commentService} from "../../../services/comments-service";
 import {blogsRepository} from "../blogs-mongodb/blogs-command-mongodb";
 
 export const postsRepository = {
@@ -49,28 +47,6 @@ export const postsRepository = {
         await dbPostsCollection.insertOne(newPost)
         return postsService.postDbInToBlog(newPost as PostDBType)
     },
-
-    // async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<ViewCommentModelType> {
-    //
-    //     const comment: CommentType = {
-    //         content: content,
-    //         commentatorInfo: {
-    //             userId: userId,
-    //             userLogin: userLogin
-    //         },
-    //         createdAt:dateNow().toISOString(),
-    //         postId: postId,
-    //         likesInfo: {
-    //             likesCount: 0,
-    //             dislikesCount: 0,
-    //         },
-    //         usersLikeStatuses: []
-    //     }
-    //
-    //     await dbCommentsCollection.insertOne(comment)
-    //
-    //     return commentService.createCommentViewModel(comment as CommentDBType, userId)
-    // },
 
     async updatePost(id: string, body: InputPostModelType): Promise<Boolean> {
 
