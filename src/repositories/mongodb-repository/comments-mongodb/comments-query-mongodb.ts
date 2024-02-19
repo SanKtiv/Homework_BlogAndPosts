@@ -39,7 +39,6 @@ export const commentsRepositoryQuery = {
                         }
                     })
         } catch (error) {
-            console.log('UserId is not found')
             return null
         }
     },

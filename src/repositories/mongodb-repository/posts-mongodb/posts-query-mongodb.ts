@@ -24,5 +24,31 @@ export const postsRepositoryQuery = {
         try {return dbPostsCollection.findOne({_id: new ObjectId(id)})}
 
         catch (error) {return null}
-    }
+    },
+
+    async getPostWithUserStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {
+
+        try {
+            return dbPostsCollection.findOne({
+                    _id: new ObjectId(postId),
+                    'userLikesInfo.userId': userId
+                },
+                {
+                    projection: {
+                        'userLikesInfo.$': 1
+                    }
+                })
+        }
+        catch (error) {return null}
+    },
+
+    async getPostWithLikeStatusInfoByPostId(postId: string, userId: string): Promise<PostDBType | null> {
+
+        try {
+            return dbPostsCollection
+                .findOne({_id: new ObjectId(postId)}, {sort: {'userLikesInfo.addedAt': -1}})
+                //.sort({'userLikesInfo.addedAt': -1})
+        }
+        catch (error) {return null}
+    },
 }
