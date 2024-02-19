@@ -23,11 +23,11 @@ export const postHandlers = {
 
     createPostViewModel(postFromDB: PostDBType): ViewPostModelType {
 
-        const {_id, ...postViewModelWithOutId} = postFromDB
+        const {_id, ...postViewModelWithoutId} = postFromDB
 
         return  {
             id: postFromDB._id.toString(),
-            ...postViewModelWithOutId
+            ...postViewModelWithoutId
         }
     },
 }

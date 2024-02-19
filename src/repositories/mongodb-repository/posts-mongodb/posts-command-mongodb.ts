@@ -3,7 +3,7 @@ import {
     InputPostModelType,
     ViewPostModelType,
     PostBodyWithoutBlogIdType,
-    PostDBType, ExtendedLikesInfoType
+    PostDBType, ExtendedLikesInfoType, UserLikesInfoType
 } from "../../../types/posts-types";
 import {dbPostsCollection} from "../db";
 import {dateNow} from "../../../variables/variables";
@@ -40,12 +40,7 @@ export const postsRepository = {
                 likesCount: 0,
                 dislikesCount: 0
             },
-            userLikes: [{
-                userStatus: null,
-                addedAt: null,
-                userId: null,
-                login: null
-            }],
+            userLikesInfo: [],
             ...body
         }
 
@@ -66,12 +61,7 @@ export const postsRepository = {
                 likesCount: 0,
                 dislikesCount: 0
             },
-            userLikes: [{
-                userStatus: null,
-                addedAt: null,
-                userId: null,
-                login: null
-            }],
+            userLikesInfo: [],
             ...body
         }
 
@@ -94,17 +84,18 @@ export const postsRepository = {
         return foundPost.matchedCount === 1
     },
 
-    async updatePostAddLikeStatus(id: string,
-                                  likeStatus: string,
-                                  likesInfo: ExtendedLikesInfoType): Promise<Boolean> {
+    async updatePostAddLikesInfo(id: string,
+                                 likesInfo: ExtendedLikesInfoType,
+                                 userLikesInfo: UserLikesInfoType): Promise<Boolean> {
 
-        await dbPostsCollection
+        const updateResult = await dbPostsCollection
             .updateOne({_id: new ObjectId(id)},
                 {
-                    $set: {extendedLikesInfo: likesInfo}
+                    $set: {extendedLikesInfo: likesInfo},
+                    $push: {userLikesInfo: userLikesInfo}
                 })
 
-        return false
+        return updateResult.matchedCount === 1
     },
 
     async deletePostById(id: string): Promise<Boolean> {

@@ -1,18 +1,40 @@
 import {WithId} from "mongodb";
-import {ViewPostModelType, PostType} from "../types/posts-types";
+import {ViewPostModelType, PostType, PostDBType} from "../types/posts-types";
 import {InputPostsPagingType, ViewPostsPagingType} from "../types/posts-types";
 
 export const postsService = {
-    postDbInToBlog(postOutDb: WithId<PostType>): ViewPostModelType {
+
+    async addLikesInfoInPost(id: string, likeStatus: string) {
+
+
+
+        const likesInfo = {
+
+        }
+
+        const userLikesInfo = {
+
+        }
+    },
+
+    postDbInToBlog(postOutDb: PostDBType): ViewPostModelType {
+
+        const {_id, extendedLikesInfo, userLikesInfo, ...newPostFromDB} = postOutDb
+
+
 
         return  {
             id: postOutDb._id.toString(),
-            title: postOutDb.title,
-            shortDescription: postOutDb.shortDescription,
-            content: postOutDb.content,
-            blogId: postOutDb.blogId,
-            blogName: postOutDb.blogName,
-            createdAt: postOutDb.createdAt
+            ...newPostFromDB,
+            extendedLikesInfo: {
+                ...extendedLikesInfo,
+                myStatus: userLikesInfo[0].userStatus,
+                newestLikes: [{
+                    addedAt: 'string',
+                    userId: 'string',
+                    login: 'string'
+                }]
+            }
         }
     },
 

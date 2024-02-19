@@ -54,6 +54,11 @@ postRouter.put('/:id',
         return res.sendStatus(404)
 })
 
+postRouter.put('/:postId/like-status', async (req: Request, res: Response) => {
+
+
+})
+
 postRouter.delete('/:id',
     basicAuth,
     validId,
