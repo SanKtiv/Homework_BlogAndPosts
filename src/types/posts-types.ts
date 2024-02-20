@@ -35,14 +35,14 @@ export type ViewPostModelType = {
         likesCount: number
         dislikesCount: number
         myStatus: string
-        newestLikes: [
-            {
-                addedAt: string
-                userId: string
-                login: string
-            }
-        ]
+        newestLikes: NewestLikesType[]
     }
+}
+
+type NewestLikesType = {
+    addedAt: string
+    userId: string
+    login: string
 }
 
 export type PostDBType = WithId<PostType>

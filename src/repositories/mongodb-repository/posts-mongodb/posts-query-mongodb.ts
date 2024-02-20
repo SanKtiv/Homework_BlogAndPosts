@@ -13,7 +13,7 @@ export const postsRepositoryQuery = {
 
         return dbPostsCollection
             .find()
-            .sort({createdAt: query.sortDirection})
+            .sort({createdAt: query.sortDirection, 'userLikesInfo.addedAt': -1})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()
@@ -22,6 +22,16 @@ export const postsRepositoryQuery = {
     async getPostById(id: string): Promise<PostDBType | null> {
 
         try {return dbPostsCollection.findOne({_id: new ObjectId(id)})}
+
+        catch (error) {return null}
+    },
+
+    async getLikesInfoFromPostByPostId(id: string): Promise<PostDBType | null> {
+
+        try {
+            return dbPostsCollection
+                .findOne({_id: new ObjectId(id)},
+            {projection: {extendedLikesInfo: 1}})}
 
         catch (error) {return null}
     },

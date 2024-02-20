@@ -1,20 +1,21 @@
 import {WithId} from "mongodb";
-import {ViewPostModelType, PostType, PostDBType} from "../types/posts-types";
+import {ViewPostModelType, PostType, PostDBType, ExtendedLikesInfoType} from "../types/posts-types";
 import {InputPostsPagingType, ViewPostsPagingType} from "../types/posts-types";
 
 export const postsService = {
 
-    async addLikesInfoInPost(id: string, likeStatus: string) {
+    async addLikesInfoInPost(id: string, likeStatus: string, userId: string, login: string, likesInfo: ExtendedLikesInfoType) {
 
-
-
-        const likesInfo = {
-
-        }
+        const newLikesInfo = likesInfo
 
         const userLikesInfo = {
-
+            userStatus: likeStatus,
+            addedAt: new Date().toISOString(),
+            userId: userId,
+            login: login
         }
+
+
     },
 
     postDbInToBlog(postOutDb: PostDBType): ViewPostModelType {

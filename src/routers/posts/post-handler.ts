@@ -23,11 +23,27 @@ export const postHandlers = {
 
     createPostViewModel(postFromDB: PostDBType): ViewPostModelType {
 
-        const {_id, ...postViewModelWithoutId} = postFromDB
+        const {
+            _id, extendedLikesInfo,
+            userLikesInfo,
+            ...postViewModelWithoutId
+        } = postFromDB
+
+        const newestLikes = userLikesInfo.map(el => {
+            const {userStatus, ...newestLikes} = el
+            return newestLikes
+        })
+
+        const newExtendedLikesInfo = {
+            ...extendedLikesInfo,
+            myStatus: 'None',
+            newestLikes: newestLikes
+        }
 
         return  {
             id: postFromDB._id.toString(),
-            ...postViewModelWithoutId
+            ...postViewModelWithoutId,
+            extendedLikesInfo: newExtendedLikesInfo
         }
     },
 }
