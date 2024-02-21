@@ -56,6 +56,17 @@ export const postsRepositoryQuery = {
     async getPostWithLikeStatusInfoByPostId(postId: string): Promise<PostDBType | null> {
 
         try {
+            const aggregate = await dbPostsCollection
+                .aggregate([
+                    {$match: {_id: new ObjectId(postId)}},
+                    {$unwind: '$userLikesInfo'},
+                    {$sort: {'userLikesInfo.addedAt': -1}},
+                    {$limit: 2},
+                    {$group: {_id: '$_id', userLikesInfo: { $push: '$userLikesInfo'}}},
+                    {$project: {_id: 0, userLikesInfo: 1}}
+                ])
+                .next()
+console.log('aggregate =', aggregate)
             return dbPostsCollection
                 .findOne({_id: new ObjectId(postId)}, {sort: {'userLikesInfo.addedAt': -1}})
         }
