@@ -20,6 +20,11 @@ export const postActions = {
         getRequest()
             .get(`${routePaths.posts}/${id}`),
 
+    getPostByIdAndAccessToken: async (id: string, token: string) =>
+        getRequest()
+            .get(`${routePaths.posts}/${id}`)
+            .set('Authorization', `Bearer ${token}`),
+
     getPostWithCommentsByPostIdAndQuery: async (postId: string, token: string, query: any) =>
         getRequest()
             .get(`${routePaths.posts}/${postId}/comments/${query}`)

@@ -45,6 +45,7 @@ export const postsRepositoryQuery = {
                 },
                 {
                     projection: {
+                        _id: 0,
                         'userLikesInfo.$': 1
                     }
                 })
@@ -52,12 +53,11 @@ export const postsRepositoryQuery = {
         catch (error) {return null}
     },
 
-    async getPostWithLikeStatusInfoByPostId(postId: string, userId: string): Promise<PostDBType | null> {
+    async getPostWithLikeStatusInfoByPostId(postId: string): Promise<PostDBType | null> {
 
         try {
             return dbPostsCollection
                 .findOne({_id: new ObjectId(postId)}, {sort: {'userLikesInfo.addedAt': -1}})
-                //.sort({'userLikesInfo.addedAt': -1})
         }
         catch (error) {return null}
     },

@@ -32,8 +32,21 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
     if (!postFromDB) return res.sendStatus(404)
 
-    const postFromDBWithUserLikeStatus = await postsRepositoryQuery
-        .getPostWithUserStatusByPostId(postId, )
+    if (headersAuth) {
+
+        const payLoad = await jwtService.getPayloadAccessToken(headersAuth)
+
+        if (payLoad) {
+
+            const postFromDBWithUserLikeStatus = await postsRepositoryQuery
+                .getPostWithUserStatusByPostId(postId, payLoad.userId)
+            console.log('userLikesInfo =', postFromDBWithUserLikeStatus)
+
+            const postDBSortByAddedAt = await postsRepositoryQuery
+                .getPostWithLikeStatusInfoByPostId(postId)
+            console.log('postDBSortByAddedAt =', postDBSortByAddedAt)
+        }
+    }
 
     const postViewModel = postHandlers.createPostViewModel(postFromDB)
 

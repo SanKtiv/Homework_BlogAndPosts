@@ -254,21 +254,21 @@ describe('TEST for POSTS', () => {
         const result1 = await postActions
             .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken1)
 
-        const updatedPost1 = await postActions.getPostById(newPost.body.id)
-        console.log('update №1', updatedPost1.body)
-        console.log('update №1', updatedPost1.body.extendedLikesInfo.newestLikes)
+        // const updatedPost1 = await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
+        // console.log('update №1', updatedPost1.body)
+        // console.log('update №1', updatedPost1.body.extendedLikesInfo.newestLikes)
 
         const result2 = await postActions
             .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken2)
 
-        const updatedPost2 = await postActions.getPostById(newPost.body.id)
-        console.log('update №2',updatedPost2.body)
-        console.log('update №2',updatedPost2.body.extendedLikesInfo.newestLikes)
+        // const updatedPost2 = await postActions.getPostById(newPost.body.id)
+        // console.log('update №2',updatedPost2.body)
+        // console.log('update №2',updatedPost2.body.extendedLikesInfo.newestLikes)
 
         const result3 = await postActions
             .updatePostLikeStatusById(newPost.body.id, 'Dislike', accessToken3)
 
-        const updatedPost3 = await postActions.getPostById(newPost.body.id)
+        const updatedPost3 = await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
         console.log('update №3',updatedPost3.body)
         console.log('update №3',updatedPost3.body.extendedLikesInfo.newestLikes)
 
