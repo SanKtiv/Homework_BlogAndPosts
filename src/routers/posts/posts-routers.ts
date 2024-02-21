@@ -57,23 +57,33 @@ postRouter.put('/:id',
         return res.sendStatus(404)
 })
 
-postRouter.put('/:postId/like-status', async (req: Request, res: Response) => {
+postRouter.put('/:postId/like-status', authAccessToken, async (req: Request, res: Response) => {
 
-        const id = req.params.postId
-        const likeStatus = req.body.likeStatus
-        const userId = req.user!.userId
-        const login = req.user!.login
-        const userLikeStatus = await postsRepositoryQuery
-            .getPostWithUserStatusByPostId(id, userId)
+    const dataBody = {
+        id: req.params.postId,
+        likeStatus: req.body.likeStatus,
+        userId: req.user!.userId,
+        login: req.user!.login,
+    }
 
-        if (userLikeStatus) {
+    const likesInfo = await postsRepositoryQuery
+        .getLikesInfoFromPostByPostId(dataBody.id)
 
-                const likesInfo = await postsRepositoryQuery.getLikesInfoFromPostByPostId(id)
+    if (!likesInfo) return res.sendStatus(404)
 
-                await postsService
-                    .addLikesInfoInPost(id, likeStatus, userId, login, likesInfo)
-        }
+    const userLikeStatus = await postsRepositoryQuery
+        .getPostWithUserStatusByPostId(dataBody.id, dataBody.userId)
 
+    if (!userLikeStatus) {
+        await postsService
+            .addLikesInfoInPost(dataBody, likesInfo.extendedLikesInfo)
+
+        return res.sendStatus(204)
+    }
+
+    await postsService.changeLikesInfoInPost(dataBody, likesInfo, userLikeStatus)
+
+    return res.sendStatus(204)
 })
 
 postRouter.delete('/:id',

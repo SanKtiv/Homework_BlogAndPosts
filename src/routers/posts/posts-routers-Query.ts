@@ -25,9 +25,15 @@ postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Respo
 
 postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
-    const postFromDB = await postsRepositoryQuery.getPostById(req.params.id)
+    const postId = req.params.id
+    const headersAuth = req.headers.authorization
+
+    const postFromDB = await postsRepositoryQuery.getPostById(postId)
 
     if (!postFromDB) return res.sendStatus(404)
+
+    const postFromDBWithUserLikeStatus = await postsRepositoryQuery
+        .getPostWithUserStatusByPostId(postId, )
 
     const postViewModel = postHandlers.createPostViewModel(postFromDB)
 

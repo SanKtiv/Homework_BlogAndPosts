@@ -74,3 +74,10 @@ export type ViewPostsPagingType = {
     totalCount: number
     items: ViewPostModelType[]
 }
+
+export type TransactBodyType = {
+    id: string
+    likeStatus: string
+    userId: string
+    login: string
+}

@@ -54,6 +54,12 @@ export const postActions = {
             .set(authBasic.type, authBasic.password)
             .send(bodyUpdate),
 
+    updatePostLikeStatusById: async (id: string, status: string, token: string) =>
+        getRequest()
+            .put(`${routePaths.posts}/${id}/like-status`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({likeStatus: status}),
+
     deletePostById: async (id: string, authBasic: BasicType) =>
         getRequest()
             .delete(`${routePaths.posts}/${id}`)

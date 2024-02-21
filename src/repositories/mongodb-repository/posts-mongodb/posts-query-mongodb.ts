@@ -1,6 +1,6 @@
 import {dbPostsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {PostDBType} from "../../../types/posts-types";
+import {ExtendedLikesInfoType, PostDBType} from "../../../types/posts-types";
 
 export const postsRepositoryQuery = {
 
@@ -26,13 +26,13 @@ export const postsRepositoryQuery = {
         catch (error) {return null}
     },
 
-    async getLikesInfoFromPostByPostId(id: string): Promise<PostDBType | null> {
+    async getLikesInfoFromPostByPostId(id: string): Promise<any | null> {
 
         try {
             return dbPostsCollection
                 .findOne({_id: new ObjectId(id)},
-            {projection: {extendedLikesInfo: 1}})}
-
+            {projection: {_id: 0, extendedLikesInfo: 1}})
+        }
         catch (error) {return null}
     },
 

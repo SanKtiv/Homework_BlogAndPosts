@@ -11,6 +11,7 @@ import {userActions} from "./test-services/test-users-services";
 import {user} from "./test-utility/test-users-utility";
 import {commentAction} from "./test-services/test-comments-services";
 import {commentSendBody_TRUE} from "./test-utility/test-comments-utility";
+import {authActions} from "./test-services/test-auth-servises";
 
 describe('TEST for POSTS', () => {
 
@@ -232,6 +233,46 @@ describe('TEST for POSTS', () => {
         const result = await postActions.deletePostById(post.id, auth.basic_TRUE)
 
         await expect(result.statusCode).toBe(404)
+    })
+
+    it('-PUT /:postId/like-status, should return status 204', async () => {
+
+        await getRequest().delete(routePaths.deleteAllData)
+
+        const newBlog = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+
+        const newPost = await postActions
+            .createPost(post.sendBody(post.body_TRUE, newBlog.body.id), auth.basic_TRUE)
+
+        await userActions.createManyUsers(user.sendManyBody(3))
+        const accessTokenArray = await userActions.authManyUser(user.sendAuthManyBody(3))
+
+        const accessToken1 = accessTokenArray[0].body.accessToken
+        const accessToken2 = accessTokenArray[1].body.accessToken
+        const accessToken3 = accessTokenArray[2].body.accessToken
+
+        const result1 = await postActions
+            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken1)
+
+        const updatedPost1 = await postActions.getPostById(newPost.body.id)
+        console.log('update №1', updatedPost1.body)
+        console.log('update №1', updatedPost1.body.extendedLikesInfo.newestLikes)
+
+        const result2 = await postActions
+            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken2)
+
+        const updatedPost2 = await postActions.getPostById(newPost.body.id)
+        console.log('update №2',updatedPost2.body)
+        console.log('update №2',updatedPost2.body.extendedLikesInfo.newestLikes)
+
+        const result3 = await postActions
+            .updatePostLikeStatusById(newPost.body.id, 'Dislike', accessToken3)
+
+        const updatedPost3 = await postActions.getPostById(newPost.body.id)
+        console.log('update №3',updatedPost3.body)
+        console.log('update №3',updatedPost3.body.extendedLikesInfo.newestLikes)
+
+        //await expect(result.statusCode).toBe(204)
     })
 
 })

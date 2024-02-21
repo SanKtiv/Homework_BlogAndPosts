@@ -24,7 +24,8 @@ export const postHandlers = {
     createPostViewModel(postFromDB: PostDBType): ViewPostModelType {
 
         const {
-            _id, extendedLikesInfo,
+            _id,
+            extendedLikesInfo,
             userLikesInfo,
             ...postViewModelWithoutId
         } = postFromDB
