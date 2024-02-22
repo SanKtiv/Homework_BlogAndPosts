@@ -23,6 +23,10 @@ export type UserLikesInfoType = {
     login: string
 }
 
+export type UserLikesInfoSortType = {
+    userLikesInfo: UserLikesInfoType[]
+}
+
 export type ViewPostModelType = {
     id: string
     title: string

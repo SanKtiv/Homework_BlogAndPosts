@@ -268,7 +268,7 @@ describe('TEST for POSTS', () => {
         const result3 = await postActions
             .updatePostLikeStatusById(newPost.body.id, 'Dislike', accessToken3)
 
-        const updatedPost3 = await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
+        const updatedPost3 = await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken3)
         console.log('update №3',updatedPost3.body)
         console.log('update №3',updatedPost3.body.extendedLikesInfo.newestLikes)
 

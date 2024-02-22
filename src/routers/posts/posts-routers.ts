@@ -72,7 +72,7 @@ postRouter.put('/:postId/like-status', authAccessToken, async (req: Request, res
     if (!likesInfo) return res.sendStatus(404)
 
     const userLikeStatus = await postsRepositoryQuery
-        .getPostWithUserStatusByPostId(dataBody.id, dataBody.userId)
+        .getPostUserLikeStatusByPostId(dataBody.id, dataBody.userId)
 
     if (!userLikeStatus) {
         await postsService

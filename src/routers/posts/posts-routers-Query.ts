@@ -39,11 +39,11 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
         if (payLoad) {
 
             const postFromDBWithUserLikeStatus = await postsRepositoryQuery
-                .getPostWithUserStatusByPostId(postId, payLoad.userId)
+                .getPostUserLikeStatus(postId, payLoad.userId)
             console.log('userLikesInfo =', postFromDBWithUserLikeStatus)
 
             const postDBSortByAddedAt = await postsRepositoryQuery
-                .getPostWithLikeStatusInfoByPostId(postId)
+                .getUserLikesInfoSortByAddedAt(postId, payLoad.userId)
             console.log('postDBSortByAddedAt =', postDBSortByAddedAt)
         }
     }

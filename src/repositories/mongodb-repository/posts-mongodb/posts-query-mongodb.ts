@@ -1,6 +1,7 @@
 import {dbPostsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {ExtendedLikesInfoType, PostDBType} from "../../../types/posts-types";
+import {PostDBType} from "../../../types/posts-types";
+
 
 export const postsRepositoryQuery = {
 
@@ -36,7 +37,7 @@ export const postsRepositoryQuery = {
         catch (error) {return null}
     },
 
-    async getPostWithUserStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {
+    async getPostUserLikeStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {
 
         try {
             return dbPostsCollection.findOne({
@@ -53,10 +54,23 @@ export const postsRepositoryQuery = {
         catch (error) {return null}
     },
 
-    async getPostWithLikeStatusInfoByPostId(postId: string): Promise<PostDBType | null> {
+    async getPostUserLikeStatus(postId: string, userId: string): Promise<PostDBType | null> {
 
         try {
-            const aggregate = await dbPostsCollection
+            return dbPostsCollection.findOne(
+            { _id: new ObjectId(postId) },
+                {projection: { "userLikesInfo.$[elem].userStatus": 1 },
+                    arrayFilters:   [{ "elem.userId": userId }]   }
+            // {projection: { userLikesInfo: { $elemMatch: { userId: userId } } } }
+            )
+        }
+        catch (error) {return null}
+    },
+
+    async getUserLikesInfoSortByAddedAt(postId: string, userId: string): Promise<any | null> {
+
+        try {
+            return dbPostsCollection
                 .aggregate([
                     {$match: {_id: new ObjectId(postId)}},
                     {$unwind: '$userLikesInfo'},
@@ -66,9 +80,6 @@ export const postsRepositoryQuery = {
                     {$project: {_id: 0, userLikesInfo: 1}}
                 ])
                 .next()
-console.log('aggregate =', aggregate)
-            return dbPostsCollection
-                .findOne({_id: new ObjectId(postId)}, {sort: {'userLikesInfo.addedAt': -1}})
         }
         catch (error) {return null}
     },
