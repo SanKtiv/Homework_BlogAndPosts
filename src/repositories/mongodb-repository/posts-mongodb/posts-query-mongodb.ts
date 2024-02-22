@@ -54,14 +54,23 @@ export const postsRepositoryQuery = {
         catch (error) {return null}
     },
 
+    async getUserStatusByPostIdAndUserId(postId: string, userId: string): Promise<PostDBType | null> {
+
+        try {
+            return dbPostsCollection.findOne({
+                    _id: new ObjectId(postId),
+                    'userLikesInfo.userId': userId
+                }, { projection: { _id: 0, 'userLikesInfo.userStatus.$': 1 } })
+        }
+        catch (error) {return null}
+    },
+
     async getPostUserLikeStatus(postId: string, userId: string): Promise<PostDBType | null> {
 
         try {
             return dbPostsCollection.findOne(
             { _id: new ObjectId(postId) },
-                {projection: { "userLikesInfo.$[elem].userStatus": 1 },
-                    arrayFilters:   [{ "elem.userId": userId }]   }
-            // {projection: { userLikesInfo: { $elemMatch: { userId: userId } } } }
+                {projection: { _id: 0, userLikesInfo: { $elemMatch: { userId: userId } } } }
             )
         }
         catch (error) {return null}
@@ -75,7 +84,7 @@ export const postsRepositoryQuery = {
                     {$match: {_id: new ObjectId(postId)}},
                     {$unwind: '$userLikesInfo'},
                     {$sort: {'userLikesInfo.addedAt': -1}},
-                    {$limit: 2},
+                    {$limit: 3},
                     {$group: {_id: '$_id', userLikesInfo: { $push: '$userLikesInfo'}}},
                     {$project: {_id: 0, userLikesInfo: 1}}
                 ])
