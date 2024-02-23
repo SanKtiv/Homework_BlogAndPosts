@@ -40,19 +40,22 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
             const userStatus = await postsRepositoryQuery
                 .getUserStatusByPostIdAndUserId(postId, payLoad.userId)
-            //console.log('userLikesInfo =', userStatus)
 
-            const userLikesInfo = await postsRepositoryQuery
+            const myStatus = userStatus ? userStatus.userLikesInfo[0].userStatus : 'None'
+
+            const { userLikesInfo } = await postsRepositoryQuery
                 .getUserLikesInfoSortByAddedAt(postId, payLoad.userId)
             console.log('postDBSortByAddedAt =', userLikesInfo)
 
-            const postViewModel = postHandlers.createPostViewModel(postFromDB)
+            const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus, userLikesInfo)
+
+            return res.status(200).send(postViewModel)
         }
     }
 
-    const postViewModel = postHandlers.createPostViewModel(postFromDB)
+    //const postViewModel = postHandlers.createPostViewModel(postFromDB)
 
-    return res.status(200).send(postViewModel)
+    return res.status(200)
 })
 
 postRouterQuery.get('/:postId/comments',

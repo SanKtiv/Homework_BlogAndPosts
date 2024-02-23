@@ -1,6 +1,6 @@
 import {
     InputPostsPagingType,
-    PostDBType,
+    PostDBType, UserLikesInfoType,
     ViewPostModelType,
     ViewPostsPagingType
 } from "../../types/posts-types";
@@ -21,7 +21,7 @@ export const postHandlers = {
         }
     },
 
-    createPostViewModel(postFromDB: PostDBType): ViewPostModelType {
+    createPostViewModel(postFromDB: PostDBType, myStatus: string, userLikesInfoSort: UserLikesInfoType[]): ViewPostModelType {
 
         const {
             _id,
@@ -37,7 +37,7 @@ export const postHandlers = {
 
         const newExtendedLikesInfo = {
             ...extendedLikesInfo,
-            myStatus: 'None',
+            myStatus: myStatus,
             newestLikes: newestLikes
         }
 
