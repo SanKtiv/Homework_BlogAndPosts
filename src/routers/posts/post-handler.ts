@@ -9,19 +9,20 @@ export const postHandlers = {
 
     createPostPagingViewModel(
         totalPosts: number,
-        postsItems: PostDBType[],
-        query: InputPostsPagingType): ViewPostsPagingType {
+        postsItems: any[],
+        query: InputPostsPagingType,
+        myStatus: string): ViewPostsPagingType {
 
         return {
             pagesCount: Math.ceil(totalPosts / +query.pageSize),
             page: +query.pageNumber,
             pageSize: +query.pageSize,
             totalCount: totalPosts,
-            items: postsItems.map(postFromDb => this.createPostViewModel(postFromDb))
+            items: postsItems.map(postFromDb => this.createPostViewModel(postFromDb, myStatus))
         }
     },
 
-    createPostViewModel(postFromDB: PostDBType, myStatus: string, userLikesInfoSort: UserLikesInfoType[]): ViewPostModelType {
+    createPostViewModel(postFromDB: any, myStatus: string): ViewPostModelType {
 
         const {
             _id,
@@ -30,7 +31,7 @@ export const postHandlers = {
             ...postViewModelWithoutId
         } = postFromDB
 
-        const newestLikes = userLikesInfo.map(el => {
+        const newestLikes = userLikesInfo.map((el: any) => {
             const {userStatus, ...newestLikes} = el
             return newestLikes
         })

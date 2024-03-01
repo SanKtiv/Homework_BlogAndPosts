@@ -20,11 +20,61 @@ export const postsRepositoryQuery = {
             .toArray()
     },
 
+    async getPostsWithPagingLikes(query: any): Promise<any> {
+
+        return dbPostsCollection
+            .aggregate([
+                {$sort: {createdAt: query.sortDirection}},
+                {$skip: (+query.pageNumber - 1) * +query.pageSize},
+                {$limit: +query.pageSize},
+                {
+                    $project: {
+                        id: 1,
+                        title: 1,
+                        shortDescription: 1,
+                        content: 1,
+                        blogId: 1,
+                        blogName: 1,
+                        createdAt: 1,
+                        userLikesInfo: {$slice: ["$userLikesInfo", -3]}
+                    }
+                }
+            ])
+            .next()
+    },
+
     async getPostById(id: string): Promise<PostDBType | null> {
 
         try {return dbPostsCollection.findOne({_id: new ObjectId(id)})}
 
         catch (error) {return null}
+    },
+
+    async getPostWithLikesByPostID(postId: string): Promise<any | null> {
+
+        try {
+            return dbPostsCollection
+                .aggregate([
+                    {$match: {_id: new ObjectId(postId)}},
+                    {$sort: {'userLikesInfo.addedAt': 1}},
+                    {
+                        $project: {
+                            id: 1,
+                            title: 1,
+                            shortDescription: 1,
+                            content: 1,
+                            blogId: 1,
+                            blogName: 1,
+                            createdAt: 1,
+                            extendedLikesInfo: 1,
+                            userLikesInfo: {$slice: ["$userLikesInfo", -3]}
+                        }
+                    }
+                ])
+                .next()
+        } catch (error) {
+            return null
+        }
     },
 
     async getLikesInfoFromPostByPostId(id: string): Promise<any | null> {

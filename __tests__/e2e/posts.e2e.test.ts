@@ -269,8 +269,8 @@ describe('TEST for POSTS', () => {
             .updatePostLikeStatusById(newPost.body.id, 'Dislike', accessToken3)
 
         const updatedPost3 = await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken3)
-        console.log('update №3',updatedPost3.body)
-        console.log('update №3',updatedPost3.body.extendedLikesInfo.newestLikes)
+        //console.log('update №3',updatedPost3.body)
+        //console.log('update №3',updatedPost3.body.extendedLikesInfo.newestLikes)
 
         //await expect(result.statusCode).toBe(204)
     })

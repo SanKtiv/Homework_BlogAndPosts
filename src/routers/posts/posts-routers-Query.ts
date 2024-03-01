@@ -18,7 +18,7 @@ postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Respo
     const postsPagingFromDB = await postsRepositoryQuery.getPostsWithPaging(req.query)
 
     const postPagingViewModel = postHandlers
-        .createPostPagingViewModel(postsTotalCount, postsPagingFromDB, req.query as InputPostsPagingType)
+        .createPostPagingViewModel(postsTotalCount, postsPagingFromDB, req.query as InputPostsPagingType, 'None')
 
     return res.status(200).send(postPagingViewModel)
 })
@@ -43,11 +43,12 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
             const myStatus = userStatus ? userStatus.userLikesInfo[0].userStatus : 'None'
 
-            const { userLikesInfo } = await postsRepositoryQuery
-                .getUserLikesInfoSortByAddedAt(postId, payLoad.userId)
-            console.log('postDBSortByAddedAt =', userLikesInfo)
+            const postByPostId = await postsRepositoryQuery
+                .getPostWithLikesByPostID(postId)
+            //console.log('postDBByPostId =', postByPostId)
 
-            const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus, userLikesInfo)
+            const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus)
+            console.log('postViewModel =', postViewModel)
 
             return res.status(200).send(postViewModel)
         }
