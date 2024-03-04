@@ -11,14 +11,21 @@ export const postHandlers = {
         totalPosts: number,
         postsItems: any[],
         query: InputPostsPagingType,
-        myStatus: string): ViewPostsPagingType {
+        usersStatuses: any[]): ViewPostsPagingType {
+
+        const items = postsItems.map(postDB => {
+            let myStatus = 'None'
+            const result = usersStatuses.find(el => el._id === postDB._id)
+            if (result) myStatus = result.userLikesInfo.userStatus
+            return this.createPostViewModel(postDB, myStatus)
+        })
 
         return {
             pagesCount: Math.ceil(totalPosts / +query.pageSize),
             page: +query.pageNumber,
             pageSize: +query.pageSize,
             totalCount: totalPosts,
-            items: postsItems.map(postFromDb => this.createPostViewModel(postFromDb, myStatus))
+            items: items
         }
     },
 

@@ -275,4 +275,59 @@ describe('TEST for POSTS', () => {
         //await expect(result.statusCode).toBe(204)
     })
 
+    it('-GET /posts, should return status 200 and posts paging', async () => {
+
+        await getRequest().delete(routePaths.deleteAllData)
+
+        //create blog
+        const newBlog = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+
+        //create 10 posts
+        const newPost = await postActions
+            .createManyPosts(post.sendManyBody(post.body_TRUE, 10, newBlog.body.id))
+
+        // const postId1 = newPost[0].body.id
+        // const postId2 = newPost[1].body.id
+        // const postId3 = newPost[2].body.id
+        // const postId4 = newPost[3].body.id
+        // const postId5 = newPost[4].body.id
+        // const postId6 = newPost[5].body.id
+        // const postId7 = newPost[6].body.id
+        // const postId8 = newPost[7].body.id
+        // const postId9 = newPost[8].body.id
+        // const postId10 = newPost[9].body.id
+
+        //create 5 users and their access tokens
+        await userActions.createManyUsers(user.sendManyBody(5))
+        const accessTokenArray = await userActions
+            .authManyUser(user.sendAuthManyBody(5))
+
+        const accessToken1 = accessTokenArray[0].body.accessToken
+        const accessToken2 = accessTokenArray[1].body.accessToken
+        const accessToken3 = accessTokenArray[2].body.accessToken
+        const accessToken4 = accessTokenArray[3].body.accessToken
+        const accessToken5 = accessTokenArray[4].body.accessToken
+
+        //write users statuses for posts
+
+        for (let postId of newPost) {
+            await postActions
+                .updatePostLikeStatusById(postId.id, 'Like', accessToken1)
+            await postActions
+                .updatePostLikeStatusById(postId.id, 'Dislike', accessToken2)
+            await postActions
+                .updatePostLikeStatusById(postId.id, 'Like', accessToken3)
+            await postActions
+                .updatePostLikeStatusById(postId.id, 'Dislike', accessToken4)
+            await postActions
+                .updatePostLikeStatusById(postId.id, 'Like', accessToken5)
+        }
+
+        const result1 = await postActions
+            .getPostsPagingWithAccessToken(post.query(post.paging.preset1), accessToken1)
+
+        await expect(result1.statusCode).toBe(200)
+
+    })
+
 })

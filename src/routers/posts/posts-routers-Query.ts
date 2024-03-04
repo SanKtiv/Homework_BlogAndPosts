@@ -13,14 +13,44 @@ export const postRouterQuery = Router ({})
 
 postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
+    const headersAuth = req.headers.authorization
     const postsTotalCount = await postsRepositoryQuery.getPostsTotalCount()
 
-    const postsPagingFromDB = await postsRepositoryQuery.getPostsWithPaging(req.query)
+    if (headersAuth) {
 
-    const postPagingViewModel = postHandlers
-        .createPostPagingViewModel(postsTotalCount, postsPagingFromDB, req.query as InputPostsPagingType, 'None')
+        const payLoad = await jwtService.getPayloadAccessToken(headersAuth)
 
-    return res.status(200).send(postPagingViewModel)
+        if (payLoad) {
+
+            const postsPagingFromDB = await postsRepositoryQuery
+                .getPostsWithPagingLikes(req.query)
+            //console.log('postsPagingFromDB++ =', postsPagingFromDB)
+            const usersStatuses = await postsRepositoryQuery
+                .getUsersStatusesByUserId(payLoad.userId)
+            //console.log('usersStatuses =', usersStatuses)
+            const postViewPagingModel = postHandlers
+                .createPostPagingViewModel(postsTotalCount, postsPagingFromDB, req.query as InputPostsPagingType, usersStatuses!)
+
+            console.log('postViewPagingModel =', postViewPagingModel)
+            console.log('0 =', postViewPagingModel.items[0].extendedLikesInfo)
+            console.log('1 =', postViewPagingModel.items[1].extendedLikesInfo)
+            console.log('2 =', postViewPagingModel.items[2].extendedLikesInfo)
+            console.log('3 =', postViewPagingModel.items[3].extendedLikesInfo)
+            console.log('4 =', postViewPagingModel.items[4].extendedLikesInfo)
+
+            return res.status(200).send({body: 'accessToken exist'})
+        }
+    }
+
+
+
+    const postsPagingFromDB = await postsRepositoryQuery.getPostsWithPagingLikes(req.query)
+    console.log('postsPagingFromDB =', postsPagingFromDB)
+
+    // const postPagingViewModel = postHandlers
+    //     .createPostPagingViewModel(postsTotalCount, postsPagingFromDB, req.query as InputPostsPagingType, 'None')
+
+    return res.status(200).send({body: 'hi'})
 })
 
 postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
@@ -37,7 +67,10 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
         const payLoad = await jwtService.getPayloadAccessToken(headersAuth)
 
         if (payLoad) {
+            //for paging
 
+
+            //
             const userStatus = await postsRepositoryQuery
                 .getUserStatusByPostIdAndUserId(postId, payLoad.userId)
 

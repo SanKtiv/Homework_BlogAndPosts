@@ -24,7 +24,7 @@ export const postsRepositoryQuery = {
 
         return dbPostsCollection
             .aggregate([
-                {$sort: {createdAt: query.sortDirection}},
+                {$sort: {createdAt: query.sortDirection === 'desc' ? -1 : 1}},
                 {$skip: (+query.pageNumber - 1) * +query.pageSize},
                 {$limit: +query.pageSize},
                 {
@@ -36,17 +36,29 @@ export const postsRepositoryQuery = {
                         blogId: 1,
                         blogName: 1,
                         createdAt: 1,
+                        extendedLikesInfo: 1,
                         userLikesInfo: {$slice: ["$userLikesInfo", -3]}
                     }
                 }
             ])
-            .next()
+            .toArray()
     },
 
     async getPostById(id: string): Promise<PostDBType | null> {
 
         try {return dbPostsCollection.findOne({_id: new ObjectId(id)})}
 
+        catch (error) {return null}
+    },
+
+    async getUsersStatusesByUserId(userId: string): Promise<PostDBType[] | null> {
+
+        try {
+            return dbPostsCollection
+                .find({ 'userLikesInfo.userId': userId },
+                { projection: { 'userLikesInfo.userStatus.$': 1 } })
+                .toArray()
+        }
         catch (error) {return null}
     },
 

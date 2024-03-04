@@ -38,6 +38,11 @@ export const postActions = {
         getRequest()
             .get(`${routePaths.posts}/${query}`),
 
+    getPostsPagingWithAccessToken: async (query: any, token: string) =>
+        getRequest()
+            .get(`${routePaths.posts}/${query}`)
+            .set('Authorization', `Bearer ${token}`),
+
     getPostsByBlogIdPaging: async (query: any, blogId: string) => {
 
         return getRequest()
