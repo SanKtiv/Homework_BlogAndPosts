@@ -15,8 +15,10 @@ export const postHandlers = {
 
         const items = postsItems.map(postDB => {
             let myStatus = 'None'
-            const result = usersStatuses.find(el => el._id === postDB._id)
-            if (result) myStatus = result.userLikesInfo.userStatus
+            const result = usersStatuses
+                .find(el => el._id.toString() === postDB._id.toString())
+            console.log('result =', result)
+            if (result) myStatus = result.userLikesInfo[0].userStatus
             return this.createPostViewModel(postDB, myStatus)
         })
 

@@ -324,7 +324,7 @@ describe('TEST for POSTS', () => {
         }
 
         const result1 = await postActions
-            .getPostsPagingWithAccessToken(post.query(post.paging.preset1), accessToken1)
+            .getPostsPagingWithAccessToken(post.query(post.paging.preset1), accessToken2)
 
         await expect(result1.statusCode).toBe(200)
 
