@@ -21,7 +21,7 @@ postRouter.post('/',
     async (req: Request, res: Response) => {
 
         const post = await postsRepository.createPost(req.body)
-
+console.log('create post =', post)
         return res.status(201).send(post)
 })
 
