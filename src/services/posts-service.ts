@@ -77,11 +77,7 @@ export const postsService = {
             extendedLikesInfo: {
                 ...extendedLikesInfo,
                 myStatus: 'None',
-                newestLikes: [{
-                    addedAt: 'string',
-                    userId: 'string',
-                    login: 'string'
-                }]
+                newestLikes: userLikesInfo
             }
         }
     },
