@@ -11,14 +11,21 @@ export const postHandlers = {
         totalPosts: number,
         postsItems: any[],
         query: InputPostsPagingType,
-        usersStatuses: any[]): ViewPostsPagingType {
+        usersStatuses?: any[]): ViewPostsPagingType {
 
         const items = postsItems.map(postDB => {
+
             let myStatus = 'None'
+
+            if (!usersStatuses) return this.createPostViewModel(postDB, myStatus)
+
             const result = usersStatuses
                 .find(el => el._id.toString() === postDB._id.toString())
-            console.log('result =', result)
+
+            // console.log('result =', result)
+
             if (result) myStatus = result.userLikesInfo[0].userStatus
+
             return this.createPostViewModel(postDB, myStatus)
         })
 

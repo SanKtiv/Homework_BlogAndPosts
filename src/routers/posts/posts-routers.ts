@@ -8,9 +8,9 @@ import {authAccessToken} from "../../middlewares/authorization-jwt";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
 import {commentService} from "../../services/comments-service";
-import {jwtService} from "../../applications/jwt-service";
 import {postsRepositoryQuery} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
 import {postsService} from "../../services/posts-service";
+import {likeStatusBody} from "../../validations/like-status-validation";
 
 export const postRouter = Router ({})
 
@@ -57,7 +57,7 @@ postRouter.put('/:id',
         return res.sendStatus(404)
 })
 
-postRouter.put('/:postId/like-status', authAccessToken, async (req: Request, res: Response) => {
+postRouter.put('/:postId/like-status', authAccessToken, likeStatusBody, errorsOfValidate, async (req: Request, res: Response) => {
 
     const dataBody = {
         id: req.params.postId,
