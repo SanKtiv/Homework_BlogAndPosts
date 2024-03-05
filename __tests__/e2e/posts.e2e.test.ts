@@ -279,6 +279,44 @@ describe('TEST for POSTS', () => {
         //await expect(result.statusCode).toBe(200)
     })
 
+    it('-GET /posts/:id, should return status 200 and post with like status', async () => {
+
+        // delete all
+        await getRequest().delete(routePaths.deleteAllData)
+
+        //create blog
+        const newBlog = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+
+        //create post
+        const newPost = await postActions
+            .createPost(post.sendBody(post.body_TRUE, newBlog.body.id), auth.basic_TRUE)
+
+        //create 5 users and their access tokens
+        await userActions.createManyUsers(user.sendManyBody(4))
+
+        const accessTokenArray = await userActions
+            .authManyUser(user.sendAuthManyBody(4))
+
+        const accessToken1 = accessTokenArray[0].body.accessToken
+        const accessToken2 = accessTokenArray[1].body.accessToken
+        const accessToken3 = accessTokenArray[2].body.accessToken
+        const accessToken4 = accessTokenArray[3].body.accessToken
+
+        // user1 like and then get post by id
+        await postActions
+            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken1)
+
+        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
+
+        // user2 like and then get post by id
+        await postActions
+            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken2)
+
+        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
+
+
+    })
+
     it('-GET /posts, should return status 200 and posts paging', async () => {
 
         await getRequest().delete(routePaths.deleteAllData)

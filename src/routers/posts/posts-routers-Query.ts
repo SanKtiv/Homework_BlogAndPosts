@@ -83,7 +83,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
             const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus)
              console.log('access token postViewModel =', postViewModel)
-
+            console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
             return res.status(200).send(postViewModel)
         }
     }
