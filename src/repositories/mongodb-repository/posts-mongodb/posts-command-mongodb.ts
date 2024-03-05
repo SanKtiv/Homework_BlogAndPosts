@@ -40,7 +40,12 @@ export const postsRepository = {
                 likesCount: 0,
                 dislikesCount: 0
             },
-            userLikesInfo: [],
+            userLikesInfo: [{
+                userStatus: 'None',
+                addedAt: 'None',
+                userId: 'None',
+                login: 'None',
+            }],
             ...body
         }
 
