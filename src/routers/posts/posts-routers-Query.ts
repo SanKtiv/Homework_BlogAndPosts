@@ -82,14 +82,14 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
             //console.log('postDBByPostId =', postByPostId)
 
             const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus)
-            // console.log('postViewModel =', postViewModel)
+             console.log('access token postViewModel =', postViewModel)
 
             return res.status(200).send(postViewModel)
         }
     }
 
     const postViewModel = postHandlers.createPostViewModel(postFromDB, 'None')
-
+    console.log('postViewModel =', postViewModel)
     return res.status(200).send(postViewModel)
 })
 

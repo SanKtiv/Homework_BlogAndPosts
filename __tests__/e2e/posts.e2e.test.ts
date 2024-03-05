@@ -244,12 +244,16 @@ describe('TEST for POSTS', () => {
         const newPost = await postActions
             .createPost(post.sendBody(post.body_TRUE, newBlog.body.id), auth.basic_TRUE)
 
+
+
         await userActions.createManyUsers(user.sendManyBody(3))
         const accessTokenArray = await userActions.authManyUser(user.sendAuthManyBody(3))
 
         const accessToken1 = accessTokenArray[0].body.accessToken
         const accessToken2 = accessTokenArray[1].body.accessToken
         const accessToken3 = accessTokenArray[2].body.accessToken
+
+        const updatedPost3 = await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken3)
 
         const result1 = await postActions
             .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken1)
@@ -268,11 +272,11 @@ describe('TEST for POSTS', () => {
         const result3 = await postActions
             .updatePostLikeStatusById(newPost.body.id, 'Dislike', accessToken3)
 
-        const updatedPost3 = await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken3)
+        // const updatedPost3 = await postActions.getPostByIdAndAccessToken(newPost.body.id, 'accessToken3')
         //console.log('update №3',updatedPost3.body)
         //console.log('update №3',updatedPost3.body.extendedLikesInfo.newestLikes)
 
-        //await expect(result.statusCode).toBe(204)
+        //await expect(result.statusCode).toBe(200)
     })
 
     it('-GET /posts, should return status 200 and posts paging', async () => {
