@@ -36,29 +36,31 @@ export const postsService = {
             login: dataBody.login
         }
 
-        if (dataBody.likeStatus === 'Like' && userLikeStatus.userStatus === 'None') {
+        if (dataBody.likeStatus === userLikeStatus) return
+
+        if (dataBody.likeStatus === 'Like' && userLikeStatus === 'None') {
             likesInfo.likesCount++
         }
 
-        if (dataBody.likeStatus === 'Like' && userLikeStatus.userStatus === 'Dislike') {
+        if (dataBody.likeStatus === 'Like' && userLikeStatus === 'Dislike') {
             likesInfo.likesCount++
             likesInfo.dislikesCount--
         }
 
-        if (dataBody.likeStatus === 'Dislike' && userLikeStatus.userStatus === 'None') {
+        if (dataBody.likeStatus === 'Dislike' && userLikeStatus=== 'None') {
             likesInfo.dislikesCount++
         }
 
-        if (dataBody.likeStatus === 'Dislike' && userLikeStatus.userStatus === 'Like') {
+        if (dataBody.likeStatus === 'Dislike' && userLikeStatus === 'Like') {
             likesInfo.dislikesCount++
             likesInfo.likesCount--
         }
 
-        if (dataBody.likeStatus === 'None' && userLikeStatus.userStatus === 'Like') {
+        if (dataBody.likeStatus === 'None' && userLikeStatus === 'Like') {
             likesInfo.likesCount--
         }
 
-        if (dataBody.likeStatus === 'None' && userLikeStatus.userStatus === 'Dislike') {
+        if (dataBody.likeStatus === 'None' && userLikeStatus === 'Dislike') {
             likesInfo.dislikesCount--
         }
 

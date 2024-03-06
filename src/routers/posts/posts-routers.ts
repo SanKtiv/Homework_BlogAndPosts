@@ -81,7 +81,12 @@ postRouter.put('/:postId/like-status', authAccessToken, likeStatusBody, errorsOf
         return res.sendStatus(204)
     }
 
-    await postsService.changeLikesInfoInPost(dataBody, likesInfo, userLikeStatus)
+    const userStatus = userLikeStatus.userLikesInfo[0].userStatus
+
+    if (userStatus === dataBody.likeStatus) return res.sendStatus(204)
+
+    await postsService
+        .changeLikesInfoInPost(dataBody, likesInfo.extendedLikesInfo, userStatus)
 
     return res.sendStatus(204)
 })
