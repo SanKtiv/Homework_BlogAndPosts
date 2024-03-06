@@ -81,14 +81,17 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
                 .getPostWithLikesByPostID(postId)
             //console.log('postDBByPostId =', postByPostId)
 
-            const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus)
+            const postViewModel = postHandlers.createPostViewModel(postByPostId, myStatus)
              console.log('access token postViewModel =', postViewModel)
             console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
             return res.status(200).send(postViewModel)
         }
     }
 
-    const postViewModel = postHandlers.createPostViewModel(postFromDB, 'None')
+    const postByPostId = await postsRepositoryQuery
+        .getPostWithLikesByPostID(postId)
+
+    const postViewModel = postHandlers.createPostViewModel(postByPostId, 'None')
     console.log('postViewModel =', postViewModel)
     return res.status(200).send(postViewModel)
 })

@@ -314,7 +314,17 @@ describe('TEST for POSTS', () => {
 
         await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
 
+        // user3 like and then get post by id
+        await postActions
+            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken3)
 
+        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
+
+        // user4 like and then get post by id
+        await postActions
+            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken4)
+
+        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
     })
 
     it('-GET /posts, should return status 200 and posts paging', async () => {

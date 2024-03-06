@@ -68,7 +68,7 @@ export const postsRepositoryQuery = {
             return dbPostsCollection
                 .aggregate([
                     {$match: {_id: new ObjectId(postId)}},
-                    {$sort: {'userLikesInfo.addedAt': 1}},
+                    //{$sort: {'userLikesInfo.addedAt': 1}},
                     {
                         $project: {
                             id: 1,
