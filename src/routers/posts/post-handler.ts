@@ -52,6 +52,9 @@ export const postHandlers = {
             return newestLikes
         })
 
+        newestLikes
+            .sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
+
         const newExtendedLikesInfo = {
             ...extendedLikesInfo,
             myStatus: myStatus,
