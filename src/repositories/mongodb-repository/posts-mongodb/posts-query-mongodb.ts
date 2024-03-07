@@ -51,6 +51,15 @@ export const postsRepositoryQuery = {
         catch (error) {return null}
     },
 
+    async getPostByIdWithoutLikeStatus(id: string): Promise<PostDBType | null> {
+
+        try {return dbPostsCollection.findOne({_id: new ObjectId(id)},
+            {projection: {'userLikesInfo.$': 0}})
+        }
+
+        catch (error) {return null}
+    },
+
     async getUsersStatusesByUserId(userId: string): Promise<PostDBType[] | null> {
 
         try {
@@ -99,6 +108,29 @@ export const postsRepositoryQuery = {
         catch (error) {return null}
     },
 
+    async getPostLikeStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {
+
+        try {
+            return dbPostsCollection.findOne({
+                    _id: new ObjectId(postId),
+                    'userLikesInfo.userId': userId
+                },
+                {
+                    projection: {
+                        title: 1,
+                        shortDescription: 1,
+                        content: 1,
+                        blogId: 1,
+                        blogName: 1,
+                        createdAt: 1,
+                        extendedLikesInfo: 1,
+                        userLikesInfo: {$elemMatch: {userId: userId}}
+                    }
+                })
+        }
+        catch (error) {return null}
+    },
+
     async getPostUserLikeStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {
 
         try {
@@ -131,8 +163,8 @@ export const postsRepositoryQuery = {
 
         try {
             return dbPostsCollection.findOne(
-            { _id: new ObjectId(postId) },
-                {projection: { _id: 0, userLikesInfo: { $elemMatch: { userId: userId } } } }
+                {_id: new ObjectId(postId)},
+                {projection: {_id: 0, userLikesInfo: {$elemMatch: {userId: userId}}}}
             )
         }
         catch (error) {return null}

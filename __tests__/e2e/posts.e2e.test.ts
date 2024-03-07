@@ -303,22 +303,23 @@ describe('TEST for POSTS', () => {
         const accessToken4 = accessTokenArray[3].body.accessToken
 
         // user1 like and then get post by id
+
         await postActions
             .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken1)
 
-        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
+        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken2)
 
         // user2 like and then get post by id
         await postActions
-            .updatePostLikeStatusById(newPost.body.id, 'Dislike', accessToken1)
+            .updatePostLikeStatusById(newPost.body.id, 'Dislike', accessToken2)
 
         await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
 
         // user3 like and then get post by id
-        await postActions
-            .updatePostLikeStatusById(newPost.body.id, 'None', accessToken1)
-
-        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
+        // await postActions
+        //     .updatePostLikeStatusById(newPost.body.id, 'None', accessToken1)
+        //
+        // await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
 
         // user4 like and then get post by id
         // await postActions

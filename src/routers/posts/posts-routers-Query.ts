@@ -72,18 +72,38 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
         if (payLoad) {
 
-            const userStatus = await postsRepositoryQuery
-                .getUserStatusByPostIdAndUserId(postId, payLoad.userId)
+            // this need to get three finally likes statuses
+            // const userStatus = await postsRepositoryQuery
+            //     .getUserStatusByPostIdAndUserId(postId, payLoad.userId)
+            //
+            // const myStatus = userStatus ? userStatus.userLikesInfo[0].userStatus : 'None'
+            //
+            // const postByPostId = await postsRepositoryQuery
+            //     .getPostWithLikesByPostID(postId)
+            // //console.log('postDBByPostId =', postByPostId)
 
-            const myStatus = userStatus ? userStatus.userLikesInfo[0].userStatus : 'None'
+            //this need to get only one like status or empty
+            const postFromDB = await postsRepositoryQuery
+                .getPostLikeStatusByPostId(postId, payLoad.userId)
+
+            if (postFromDB) {
+
+                const myStatus = postFromDB.userLikesInfo[0].userStatus
+
+                const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus)
+
+                console.log('access token postViewModel =', postViewModel)
+                console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
+                return res.status(200).send(postViewModel)
+            }
+
+            const myStatus = 'None'
 
             const postByPostId = await postsRepositoryQuery
                 .getPostWithLikesByPostID(postId)
-            //console.log('postDBByPostId =', postByPostId)
 
             const postViewModel = postHandlers.createPostViewModel(postByPostId, myStatus)
-             console.log('access token postViewModel =', postViewModel)
-            console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
+
             return res.status(200).send(postViewModel)
         }
     }
