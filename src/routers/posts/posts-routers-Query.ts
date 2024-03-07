@@ -104,7 +104,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
             const postViewModel = postHandlers.createPostViewModel(postByPostId, myStatus)
 
-            return res.status(200).send(postViewModel)
+            return res.status(200).send({...postViewModel, abc: 'Hi'})
         }
     }
 

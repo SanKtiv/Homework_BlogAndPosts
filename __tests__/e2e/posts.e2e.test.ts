@@ -307,25 +307,25 @@ describe('TEST for POSTS', () => {
         await postActions
             .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken1)
 
-        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken2)
+        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
 
         // user2 like and then get post by id
         await postActions
-            .updatePostLikeStatusById(newPost.body.id, 'Dislike', accessToken2)
+            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken2)
 
         await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
 
         // user3 like and then get post by id
-        // await postActions
-        //     .updatePostLikeStatusById(newPost.body.id, 'None', accessToken1)
-        //
-        // await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
+        await postActions
+            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken3)
+
+        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
 
         // user4 like and then get post by id
-        // await postActions
-        //     .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken4)
-        //
-        // await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
+        await postActions
+            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken4)
+
+        await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
     })
 
     it('-GET /posts, should return status 200 and posts paging', async () => {
