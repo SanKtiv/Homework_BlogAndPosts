@@ -108,27 +108,52 @@ export const postsRepositoryQuery = {
         catch (error) {return null}
     },
 
-    async getPostLikeStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {
+    async getPostLikeStatusByPostId(postId: string, userStatus: string): Promise<any | null> {
 
         try {
-            return dbPostsCollection.findOne({
-                    _id: new ObjectId(postId),
-                    'userLikesInfo.userId': userId
-                },
-                {
-                    projection: {
-                        title: 1,
-                        shortDescription: 1,
-                        content: 1,
-                        blogId: 1,
-                        blogName: 1,
-                        createdAt: 1,
-                        extendedLikesInfo: 1,
-                        userLikesInfo: {$elemMatch: {userId: userId}}
+            return dbPostsCollection
+                .aggregate([
+                    {
+                        $match: {
+                            _id: new ObjectId(postId),
+                            'userLikesInfo.userStatus': userStatus}},
+                    {
+                        $project: {
+                            id: 1,
+                            title: 1,
+                            shortDescription: 1,
+                            content: 1,
+                            blogId: 1,
+                            blogName: 1,
+                            createdAt: 1,
+                            extendedLikesInfo: 1,
+                            userLikesInfo: {$slice: ["$userLikesInfo", -3]}
+                        }
                     }
-                })
+                ])
+                .next()
+        } catch (error) {
+            return null
         }
-        catch (error) {return null}
+        // try {
+        //     return dbPostsCollection.findOne({
+        //             _id: new ObjectId(postId),
+        //             'userLikesInfo.userId': userId
+        //         },
+        //         {
+        //             projection: {
+        //                 title: 1,
+        //                 shortDescription: 1,
+        //                 content: 1,
+        //                 blogId: 1,
+        //                 blogName: 1,
+        //                 createdAt: 1,
+        //                 extendedLikesInfo: 1,
+        //                 userLikesInfo: {$elemMatch: {userId: userId}}
+        //             }
+        //         })
+        // }
+        // catch (error) {return null}
     },
 
     async getPostUserLikeStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {

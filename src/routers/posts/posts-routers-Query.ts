@@ -84,7 +84,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
             //this need to get only one like status or empty
             const postFromDB = await postsRepositoryQuery
-                .getPostLikeStatusByPostId(postId, payLoad.userId)
+                .getPostLikeStatusByPostId(postId, 'Like')
 
             if (postFromDB) {
 
@@ -100,7 +100,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
             const myStatus = 'None'
 
             const postByPostId = await postsRepositoryQuery
-                .getPostWithLikesByPostID(postId)
+                .getPostLikeStatusByPostId(postId, 'Like')
 
             const postViewModel = postHandlers.createPostViewModel(postByPostId, myStatus)
 
@@ -109,7 +109,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
     }
 
     const postByPostId = await postsRepositoryQuery
-        .getPostWithLikesByPostID(postId)
+        .getPostLikeStatusByPostId(postId, 'Like')
 
     const postViewModel = postHandlers.createPostViewModel(postByPostId, 'None')
     console.log('postViewModel =', postViewModel)
