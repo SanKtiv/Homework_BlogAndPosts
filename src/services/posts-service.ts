@@ -60,21 +60,17 @@ export const postsService = {
                 .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         }
 
-        if (dataBody.likeStatus === 'None') {
+        if (dataBody.likeStatus === 'None' && userLikeStatus === 'Like') {
             likesInfo.likesCount--
             await postsRepository
                 .updatePostRemoveUserLikeStatus(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         }
 
-        // if (dataBody.likeStatus === 'None' && userLikeStatus === 'Like') {
-        //     likesInfo.likesCount--
-        // }
-        //
-        // if (dataBody.likeStatus === 'None' && userLikeStatus === 'Dislike') {
-        //     likesInfo.dislikesCount--
-        // }
-
-
+        if (dataBody.likeStatus === 'None' && userLikeStatus === 'Dislike') {
+            likesInfo.dislikesCount--
+            await postsRepository
+                .updatePostRemoveUserLikeStatus(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
+        }
     },
 
     postDbInToBlog(postOutDb: PostDBType): ViewPostModelType {
