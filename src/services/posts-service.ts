@@ -38,34 +38,43 @@ export const postsService = {
 
         //if (dataBody.likeStatus === userLikeStatus) return
 
-        if (dataBody.likeStatus === 'Like' && userLikeStatus === 'None') {
-            likesInfo.likesCount++
-        }
+        // if (dataBody.likeStatus === 'Like' && userLikeStatus === 'None') {
+        //     likesInfo.likesCount++
+        // }
 
         if (dataBody.likeStatus === 'Like' && userLikeStatus === 'Dislike') {
             likesInfo.likesCount++
             likesInfo.dislikesCount--
+            await postsRepository
+                .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         }
 
-        if (dataBody.likeStatus === 'Dislike' && userLikeStatus=== 'None') {
-            likesInfo.dislikesCount++
-        }
+        // if (dataBody.likeStatus === 'Dislike' && userLikeStatus === 'None') {
+        //     likesInfo.dislikesCount++
+        // }
 
         if (dataBody.likeStatus === 'Dislike' && userLikeStatus === 'Like') {
             likesInfo.dislikesCount++
             likesInfo.likesCount--
+            await postsRepository
+                .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         }
 
-        if (dataBody.likeStatus === 'None' && userLikeStatus === 'Like') {
+        if (dataBody.likeStatus === 'None') {
             likesInfo.likesCount--
+            await postsRepository
+                .updatePostRemoveUserLikeStatus(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         }
 
-        if (dataBody.likeStatus === 'None' && userLikeStatus === 'Dislike') {
-            likesInfo.dislikesCount--
-        }
+        // if (dataBody.likeStatus === 'None' && userLikeStatus === 'Like') {
+        //     likesInfo.likesCount--
+        // }
+        //
+        // if (dataBody.likeStatus === 'None' && userLikeStatus === 'Dislike') {
+        //     likesInfo.dislikesCount--
+        // }
 
-        await postsRepository
-            .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
+
     },
 
     postDbInToBlog(postOutDb: PostDBType): ViewPostModelType {

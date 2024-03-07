@@ -115,6 +115,21 @@ export const postsRepository = {
         return updateResult.matchedCount === 1
     },
 
+    async updatePostRemoveUserLikeStatus(id: string,
+                                    userId: string,
+                                    likesInfo: ExtendedLikesInfoType,
+                                    userLikesInfo: UserLikesInfoType): Promise<Boolean> {
+
+        const updateResult = await dbPostsCollection
+            .updateOne({_id: new ObjectId(id)},
+                {
+                    $set: {extendedLikesInfo: likesInfo},
+                    $pull: {userLikesInfo: {userId: userId}}
+                })
+
+        return updateResult.matchedCount === 1
+    },
+
     async deletePostById(id: string): Promise<Boolean> {
 
         const deletePost = await dbPostsCollection.deleteOne({_id: new ObjectId(id)})
