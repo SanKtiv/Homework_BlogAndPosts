@@ -304,7 +304,7 @@ describe('TEST for POSTS', () => {
 
         // user1 like and then get post by id
         await postActions
-            .updatePostLikeStatusById(newPost.body.id, 'Like', accessToken1)
+            .updatePostLikeStatusById(newPost.body.id, 'Dislike', accessToken1)
 
         await postActions.getPostByIdAndAccessToken(newPost.body.id, accessToken1)
 

@@ -36,7 +36,7 @@ export const postsService = {
             login: dataBody.login
         }
 
-        if (dataBody.likeStatus === userLikeStatus) return
+        //if (dataBody.likeStatus === userLikeStatus) return
 
         if (dataBody.likeStatus === 'Like' && userLikeStatus === 'None') {
             likesInfo.likesCount++
@@ -64,7 +64,8 @@ export const postsService = {
             likesInfo.dislikesCount--
         }
 
-        await postsRepository.updatePostAddLikesInfo(dataBody.id, likesInfo, userLikesInfo)
+        await postsRepository
+            .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
     },
 
     postDbInToBlog(postOutDb: PostDBType): ViewPostModelType {
