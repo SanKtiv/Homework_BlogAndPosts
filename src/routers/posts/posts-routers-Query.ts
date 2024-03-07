@@ -94,7 +94,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
                 console.log('access token postViewModel =', postViewModel)
                 console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
-                return res.status(200).send(postViewModel)
+                return res.status(200).send({...postViewModel, abc: 'Hi'})
             }
 
             const myStatus = 'None'
