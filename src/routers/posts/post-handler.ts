@@ -38,7 +38,7 @@ export const postHandlers = {
         }
     },
 
-    createPostViewModel(postFromDB: any, myStatus: string): any {
+    createPostViewModel(postFromDB: any, myStatus: string): ViewPostModelType {
 
         const {
             _id,

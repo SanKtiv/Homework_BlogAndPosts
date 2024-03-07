@@ -100,7 +100,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
             const myStatus = 'None'
 
             const postByPostId = await postsRepositoryQuery
-                .getPostLikeStatusByPostId(postId, 'Like')
+                .getPostByIdWithoutLikeStatus(postId)
 
             const postViewModel = postHandlers.createPostViewModel(postByPostId, myStatus)
 
@@ -111,9 +111,20 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
     const postByPostId = await postsRepositoryQuery
         .getPostLikeStatusByPostId(postId, 'Like')
 
-    const postViewModel = postHandlers.createPostViewModel(postByPostId, 'None')
-    console.log('postViewModel =', postViewModel)
-    return res.status(200).send(postViewModel)
+    if (postByPostId) {
+        const postViewModel = postHandlers.createPostViewModel(postByPostId, 'None')
+        console.log('postViewModel =', postViewModel)
+        return res.status(200).send(postViewModel)
+    } else {
+        const postByPostId = await postsRepositoryQuery
+            .getPostByIdWithoutLikeStatus(postId)
+        const postViewModel = postHandlers.createPostViewModel(postByPostId, 'None')
+        console.log('postViewModel =', postViewModel)
+        return res.status(200).send(postViewModel)
+    }
+
+
+
 })
 
 postRouterQuery.get('/:postId/comments',
