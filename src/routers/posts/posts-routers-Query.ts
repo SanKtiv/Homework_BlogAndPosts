@@ -94,7 +94,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
                 console.log('access token postViewModel =', postViewModel)
                 console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
-                return res.status(200).send({...postViewModel, abc: 'Hi'})
+                return res.status(200).send(postViewModel)
             }
 
             const myStatus = 'None'
@@ -104,7 +104,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
             const postViewModel = postHandlers.createPostViewModel(postByPostId, myStatus)
 
-            return res.status(200).send({...postViewModel, abc: 'Hi'})
+            return res.status(200).send(postViewModel)
         }
     }
 
