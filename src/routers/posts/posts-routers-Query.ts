@@ -116,8 +116,10 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
         console.log('postViewModel =', postViewModel)
         return res.status(200).send(postViewModel)
     } else {
+
         const postByPostId = await postsRepositoryQuery
-            .getPostByIdWithoutLikeStatus(postId)
+            .getPostById(postId)
+        console.log('postByPostId =', postByPostId)
         const postViewModel = postHandlers.createPostViewModel(postByPostId, 'None')
         console.log('postViewModel =', postViewModel)
         return res.status(200).send(postViewModel)

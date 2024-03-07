@@ -53,7 +53,8 @@ export const postsRepositoryQuery = {
 
     async getPostByIdWithoutLikeStatus(id: string): Promise<PostDBType | null> {
 
-        try {return dbPostsCollection.findOne({_id: new ObjectId(id)},
+        try {
+            return dbPostsCollection.findOne({_id: new ObjectId(id)},
             {projection: {'userLikesInfo.$': 0}})
         }
 
