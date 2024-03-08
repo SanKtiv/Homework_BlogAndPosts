@@ -83,12 +83,15 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
             // //console.log('postDBByPostId =', postByPostId)
 
             //this need to get only one like status or empty
+            const userStatus = await postsRepositoryQuery
+                 .getUserStatusByPostIdAndUserId(postId, payLoad.userId)
+
+            const myStatus = userStatus ? userStatus.userLikesInfo[0].userStatus : 'None'
+
             const postDB = await postsRepositoryQuery
                 .getPostLikeStatusByPostId(postId, 'Like')
 
             if (postDB) {
-
-                const myStatus = postDB.userLikesInfo[0].userStatus
 
                 const postViewModel = postHandlers.createPostViewModel(postDB, myStatus)
 
@@ -96,8 +99,6 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
                 // console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
                 return res.status(200).send(postViewModel)
             }
-
-            const myStatus = 'None'
 
             postFromDB.userLikesInfo = []
 
