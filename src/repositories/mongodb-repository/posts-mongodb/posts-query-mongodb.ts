@@ -78,10 +78,7 @@ export const postsRepositoryQuery = {
             return dbPostsCollection
                 .aggregate([
                     {$match: {_id: new ObjectId(postId)}},
-                    //{$sort: {'userLikesInfo.addedAt': 1}},
-                    {
-                        $project: {
-                            id: 1,
+                    {$project: {
                             title: 1,
                             shortDescription: 1,
                             content: 1,
@@ -89,7 +86,7 @@ export const postsRepositoryQuery = {
                             blogName: 1,
                             createdAt: 1,
                             extendedLikesInfo: 1,
-                            userLikesInfo: {$slice: ["$userLikesInfo", -3]}
+                            userLikesInfo: {$slice: ["$userLikesInfo", 0]}
                         }
                     }
                 ])

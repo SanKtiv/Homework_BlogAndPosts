@@ -83,26 +83,25 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
             // //console.log('postDBByPostId =', postByPostId)
 
             //this need to get only one like status or empty
-            const postFromDB = await postsRepositoryQuery
+            const postDB = await postsRepositoryQuery
                 .getPostLikeStatusByPostId(postId, 'Like')
 
-            if (postFromDB) {
+            if (postDB) {
 
-                const myStatus = postFromDB.userLikesInfo[0].userStatus
+                const myStatus = postDB.userLikesInfo[0].userStatus
 
-                const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus)
+                const postViewModel = postHandlers.createPostViewModel(postDB, myStatus)
 
-                console.log('access token postViewModel =', postViewModel)
-                console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
+                // console.log('access token postViewModel =', postViewModel)
+                // console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
                 return res.status(200).send(postViewModel)
             }
 
             const myStatus = 'None'
 
-            const postByPostId = await postsRepositoryQuery
-                .getPostByIdWithoutLikeStatus(postId)
+            postFromDB.userLikesInfo = []
 
-            const postViewModel = postHandlers.createPostViewModel(postByPostId, myStatus)
+            const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus)
 
             return res.status(200).send(postViewModel)
         }
@@ -117,10 +116,9 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
         return res.status(200).send(postViewModel)
     } else {
 
-        const postByPostId = await postsRepositoryQuery
-            .getPostById(postId)
-        console.log('postByPostId =', postByPostId)
-        const postViewModel = postHandlers.createPostViewModel(postByPostId, 'None')
+        postFromDB.userLikesInfo = []
+        console.log('postFromDB =', postFromDB)
+        const postViewModel = postHandlers.createPostViewModel(postFromDB, 'None')
         console.log('postViewModel =', postViewModel)
         return res.status(200).send(postViewModel)
     }
