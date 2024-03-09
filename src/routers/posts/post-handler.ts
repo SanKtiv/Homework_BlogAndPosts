@@ -84,10 +84,13 @@ export const postHandlers = {
 
         const newestLikes = userLikesInfo.filter(el => el.userStatus === 'Like')
 
-        newestLikes
+        const newNewestLikes = newestLikes
+            .map(({userStatus, ...newestLikes}) => newestLikes)
+
+        newNewestLikes
             .sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
 
-        newestLikes.slice(0, 3)
+        newNewestLikes.slice(0, 3)
 
         return  {
             id: postFromDB._id.toString(),
@@ -95,7 +98,7 @@ export const postHandlers = {
             extendedLikesInfo: {
                 ...extendedLikesInfo,
                 myStatus: myStatus,
-                newestLikes: newestLikes
+                newestLikes: newNewestLikes
             }
         }
     },
