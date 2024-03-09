@@ -62,8 +62,10 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
     const postId = req.params.id
     const headersAuth = req.headers.authorization
 
-    const postFromDB = await postsRepositoryQuery.getPostById(postId)
-
+    //post from DB with only likes statuses
+    const postFromDB = await postsRepositoryQuery
+        .getPostLikeStatusByPostId(postId, 'Like')
+console.log('postFromDB =',postFromDB)
     if (!postFromDB) return res.sendStatus(404)
 
     if (headersAuth) {
@@ -71,16 +73,6 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
         const payLoad = await jwtService.getPayloadAccessToken(headersAuth)
 
         if (payLoad) {
-
-            // this need to get three finally likes statuses
-            // const userStatus = await postsRepositoryQuery
-            //     .getUserStatusByPostIdAndUserId(postId, payLoad.userId)
-            //
-            // const myStatus = userStatus ? userStatus.userLikesInfo[0].userStatus : 'None'
-            //
-            // const postByPostId = await postsRepositoryQuery
-            //     .getPostWithLikesByPostID(postId)
-            // //console.log('postDBByPostId =', postByPostId)
 
             //this need to get only one like status or empty
             const userStatus = await postsRepositoryQuery
@@ -93,10 +85,12 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
             if (postDB) {
 
+                // console.log('to be like postDB =', postDB)
+                // console.log('to be only like =', postDB.userLikesInfo)
                 const postViewModel = postHandlers.createPostViewModel(postDB, myStatus)
 
-                // console.log('access token postViewModel =', postViewModel)
-                // console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
+                console.log('access token postViewModel =', postViewModel)
+                console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
                 return res.status(200).send(postViewModel)
             }
 

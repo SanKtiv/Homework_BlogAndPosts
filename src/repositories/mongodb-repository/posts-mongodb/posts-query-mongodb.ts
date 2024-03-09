@@ -113,8 +113,9 @@ export const postsRepositoryQuery = {
                 .aggregate([
                     {
                         $match: {
-                            _id: new ObjectId(postId),
-                            'userLikesInfo.userStatus': userStatus}},
+                            _id: new ObjectId(postId)
+                        }
+                    },
                     {
                         $project: {
                             id: 1,
@@ -125,7 +126,13 @@ export const postsRepositoryQuery = {
                             blogName: 1,
                             createdAt: 1,
                             extendedLikesInfo: 1,
-                            userLikesInfo: {$slice: ["$userLikesInfo", -3]}
+                            userLikesInfo: {
+                                $filter: {
+                                    input: "$userLikesInfo",
+                                    as: "item",
+                                    cond: {$eq: ["$$item.userStatus", userStatus]}
+                                }
+                            }
                         }
                     }
                 ])
@@ -133,25 +140,6 @@ export const postsRepositoryQuery = {
         } catch (error) {
             return null
         }
-        // try {
-        //     return dbPostsCollection.findOne({
-        //             _id: new ObjectId(postId),
-        //             'userLikesInfo.userId': userId
-        //         },
-        //         {
-        //             projection: {
-        //                 title: 1,
-        //                 shortDescription: 1,
-        //                 content: 1,
-        //                 blogId: 1,
-        //                 blogName: 1,
-        //                 createdAt: 1,
-        //                 extendedLikesInfo: 1,
-        //                 userLikesInfo: {$elemMatch: {userId: userId}}
-        //             }
-        //         })
-        // }
-        // catch (error) {return null}
     },
 
     async getPostUserLikeStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {
