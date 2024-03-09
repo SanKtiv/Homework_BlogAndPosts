@@ -98,6 +98,7 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
             const postViewModel = postHandlers
                 .createPostViewModelNew(postFromDB, payLoad.userId)
             console.log('postViewModel =', postViewModel)
+            console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
             return res.status(200).send(postViewModel)
         }
     }

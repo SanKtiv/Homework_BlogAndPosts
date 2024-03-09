@@ -82,15 +82,19 @@ export const postHandlers = {
             myStatus = findUserStatus ? findUserStatus.userStatus : 'None'
         }
 
-        const newestLikes = userLikesInfo.filter(el => el.userStatus === 'Like')
-
-        const newNewestLikes = newestLikes
+        const newestLikes = userLikesInfo
+            .filter(el => el.userStatus === 'Like')
+            .sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
+            .slice(0, 3)
             .map(({userStatus, ...newestLikes}) => newestLikes)
 
-        newNewestLikes
-            .sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
+        // const newNewestLikes = newestLikes
+        //     .map(({userStatus, ...newestLikes}) => newestLikes)
 
-        newNewestLikes.slice(0, 3)
+        // newNewestLikes
+        //     .sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
+
+        // newNewestLikes.slice(0, 3)
 
         return  {
             id: postFromDB._id.toString(),
@@ -98,7 +102,7 @@ export const postHandlers = {
             extendedLikesInfo: {
                 ...extendedLikesInfo,
                 myStatus: myStatus,
-                newestLikes: newNewestLikes
+                newestLikes: newestLikes
             }
         }
     },
