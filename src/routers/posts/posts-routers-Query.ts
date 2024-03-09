@@ -63,9 +63,11 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
     const headersAuth = req.headers.authorization
 
     //post from DB with only likes statuses
-    const postFromDB = await postsRepositoryQuery
-        .getPostLikeStatusByPostId(postId, 'Like')
-console.log('postFromDB =',postFromDB)
+    // const postFromDB = await postsRepositoryQuery
+    //     .getPostLikeStatusByPostId(postId, 'Like')
+
+    const postFromDB = await postsRepositoryQuery.getPostById(postId)
+        //console.log('postFromDB =',postFromDB)
     if (!postFromDB) return res.sendStatus(404)
 
     if (headersAuth) {
@@ -75,51 +77,34 @@ console.log('postFromDB =',postFromDB)
         if (payLoad) {
 
             //this need to get only one like status or empty
-            const userStatus = await postsRepositoryQuery
-                 .getUserStatusByPostIdAndUserId(postId, payLoad.userId)
+            // const userStatus = await postsRepositoryQuery
+            //      .getUserStatusByPostIdAndUserId(postId, payLoad.userId)
+            // const myStatus = userStatus ? userStatus.userLikesInfo[0].userStatus : 'None'
+            //
+            // const postDB = await postsRepositoryQuery
+            //     .getPostLikeStatusByPostId(postId, 'Like')
+            // if (postDB) {
+            //
+            //     // console.log('to be like postDB =', postDB)
+            //     // console.log('to be only like =', postDB.userLikesInfo)
+            //     const postViewModel = postHandlers.createPostViewModel(postDB, myStatus)
+            //
+            //     console.log('access token postViewModel =', postViewModel)
+            //     console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
+            //     return res.status(200).send(postViewModel)
+            // }
+            //postFromDB.userLikesInfo = []
 
-            const myStatus = userStatus ? userStatus.userLikesInfo[0].userStatus : 'None'
-
-            const postDB = await postsRepositoryQuery
-                .getPostLikeStatusByPostId(postId, 'Like')
-
-            if (postDB) {
-
-                // console.log('to be like postDB =', postDB)
-                // console.log('to be only like =', postDB.userLikesInfo)
-                const postViewModel = postHandlers.createPostViewModel(postDB, myStatus)
-
-                console.log('access token postViewModel =', postViewModel)
-                console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
-                return res.status(200).send(postViewModel)
-            }
-
-            postFromDB.userLikesInfo = []
-
-            const postViewModel = postHandlers.createPostViewModel(postFromDB, myStatus)
-
+            const postViewModel = postHandlers
+                .createPostViewModelNew(postFromDB, payLoad.userId)
+            console.log('postViewModel =', postViewModel)
             return res.status(200).send(postViewModel)
         }
     }
-
-    const postByPostId = await postsRepositoryQuery
-        .getPostLikeStatusByPostId(postId, 'Like')
-
-    if (postByPostId) {
-        const postViewModel = postHandlers.createPostViewModel(postByPostId, 'None')
-        console.log('postViewModel =', postViewModel)
-        return res.status(200).send(postViewModel)
-    } else {
-
-        postFromDB.userLikesInfo = []
         console.log('postFromDB =', postFromDB)
-        const postViewModel = postHandlers.createPostViewModel(postFromDB, 'None')
+        const postViewModel = postHandlers.createPostViewModelNew(postFromDB)
         console.log('postViewModel =', postViewModel)
         return res.status(200).send(postViewModel)
-    }
-
-
-
 })
 
 postRouterQuery.get('/:postId/comments',

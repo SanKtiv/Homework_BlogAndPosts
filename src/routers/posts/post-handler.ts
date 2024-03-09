@@ -4,6 +4,7 @@ import {
     ViewPostModelType,
     ViewPostsPagingType
 } from "../../types/posts-types";
+import {JwtPayload} from "jsonwebtoken";
 
 export const postHandlers = {
 
@@ -65,6 +66,37 @@ export const postHandlers = {
             id: postFromDB._id.toString(),
             ...postViewModelWithoutId,
             extendedLikesInfo: newExtendedLikesInfo
+        }
+    },
+
+    createPostViewModelNew(postFromDB: PostDBType, userId?: string): ViewPostModelType {
+
+        const {_id, userLikesInfo, extendedLikesInfo, ...postViewModelWithoutId} = postFromDB
+
+        let myStatus = 'None'
+
+        if (userId) {
+
+            const findUserStatus = userLikesInfo.find(el => el.userId === userId)
+
+            myStatus = findUserStatus ? findUserStatus.userStatus : 'None'
+        }
+
+        const newestLikes = userLikesInfo.filter(el => el.userStatus === 'Like')
+
+        newestLikes
+            .sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
+
+        newestLikes.slice(0, 3)
+
+        return  {
+            id: postFromDB._id.toString(),
+            ...postViewModelWithoutId,
+            extendedLikesInfo: {
+                ...extendedLikesInfo,
+                myStatus: myStatus,
+                newestLikes: newestLikes
+            }
         }
     },
 }
