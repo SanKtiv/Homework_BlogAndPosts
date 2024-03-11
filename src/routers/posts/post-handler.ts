@@ -105,7 +105,9 @@ export const postHandlers = {
         query: InputPostsPagingType,
         userId?: string): ViewPostsPagingType {
 
-        const items = postsFromDB.map(postDB => this.createPostViewModelNew(postDB, userId))
+        const items = userId ?
+            postsFromDB.map(postDB => this.createPostViewModelNew(postDB, userId)) :
+            postsFromDB.map(postDB => this.createPostViewModelNew(postDB))
 
         return {
             pagesCount: Math.ceil(totalPosts / +query.pageSize),
