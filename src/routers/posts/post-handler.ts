@@ -88,14 +88,6 @@ export const postHandlers = {
             .slice(0, 3)
             .map(({userStatus, ...newestLikes}) => newestLikes)
 
-        // const newNewestLikes = newestLikes
-        //     .map(({userStatus, ...newestLikes}) => newestLikes)
-
-        // newNewestLikes
-        //     .sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
-
-        // newNewestLikes.slice(0, 3)
-
         return  {
             id: postFromDB._id.toString(),
             ...postViewModelWithoutId,
@@ -104,6 +96,23 @@ export const postHandlers = {
                 myStatus: myStatus,
                 newestLikes: newestLikes
             }
+        }
+    },
+
+    createPostPagingViewModelNew(
+        totalPosts: number,
+        postsFromDB: PostDBType[],
+        query: InputPostsPagingType,
+        userId?: string): ViewPostsPagingType {
+
+        const items = postsFromDB.map(postDB => this.createPostViewModelNew(postDB, userId))
+
+        return {
+            pagesCount: Math.ceil(totalPosts / +query.pageSize),
+            page: +query.pageNumber,
+            pageSize: +query.pageSize,
+            totalCount: totalPosts,
+            items: items
         }
     },
 }

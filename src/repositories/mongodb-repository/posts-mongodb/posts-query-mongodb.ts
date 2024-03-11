@@ -14,7 +14,7 @@ export const postsRepositoryQuery = {
 
         return dbPostsCollection
             .find()
-            .sort({createdAt: query.sortDirection, 'userLikesInfo.addedAt': -1})
+            .sort({createdAt: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()

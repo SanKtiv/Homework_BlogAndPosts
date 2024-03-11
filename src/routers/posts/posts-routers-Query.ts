@@ -15,6 +15,7 @@ postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Respo
 
     const headersAuth = req.headers.authorization
     const postsTotalCount = await postsRepositoryQuery.getPostsTotalCount()
+    const postsPagingFromDB = await postsRepositoryQuery.getPostsWithPaging(req.query)
 
     if (headersAuth) {
 
@@ -22,17 +23,23 @@ postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Respo
 
         if (payLoad) {
 
-            const postsPagingFromDB = await postsRepositoryQuery
-                .getPostsWithPagingLikes(req.query)
-
-            const usersStatuses = await postsRepositoryQuery
-                .getUsersStatusesByUserId(payLoad.userId)
-
             const postViewPagingModel = postHandlers
-                .createPostPagingViewModel(postsTotalCount,
+                .createPostPagingViewModelNew(postsTotalCount,
                     postsPagingFromDB,
                     req.query as InputPostsPagingType,
-                    usersStatuses!)
+                    payLoad.userId)
+
+            // const postsPagingFromDB = await postsRepositoryQuery
+            //     .getPostsWithPagingLikes(req.query)
+            //
+            // const usersStatuses = await postsRepositoryQuery
+            //     .getUsersStatusesByUserId(payLoad.userId)
+
+            // const postViewPagingModel = postHandlers
+            //     .createPostPagingViewModel(postsTotalCount,
+            //         postsPagingFromDB,
+            //         req.query as InputPostsPagingType,
+            //         usersStatuses!)
 
             // console.log('postViewPagingModel =', postViewPagingModel)
             // console.log('0 =', postViewPagingModel.items[0].extendedLikesInfo)
@@ -45,14 +52,10 @@ postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Respo
         }
     }
 
-    const postsPagingFromDB = await postsRepositoryQuery
-        .getPostsWithPagingLikes(req.query)
-    // console.log('postsPagingFromDB =', postsPagingFromDB)
-
     const postViewPagingModel = postHandlers
-                    .createPostPagingViewModel(postsTotalCount,
-                        postsPagingFromDB,
-                        req.query as InputPostsPagingType)
+        .createPostPagingViewModelNew(postsTotalCount,
+            postsPagingFromDB,
+            req.query as InputPostsPagingType)
 
     return res.status(200).send(postViewPagingModel)
 })
