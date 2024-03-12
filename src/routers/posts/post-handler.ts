@@ -107,7 +107,7 @@ export const postHandlers = {
         const items = userId ?
             postsFromDB.map(postDB => this.createPostViewModelNew(postDB, userId)) :
             postsFromDB.map(postDB => this.createPostViewModelNew(postDB))
-console.log('newestLikes =', items[0].extendedLikesInfo.newestLikes)
+
         return {
             pagesCount: Math.ceil(totalPosts / +query.pageSize),
             page: +query.pageNumber,

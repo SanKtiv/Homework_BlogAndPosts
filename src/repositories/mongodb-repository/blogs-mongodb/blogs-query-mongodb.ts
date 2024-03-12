@@ -1,5 +1,5 @@
 import {dbBlogsCollection, dbPostsCollection} from "../db";
-import {InputPostsPagingType, ViewPostsPagingType} from "../../../types/posts-types";
+import {InputPostsPagingType, PostDBType, ViewPostsPagingType} from "../../../types/posts-types";
 import {blogsService} from "../../../services/blogs-service";
 import {postsService} from "../../../services/posts-service";
 import {InputBlogsPagingType, ViewBlogsPagingType} from "../../../types/blogs-types";
@@ -37,19 +37,17 @@ export const blogsRepositoryQuery = {
         return blogsService.blogsOutputQuery(totalBlogs, blogsItems, query)
     },
 
-    async getPostsByBlogId(blogId: string, query: InputPostsPagingType): Promise<ViewPostsPagingType | null> {
+    async getPostsByBlogId(blogId: string, query: InputPostsPagingType): Promise<PostDBType[]> {
 
-        const totalPostsByBlogId = await dbPostsCollection.countDocuments({blogId: blogId})
+        // const totalPostsByBlogId = await dbPostsCollection.countDocuments({blogId: blogId})
 
-        if (totalPostsByBlogId === 0) return null
-
-        const postsOutputFromDb = await dbPostsCollection
+        return dbPostsCollection
             .find({blogId: blogId})
             .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()
 
-        return postHandlers.createPostPagingViewModelNew(totalPostsByBlogId, postsOutputFromDb, query)
+        // return postHandlers.createPostPagingViewModelNew(totalPostsByBlogId, postsOutputFromDb, query)
     },
 }

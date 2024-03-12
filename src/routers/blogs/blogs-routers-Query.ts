@@ -4,6 +4,9 @@ import {blogsRepository} from "../../repositories/mongodb-repository/blogs-mongo
 import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
 import {InputPostsPagingType} from "../../types/posts-types";
 import {InputBlogsPagingType} from "../../types/blogs-types";
+import {dbPostsCollection} from "../../repositories/mongodb-repository/db";
+import {postHandlers} from "../posts/post-handler";
+import {jwtService} from "../../applications/jwt-service";
 
 export const blogRouterQuery = Router ({})
 
@@ -17,12 +20,35 @@ blogRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Respo
 
 blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
-    const postsByBlogId = await blogsRepositoryQuery
-        .getPostsByBlogId(req.params.blogId, req.query as InputPostsPagingType)
+    const blogId = req.params.blogId
 
-    if (postsByBlogId) return res.status(200).send(postsByBlogId)
+    const headersAuth = req.headers.authorization
 
-    return res.sendStatus(404)
+    const query = req.query as InputPostsPagingType
+
+    const totalPostsByBlogId = await dbPostsCollection.countDocuments({blogId: blogId})
+
+    const postsByBlogId = await blogsRepositoryQuery.getPostsByBlogId(blogId, query)
+
+    if (!postsByBlogId) return res.sendStatus(404)
+
+    if (headersAuth) {
+
+        const payLoad = await jwtService.getPayloadAccessToken(headersAuth)
+
+        if (payLoad) {
+
+            const view = await postHandlers
+                .createPostPagingViewModelNew(totalPostsByBlogId, postsByBlogId, query, payLoad.userId)
+
+            return res.status(200).send(view)
+        }
+    }
+
+    const view = await postHandlers
+        .createPostPagingViewModelNew(totalPostsByBlogId, postsByBlogId, query)
+
+    return res.status(200).send(view)
 })
 
 blogRouterQuery.get( '/:id', async (req: Request, res: Response) => {
