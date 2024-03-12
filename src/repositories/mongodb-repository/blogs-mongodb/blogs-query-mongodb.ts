@@ -3,6 +3,7 @@ import {InputPostsPagingType, ViewPostsPagingType} from "../../../types/posts-ty
 import {blogsService} from "../../../services/blogs-service";
 import {postsService} from "../../../services/posts-service";
 import {InputBlogsPagingType, ViewBlogsPagingType} from "../../../types/blogs-types";
+import {postHandlers} from "../../../routers/posts/post-handler";
 
 export const blogsRepositoryQuery = {
 
@@ -49,6 +50,6 @@ export const blogsRepositoryQuery = {
             .limit(+query.pageSize)
             .toArray()
 
-        return postsService.postsOutputQuery(totalPostsByBlogId, postsOutputFromDb, query)
+        return postHandlers.createPostPagingViewModelNew(totalPostsByBlogId, postsOutputFromDb, query)
     },
 }

@@ -9,14 +9,16 @@ export const blogRouterQuery = Router ({})
 
 blogRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
-    const blogsPaging = await blogsRepositoryQuery.getBlogsWithPaging(req.query as InputBlogsPagingType)
+    const blogsPaging = await blogsRepositoryQuery
+        .getBlogsWithPaging(req.query as InputBlogsPagingType)
 
     res.status(200).send(blogsPaging)
 })
 
 blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
-    const postsByBlogId = await blogsRepositoryQuery.getPostsByBlogId(req.params.blogId, req.query as InputPostsPagingType)
+    const postsByBlogId = await blogsRepositoryQuery
+        .getPostsByBlogId(req.params.blogId, req.query as InputPostsPagingType)
 
     if (postsByBlogId) return res.status(200).send(postsByBlogId)
 
