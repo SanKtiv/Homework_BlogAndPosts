@@ -13,41 +13,48 @@ import {blogsRepository} from "../blogs-mongodb/blogs-command-mongodb";
 
 export const postsRepository = {
 
-    async getAllPosts(): Promise<ViewPostModelType[]> {
+    // async getAllPosts(): Promise<ViewPostModelType[]> {
+    //
+    //     const allPosts = await dbPostsCollection.find().toArray()
+    //
+    //     return allPosts.map(postOutDb => postsService.postDbInToBlog(postOutDb))
+    // },
 
-        const allPosts = await dbPostsCollection.find().toArray()
+    // async getPostById(id: string): Promise<ViewPostModelType | null> {
+    //
+    //     const postOutDb = await dbPostsCollection.findOne({_id: new ObjectId(id)})
+    //
+    //     if (postOutDb === null) return null
+    //
+    //     return postsService.postDbInToBlog(postOutDb)
+    // },
 
-        return allPosts.map(postOutDb => postsService.postDbInToBlog(postOutDb))
+    async insertPostToDB(post: PostType): Promise<PostDBType> {
+
+        await dbPostsCollection.insertOne(post)
+
+        return post as PostDBType
     },
 
-    async getPostById(id: string): Promise<ViewPostModelType | null> {
-
-        const postOutDb = await dbPostsCollection.findOne({_id: new ObjectId(id)})
-
-        if (postOutDb === null) return null
-
-        return postsService.postDbInToBlog(postOutDb)
-    },
-
-    async createPost(body: InputPostModelType): Promise<ViewPostModelType> {
-
-        const blog = await blogsRepository.getBlogById(body.blogId)
-
-        const newPost: PostType = {
-            createdAt: dateNow().toISOString(),
-            blogName: blog!.name,
-            extendedLikesInfo: {
-                likesCount: 0,
-                dislikesCount: 0
-            },
-            userLikesInfo: [],
-            ...body
-        }
-
-        await dbPostsCollection.insertOne(newPost)
-
-        return postsService.postDbInToBlog(newPost as PostDBType)
-    },
+    // async createPost(body: InputPostModelType): Promise<ViewPostModelType> {
+    //
+    //     const blog = await blogsRepository.getBlogById(body.blogId)
+    //
+    //     const newPost: PostType = {
+    //         createdAt: dateNow().toISOString(),
+    //         blogName: blog!.name,
+    //         extendedLikesInfo: {
+    //             likesCount: 0,
+    //             dislikesCount: 0
+    //         },
+    //         userLikesInfo: [],
+    //         ...body
+    //     }
+    //
+    //     await dbPostsCollection.insertOne(newPost)
+    //
+    //     return postsService.postDbInToBlog(newPost as PostDBType)
+    // },
 
     async createPostForBlogId(blogId: string, body: PostBodyWithoutBlogIdType): Promise<ViewPostModelType> {
 

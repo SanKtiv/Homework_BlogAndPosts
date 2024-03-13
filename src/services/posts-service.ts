@@ -1,13 +1,35 @@
 import {WithId} from "mongodb";
-import {ViewPostModelType, PostType, PostDBType, ExtendedLikesInfoType, TransactBodyType} from "../types/posts-types";
+import {
+    ViewPostModelType,
+    PostType,
+    PostDBType,
+    ExtendedLikesInfoType,
+    TransactBodyType,
+    InputPostModelType
+} from "../types/posts-types";
 import {InputPostsPagingType, ViewPostsPagingType} from "../types/posts-types";
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
+import {dateNow} from "../variables/variables";
+import {postHandlers} from "../routers/posts/post-handler";
 
 export const postsService = {
 
-    createExtendedLikesInfoForPost(bodyForCreate: any) {
+    async createPost(body: InputPostModelType, blogName: string) {
 
+        const newPost: PostType = {
+            createdAt: dateNow().toISOString(),
+            blogName: blogName,
+            extendedLikesInfo: {
+                likesCount: 0,
+                dislikesCount: 0
+            },
+            userLikesInfo: [],
+            ...body
+        }
 
+        const postDB = await postsRepository.insertPostToDB(newPost)
+
+        return postHandlers.createPostViewModelNew(postDB)
     },
 
     async addLikesInfoInPost(dataBody: TransactBodyType, likesInfo: ExtendedLikesInfoType) {
@@ -36,22 +58,12 @@ export const postsService = {
             login: dataBody.login
         }
 
-        //if (dataBody.likeStatus === userLikeStatus) return
-
-        // if (dataBody.likeStatus === 'Like' && userLikeStatus === 'None') {
-        //     likesInfo.likesCount++
-        // }
-
         if (dataBody.likeStatus === 'Like' && userLikeStatus === 'Dislike') {
             likesInfo.likesCount++
             likesInfo.dislikesCount--
             await postsRepository
                 .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         }
-
-        // if (dataBody.likeStatus === 'Dislike' && userLikeStatus === 'None') {
-        //     likesInfo.dislikesCount++
-        // }
 
         if (dataBody.likeStatus === 'Dislike' && userLikeStatus === 'Like') {
             likesInfo.dislikesCount++
@@ -77,8 +89,6 @@ export const postsService = {
 
         const {_id, extendedLikesInfo, userLikesInfo, ...newPostFromDB} = postOutDb
 
-
-
         return  {
             id: postOutDb._id.toString(),
             ...newPostFromDB,
@@ -87,20 +97,6 @@ export const postsService = {
                 myStatus: 'None',
                 newestLikes: userLikesInfo
             }
-        }
-    },
-
-    postsOutputQuery(
-        totalBlogs: number,
-        blogsItems: WithId<PostType>[],
-        query: InputPostsPagingType): ViewPostsPagingType {
-
-        return {
-            pagesCount: Math.ceil(totalBlogs / +query.pageSize),
-            page: +query.pageNumber,
-            pageSize: +query.pageSize,
-            totalCount: totalBlogs,
-            items: blogsItems.map(blogOutDb => this.postDbInToBlog(blogOutDb))
         }
     },
 }
