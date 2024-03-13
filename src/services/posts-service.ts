@@ -14,7 +14,7 @@ import {postHandlers} from "../routers/posts/post-handler";
 
 export const postsService = {
 
-    async createPost(body: InputPostModelType, blogName: string) {
+    async createPost(body: InputPostModelType, blogName: string): Promise<ViewPostModelType> {
 
         const newPost: PostType = {
             createdAt: dateNow().toISOString(),
