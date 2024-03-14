@@ -1,4 +1,3 @@
-import {WithId} from "mongodb";
 import {
     ViewPostModelType,
     PostType,
@@ -7,7 +6,6 @@ import {
     TransactBodyType,
     InputPostModelType
 } from "../types/posts-types";
-import {InputPostsPagingType, ViewPostsPagingType} from "../types/posts-types";
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
 import {dateNow} from "../variables/variables";
 import {postHandlers} from "../routers/posts/post-handler";
@@ -16,16 +14,24 @@ export const postsService = {
 
     async createPost(body: InputPostModelType, blogName: string): Promise<ViewPostModelType> {
 
-        const newPost: PostType = {
-            createdAt: dateNow().toISOString(),
-            blogName: blogName,
-            extendedLikesInfo: {
-                likesCount: 0,
-                dislikesCount: 0
-            },
-            userLikesInfo: [],
-            ...body
-        }
+        const newPost = new PostType(
+            body.title,
+            body.shortDescription,
+            body.content,
+            body.blogId,
+            blogName,
+            new Date().toISOString(),
+            {likesCount: 0, dislikesCount: 0},
+            []
+        )
+        // createdAt: dateNow().toISOString(),
+        // blogName: blogName,
+        // extendedLikesInfo: {
+        //     likesCount: 0,
+        //     dislikesCount: 0
+        // },
+        // userLikesInfo: [],
+        // ...body
 
         const postDB = await postsRepository.insertPostToDB(newPost)
 
