@@ -40,6 +40,56 @@ export const commentService = {
         return this.createCommentViewModel(commentDB)
     },
 
+    async addNewLikesInfo(commentId: string, comment: CommentDBType, likeStatus: string, userId: string) {
+
+        let likesCount = comment!.likesInfo.likesCount
+        let dislikesCount = comment!.likesInfo.dislikesCount
+
+        if (likeStatus === 'Like') likesCount++
+        if (likeStatus === 'Dislike') dislikesCount++
+
+        const likesInfo: LikesInfoType = {
+            likesCount,
+            dislikesCount,
+        }
+
+        await commentsRepository
+            .updateCommentAddNewUserLikeStatus(commentId, userId, likeStatus, likesInfo)
+    },
+
+    async changeLikesInfo(commentId: string, comment: CommentDBType, likeStatus: string, userId: string, commentWithUserLikeStatus: CommentDBType) {
+
+        let likesCount = commentWithUserLikeStatus.likesInfo.likesCount
+        let dislikesCount = commentWithUserLikeStatus.likesInfo.dislikesCount
+        let userStatus = commentWithUserLikeStatus.usersLikeStatuses![0].userStatus
+
+        if (likeStatus === 'Like' && userStatus === 'Dislike') {
+            likesCount++
+            dislikesCount--
+        }
+
+        if (likeStatus === 'Like' && userStatus === 'None') likesCount++
+
+        if (likeStatus === 'Dislike' && userStatus === 'Like') {
+            likesCount--
+            dislikesCount++
+        }
+
+        if (likeStatus === 'Dislike' && userStatus === 'None') dislikesCount++
+
+        if (likeStatus === 'None' && userStatus === 'Like') likesCount--
+
+        if (likeStatus === 'None' && userStatus === 'Dislike') dislikesCount--
+
+        const likesInfo: LikesInfoType = {
+            likesCount,
+            dislikesCount,
+        }
+
+        await commentsRepository
+            .updateCommentLikesInfoByCommentId(commentId, userId, likeStatus, likesInfo)
+    },
+
     async createLikesInfo(commentId: string, likeStatus: string, headersAuthorization: string) {
 
         const payload = await jwtService.getPayloadAccessToken(headersAuthorization)
@@ -64,7 +114,7 @@ export const commentService = {
                 dislikesCount,
             }
 
-            return  commentsRepository
+            return commentsRepository
                 .updateCommentAddNewUserLikeStatus(commentId, userId, likeStatus, likesInfo)
         }
 
