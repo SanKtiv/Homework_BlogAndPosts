@@ -35,9 +35,9 @@ export const commentService = {
             }]
         }
 
-        await dbCommentsCollection.insertOne(comment)
+        const commentDB = await commentsRepository.insertComment(comment)
 
-        return this.createCommentViewModel(comment as CommentDBType)
+        return this.createCommentViewModel(commentDB)
     },
 
     async createLikesInfo(commentId: string, likeStatus: string, headersAuthorization: string) {

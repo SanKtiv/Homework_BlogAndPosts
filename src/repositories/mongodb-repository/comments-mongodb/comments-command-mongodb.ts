@@ -1,8 +1,15 @@
-import {LikesInfoType} from "../../../types/comments-types";
+import {CommentDBType, CommentType, LikesInfoType} from "../../../types/comments-types";
 import {dbCommentsCollection} from "../db";
 import {ObjectId} from "mongodb";
 
 export const commentsRepository = {
+
+    async insertComment(comment: CommentType): Promise<CommentDBType> {
+
+        await dbCommentsCollection.insertOne(comment)
+
+        return comment as CommentDBType
+    },
 
     async updateCommentContentById(id: string, content: string): Promise<void> {
         await dbCommentsCollection.findOneAndUpdate({_id: new ObjectId(id)}, {$set: {content: content}})
