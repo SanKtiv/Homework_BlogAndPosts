@@ -1,14 +1,26 @@
 import {WithId} from "mongodb";
 
-export type PostType = {
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string
-    createdAt: string
-    extendedLikesInfo: ExtendedLikesInfoType
-    userLikesInfo: UserLikesInfoType[]
+// export type PostType = {
+//     title: string
+//     shortDescription: string
+//     content: string
+//     blogId: string
+//     blogName: string
+//     createdAt: string
+//     extendedLikesInfo: ExtendedLikesInfoType
+//     userLikesInfo: UserLikesInfoType[]
+// }
+
+export class PostType {
+    constructor(public title: string,
+                public shortDescription: string,
+                public content: string,
+                public blogId: string,
+                public blogName: string,
+                public createdAt: string,
+                public extendedLikesInfo: ExtendedLikesInfoType,
+                public userLikesInfo: UserLikesInfoType[]) {
+    }
 }
 
 export type ExtendedLikesInfoType = {

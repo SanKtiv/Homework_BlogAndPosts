@@ -9,9 +9,9 @@ import {InputPostsPagingType} from "../../types/posts-types";
 import {commentHandlers} from "../comments/comments-handlers";
 import {commentsRepositoryQuery} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
 
-export const postRouterQuery = Router ({})
+export const postRouterQuery = Router({})
 
-postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Response) => {
+postRouterQuery.get('/', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
     const headersAuth = req.headers.authorization
     const postsTotalCount = await postsRepositoryQuery.getPostsTotalCount()
@@ -29,25 +29,6 @@ postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Respo
                     req.query as InputPostsPagingType,
                     payLoad.userId)
 
-            // const postsPagingFromDB = await postsRepositoryQuery
-            //     .getPostsWithPagingLikes(req.query)
-            //
-            // const usersStatuses = await postsRepositoryQuery
-            //     .getUsersStatusesByUserId(payLoad.userId)
-
-            // const postViewPagingModel = postHandlers
-            //     .createPostPagingViewModel(postsTotalCount,
-            //         postsPagingFromDB,
-            //         req.query as InputPostsPagingType,
-            //         usersStatuses!)
-
-            // console.log('postViewPagingModel =', postViewPagingModel)
-            // console.log('0 =', postViewPagingModel.items[0].extendedLikesInfo)
-            // console.log('1 =', postViewPagingModel.items[1].extendedLikesInfo)
-            // console.log('2 =', postViewPagingModel.items[2].extendedLikesInfo)
-            // console.log('3 =', postViewPagingModel.items[3].extendedLikesInfo)
-            // console.log('4 =', postViewPagingModel.items[4].extendedLikesInfo)
-
             return res.status(200).send(postViewPagingModel)
         }
     }
@@ -60,17 +41,13 @@ postRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Respo
     return res.status(200).send(postViewPagingModel)
 })
 
-postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
+postRouterQuery.get('/:id', async (req: Request, res: Response) => {
 
     const postId = req.params.id
     const headersAuth = req.headers.authorization
 
-    //post from DB with only likes statuses
-    // const postFromDB = await postsRepositoryQuery
-    //     .getPostLikeStatusByPostId(postId, 'Like')
-
     const postFromDB = await postsRepositoryQuery.getPostById(postId)
-        //console.log('postFromDB =',postFromDB)
+    //console.log('postFromDB =',postFromDB)
     if (!postFromDB) return res.sendStatus(404)
 
     if (headersAuth) {
@@ -79,25 +56,6 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
         if (payLoad) {
 
-            //this need to get only one like status or empty
-            // const userStatus = await postsRepositoryQuery
-            //      .getUserStatusByPostIdAndUserId(postId, payLoad.userId)
-            // const myStatus = userStatus ? userStatus.userLikesInfo[0].userStatus : 'None'
-            //
-            // const postDB = await postsRepositoryQuery
-            //     .getPostLikeStatusByPostId(postId, 'Like')
-            // if (postDB) {
-            //
-            //     // console.log('to be like postDB =', postDB)
-            //     // console.log('to be only like =', postDB.userLikesInfo)
-            //     const postViewModel = postHandlers.createPostViewModel(postDB, myStatus)
-            //
-            //     console.log('access token postViewModel =', postViewModel)
-            //     console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
-            //     return res.status(200).send(postViewModel)
-            // }
-            //postFromDB.userLikesInfo = []
-
             const postViewModel = postHandlers
                 .createPostViewModelNew(postFromDB, payLoad.userId)
             console.log('postViewModel =', postViewModel)
@@ -105,10 +63,10 @@ postRouterQuery.get( '/:id', async (req: Request, res: Response) => {
             return res.status(200).send(postViewModel)
         }
     }
-        console.log('postFromDB =', postFromDB)
-        const postViewModel = postHandlers.createPostViewModelNew(postFromDB)
-        console.log('postViewModel =', postViewModel)
-        return res.status(200).send(postViewModel)
+    console.log('postFromDB =', postFromDB)
+    const postViewModel = postHandlers.createPostViewModelNew(postFromDB)
+    console.log('postViewModel =', postViewModel)
+    return res.status(200).send(postViewModel)
 })
 
 postRouterQuery.get('/:postId/comments',

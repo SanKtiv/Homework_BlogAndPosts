@@ -79,29 +79,6 @@ commentRouter.put('/:commentId/like-status',
         await commentService
             .addOrChangeLikesInfo(commentDB!, userId, likeStatus)
 
-        // if (commentDB!.usersLikeStatuses) {
-        //
-        // }
-        //
-        // const comment = await commentsRepositoryQuery
-        //     .findCommentWithoutUsersLikeStatuses(commentId)
-        //
-        //         const commentWithUserLikeStatus = await commentsRepositoryQuery
-        //             .findCommentWithUserLikeStatus(commentId, userId)
-        //
-        //         if (!commentWithUserLikeStatus) {
-        //             await commentService
-        //                 .addNewLikesInfo(commentId, comment!, likeStatus, userId)
-        //
-        //             return res.sendStatus(204)
-        //         }
-        //
-        // await commentService
-        //     .changeLikesInfo(commentId, comment!, likeStatus, userId, commentWithUserLikeStatus)
-
-        // await commentService
-        //     .createLikesInfo(req.params.commentId, req.body.likeStatus, req.headers!.authorization!)
-
         return res.sendStatus(204)
     })
 
