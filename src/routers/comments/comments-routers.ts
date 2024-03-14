@@ -70,7 +70,6 @@ commentRouter.put('/:commentId/like-status',
     errorsOfValidate,
     async (req: Request, res: Response) => {
 
-        //const headersAuth = req.headers.authorization
         const commentId = req.params.commentId
         const likeStatus = req.body.likeStatus
         const userId = req.user!.userId
