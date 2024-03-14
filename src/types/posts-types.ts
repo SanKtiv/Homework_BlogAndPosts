@@ -1,16 +1,5 @@
 import {WithId} from "mongodb";
 
-// export type PostType = {
-//     title: string
-//     shortDescription: string
-//     content: string
-//     blogId: string
-//     blogName: string
-//     createdAt: string
-//     extendedLikesInfo: ExtendedLikesInfoType
-//     userLikesInfo: UserLikesInfoType[]
-// }
-
 export class PostType {
     constructor(public title: string,
                 public shortDescription: string,
@@ -33,10 +22,6 @@ export type UserLikesInfoType = {
     addedAt: string
     userId: string
     login: string
-}
-
-export type UserLikesInfoSortType = {
-    userLikesInfo: UserLikesInfoType[]
 }
 
 export type ViewPostModelType = {
