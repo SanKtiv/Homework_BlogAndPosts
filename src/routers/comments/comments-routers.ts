@@ -70,25 +70,35 @@ commentRouter.put('/:commentId/like-status',
     errorsOfValidate,
     async (req: Request, res: Response) => {
 
-        const headersAuth = req.headers.authorization
+        //const headersAuth = req.headers.authorization
         const commentId = req.params.commentId
         const likeStatus = req.body.likeStatus
         const userId = req.user!.userId
-        const comment = await commentsRepositoryQuery
-            .findCommentWithoutUsersLikeStatuses(commentId)
 
-                const commentWithUserLikeStatus = await commentsRepositoryQuery
-                    .findCommentWithUserLikeStatus(commentId, userId)
-
-                if (!commentWithUserLikeStatus) {
-                    await commentService
-                        .addNewLikesInfo(commentId, comment!, likeStatus, userId)
-
-                    return res.sendStatus(204)
-                }
+        const commentDB = await commentsRepositoryQuery.getCommentById(commentId)
 
         await commentService
-            .changeLikesInfo(commentId, comment!, likeStatus, userId, commentWithUserLikeStatus)
+            .addOrChangeLikesInfo(commentDB!, userId, likeStatus)
+
+        // if (commentDB!.usersLikeStatuses) {
+        //
+        // }
+        //
+        // const comment = await commentsRepositoryQuery
+        //     .findCommentWithoutUsersLikeStatuses(commentId)
+        //
+        //         const commentWithUserLikeStatus = await commentsRepositoryQuery
+        //             .findCommentWithUserLikeStatus(commentId, userId)
+        //
+        //         if (!commentWithUserLikeStatus) {
+        //             await commentService
+        //                 .addNewLikesInfo(commentId, comment!, likeStatus, userId)
+        //
+        //             return res.sendStatus(204)
+        //         }
+        //
+        // await commentService
+        //     .changeLikesInfo(commentId, comment!, likeStatus, userId, commentWithUserLikeStatus)
 
         // await commentService
         //     .createLikesInfo(req.params.commentId, req.body.likeStatus, req.headers!.authorization!)

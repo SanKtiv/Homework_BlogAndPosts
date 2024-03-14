@@ -90,6 +90,46 @@ export const commentService = {
             .updateCommentLikesInfoByCommentId(commentId, userId, likeStatus, likesInfo)
     },
 
+    async addOrChangeLikesInfo(commentDB: CommentDBType, userId: string, likeStatus: string) {
+
+        const commentId = commentDB._id.toString()
+        const {usersLikeStatuses, likesInfo} = commentDB
+
+        const findUser = usersLikeStatuses.find(el => el.userId === userId)
+
+        if (!findUser) {
+
+            if (likeStatus === 'Like') likesInfo.likesCount++
+            if (likeStatus === 'Dislike') likesInfo.dislikesCount++
+
+            return commentsRepository
+                .updateCommentAddNewUserLikeStatus(commentId, userId, likeStatus, likesInfo)
+        }
+
+        const userStatus = findUser.userStatus
+
+        if (likeStatus === 'Like' && userStatus === 'Dislike') {
+            likesInfo.likesCount++
+            likesInfo.dislikesCount--
+        }
+
+        if (likeStatus === 'Dislike' && userStatus === 'Like') {
+            likesInfo.likesCount--
+            likesInfo.dislikesCount++
+        }
+
+        if (likeStatus === 'Like' && userStatus === 'None') likesInfo.likesCount++
+
+        if (likeStatus === 'Dislike' && userStatus === 'None') likesInfo.dislikesCount++
+
+        if (likeStatus === 'None' && userStatus === 'Like') likesInfo.likesCount--
+
+        if (likeStatus === 'None' && userStatus === 'Dislike') likesInfo.dislikesCount--
+
+        return commentsRepository
+            .updateCommentLikesInfoByCommentId(commentId, userId, likeStatus, likesInfo)
+    },
+
     async createLikesInfo(commentId: string, likeStatus: string, headersAuthorization: string) {
 
         const payload = await jwtService.getPayloadAccessToken(headersAuthorization)
