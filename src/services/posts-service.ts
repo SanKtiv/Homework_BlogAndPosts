@@ -4,10 +4,13 @@ import {
     PostDBType,
     ExtendedLikesInfoType,
     TransactBodyType,
-    InputPostModelType
+    InputPostModelType, PostBodyWithoutBlogIdType
 } from "../types/posts-types";
 import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
 import {postHandlers} from "../routers/posts/post-handler";
+import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
+import {dateNow} from "../variables/variables";
+import {dbPostsCollection} from "../repositories/mongodb-repository/db";
 
 class PostService {
 
@@ -18,6 +21,24 @@ class PostService {
             body.shortDescription,
             body.content,
             body.blogId,
+            blogName,
+            new Date().toISOString(),
+            {likesCount: 0, dislikesCount: 0},
+            []
+        )
+
+        const postDB = await postsRepository.insertPostToDB(newPost)
+
+        return postHandlers.createPostViewModelNew(postDB)
+    }
+
+    async createPostByBlogId(blogId: string, body: PostBodyWithoutBlogIdType, blogName: string): Promise<ViewPostModelType> {
+
+        const newPost = new PostType(
+            body.title,
+            body.shortDescription,
+            body.content,
+            blogId,
             blogName,
             new Date().toISOString(),
             {likesCount: 0, dislikesCount: 0},
