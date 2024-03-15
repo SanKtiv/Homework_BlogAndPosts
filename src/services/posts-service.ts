@@ -67,7 +67,7 @@ class PostService {
 
     async changeLikesInfoInPost(dataBody: TransactBodyType,
                                 likesInfo: ExtendedLikesInfoType,
-                                userLikeStatus: any) {
+                                userLikeStatus: string) {
 
         const userLikesInfo = {
             userStatus: dataBody.likeStatus,
@@ -76,47 +76,70 @@ class PostService {
             login: dataBody.login
         }
 
+        if (dataBody.likeStatus === 'None') {
+
+            if (userLikeStatus === 'Like') likesInfo.likesCount--
+            if (userLikeStatus === 'Dislike') likesInfo.dislikesCount--
+
+            await postsRepository
+                .updatePostRemoveUserLikeStatus(dataBody.id, dataBody.userId, likesInfo)
+            return
+        }
+
         if (dataBody.likeStatus === 'Like' && userLikeStatus === 'Dislike') {
             likesInfo.likesCount++
             likesInfo.dislikesCount--
-            await postsRepository
-                .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         }
 
         if (dataBody.likeStatus === 'Dislike' && userLikeStatus === 'Like') {
             likesInfo.dislikesCount++
             likesInfo.likesCount--
-            await postsRepository
-                .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         }
 
-        if (dataBody.likeStatus === 'None' && userLikeStatus === 'Like') {
-            likesInfo.likesCount--
-            await postsRepository
-                .updatePostRemoveUserLikeStatus(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
-        }
-
-        if (dataBody.likeStatus === 'None' && userLikeStatus === 'Dislike') {
-            likesInfo.dislikesCount--
-            await postsRepository
-                .updatePostRemoveUserLikeStatus(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
-        }
+        await postsRepository
+            .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
+        return
+        // if (dataBody.likeStatus === 'Like' && userLikeStatus === 'Dislike') {
+        //     likesInfo.likesCount++
+        //     likesInfo.dislikesCount--
+        //     await postsRepository
+        //         .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
+        // }
+        //
+        // if (dataBody.likeStatus === 'Dislike' && userLikeStatus === 'Like') {
+        //     likesInfo.dislikesCount++
+        //     likesInfo.likesCount--
+        //     await postsRepository
+        //         .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
+        // }
+        //
+        // if (dataBody.likeStatus === 'None' && userLikeStatus === 'Like') {
+        //     likesInfo.likesCount--
+        //     await postsRepository
+        //         .updatePostRemoveUserLikeStatus(dataBody.id, dataBody.userId, likesInfo)
+        // }
+        //
+        // if (dataBody.likeStatus === 'None' && userLikeStatus === 'Dislike') {
+        //     likesInfo.dislikesCount--
+        //     await postsRepository
+        //         .updatePostRemoveUserLikeStatus(dataBody.id, dataBody.userId, likesInfo)
+        // }
     }
 
-    postDbInToBlog(postOutDb: PostDBType): ViewPostModelType {
-
-        const {_id, extendedLikesInfo, userLikesInfo, ...newPostFromDB} = postOutDb
-
-        return  {
-            id: postOutDb._id.toString(),
-            ...newPostFromDB,
-            extendedLikesInfo: {
-                ...extendedLikesInfo,
-                myStatus: 'None',
-                newestLikes: userLikesInfo
-            }
-        }
-    }
+    // postDbInToBlog(postOutDb: PostDBType): ViewPostModelType {
+    //
+    //     const {_id, extendedLikesInfo, userLikesInfo, ...newPostFromDB} = postOutDb
+    //
+    //     return  {
+    //         id: postOutDb._id.toString(),
+    //         ...newPostFromDB,
+    //         extendedLikesInfo: {
+    //             ...extendedLikesInfo,
+    //             myStatus: 'None',
+    //             newestLikes: userLikesInfo
+    //         }
+    //     }
+    // }
 
 }
 

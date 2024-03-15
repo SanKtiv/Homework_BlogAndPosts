@@ -56,26 +56,26 @@ export const postsRepository = {
     //     return postsService.postDbInToBlog(newPost as PostDBType)
     // },
 
-    async createPostForBlogId(blogId: string, body: PostBodyWithoutBlogIdType): Promise<ViewPostModelType> {
-
-        const blog = await blogsRepository.getBlogById(blogId)
-
-        const newPost: PostType = {
-            createdAt: dateNow().toISOString(),
-            blogName: blog!.name,
-            blogId: blogId,
-            extendedLikesInfo: {
-                likesCount: 0,
-                dislikesCount: 0
-            },
-            userLikesInfo: [],
-            ...body
-        }
-
-        await dbPostsCollection.insertOne(newPost)
-
-        return postsService.postDbInToBlog(newPost as PostDBType)
-    },
+    // async createPostForBlogId(blogId: string, body: PostBodyWithoutBlogIdType): Promise<ViewPostModelType> {
+    //
+    //     const blog = await blogsRepository.getBlogById(blogId)
+    //
+    //     const newPost: PostType = {
+    //         createdAt: dateNow().toISOString(),
+    //         blogName: blog!.name,
+    //         blogId: blogId,
+    //         extendedLikesInfo: {
+    //             likesCount: 0,
+    //             dislikesCount: 0
+    //         },
+    //         userLikesInfo: [],
+    //         ...body
+    //     }
+    //
+    //     await dbPostsCollection.insertOne(newPost)
+    //
+    //     return postsService.postDbInToBlog(newPost as PostDBType)
+    // },
 
     async updatePost(id: string, body: InputPostModelType): Promise<Boolean> {
 
@@ -124,8 +124,7 @@ export const postsRepository = {
 
     async updatePostRemoveUserLikeStatus(id: string,
                                     userId: string,
-                                    likesInfo: ExtendedLikesInfoType,
-                                    userLikesInfo: UserLikesInfoType): Promise<Boolean> {
+                                    likesInfo: ExtendedLikesInfoType): Promise<Boolean> {
 
         const updateResult = await dbPostsCollection
             .updateOne({_id: new ObjectId(id)},

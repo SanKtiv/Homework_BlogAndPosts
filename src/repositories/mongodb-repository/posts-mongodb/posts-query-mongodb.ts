@@ -27,7 +27,7 @@ export const postsRepositoryQuery = {
         catch (error) {return null}
     },
 
-    async getLikesInfoFromPostByPostId(id: string): Promise<any | null> {
+    async getLikesInfoByPostId(id: string): Promise<any | null> {
 
         try {
             return dbPostsCollection
