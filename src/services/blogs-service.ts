@@ -24,20 +24,3 @@ class BlogsService {
 }
 
 export const blogsService = new BlogsService()
-// export const blogsService = {
-//
-//     async createBlog(body: InputBlogModelType): Promise<ViewBlogModelType> {
-//
-//         const newBlog = new BlogType(
-//             body.name,
-//             body.description,
-//             body.websiteUrl,
-//             new Date().toISOString(),
-//             false
-//         )
-//
-//         const blogFromDB = await blogsRepository.insertBlog(newBlog)
-//
-//         return blogHandlers.blogViewModel(blogFromDB)
-//     }
-// }

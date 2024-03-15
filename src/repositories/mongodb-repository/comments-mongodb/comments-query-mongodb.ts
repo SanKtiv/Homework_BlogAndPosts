@@ -13,16 +13,6 @@ export const commentsRepositoryQuery = {
         }
     },
 
-    // async findCommentWithoutUsersLikeStatuses(id: string): Promise<CommentDBType | null> {
-    //
-    //     try {
-    //         return dbCommentsCollection
-    //             .findOne({_id: new ObjectId(id)}, {projection: {usersLikeStatuses: 0}})
-    //     } catch (error) {
-    //         return null
-    //     }
-    // },
-
     async findCommentWithUserLikeStatus(commentId: string, userId: string): Promise<CommentDBType | null> {
 
         try {

@@ -4,26 +4,6 @@ import {ObjectId} from "mongodb";
 
 export const blogsRepository = {
 
-    // async getAllBlogs(): Promise<ViewBlogModelType[]> {
-    //
-    //     const allBlogs = await dbBlogsCollection.find().toArray()
-    //
-    //     return allBlogs.map(blogOutDb => blogsService.createViewBlogModel(blogOutDb))
-    // },
-
-    // async getBlogById(id: string): Promise<ViewBlogModelType | null> {
-    //
-    //     try {
-    //         const blogDB = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
-    //
-    //         if (blogDB) return blogsService.createViewBlogModel(blogDB)
-    //
-    //         return null
-    //     } catch (error) {
-    //         return null
-    //     }
-    // },
-
     async insertBlog(body: BlogType): Promise<BlogDBType> {
 
         await dbBlogsCollection.insertOne(body)
