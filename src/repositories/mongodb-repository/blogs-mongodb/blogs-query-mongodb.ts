@@ -1,17 +1,28 @@
 import {dbBlogsCollection, dbPostsCollection} from "../db";
-import {InputPostsPagingType, PostDBType, ViewPostsPagingType} from "../../../types/posts-types";
+import {InputPostsPagingType, PostDBType} from "../../../types/posts-types";
 import {blogsService} from "../../../services/blogs-service";
-import {postsService} from "../../../services/posts-service";
-import {InputBlogsPagingType, ViewBlogsPagingType} from "../../../types/blogs-types";
-import {postHandlers} from "../../../routers/posts/post-handler";
+import {InputBlogsPagingType, ViewBlogModelType, ViewBlogsPagingType} from "../../../types/blogs-types";
+import {ObjectId} from "mongodb";
 
 export const blogsRepositoryQuery = {
+
+    async getBlogById(id: string): Promise<ViewBlogModelType | null> {
+
+        try {
+            const blogDB = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
+
+            if (blogDB) return blogsService.createViewBlogModel(blogDB)
+
+            return null
+        } catch (error) {
+            return null
+        }
+    },
 
     async getBlogsWithPaging(query: InputBlogsPagingType): Promise<ViewBlogsPagingType | null> {
 
         if (query.searchNameTerm) {
 
-            //const searchNameToRegExp = new RegExp(query.searchNameTerm, 'i')
             const totalBlogsBySearchName = await dbBlogsCollection
                 .countDocuments({name: {$regex: query.searchNameTerm, $options: 'i'}})
 
@@ -39,15 +50,11 @@ export const blogsRepositoryQuery = {
 
     async getPostsByBlogId(blogId: string, query: InputPostsPagingType): Promise<PostDBType[]> {
 
-        // const totalPostsByBlogId = await dbPostsCollection.countDocuments({blogId: blogId})
-
         return dbPostsCollection
             .find({blogId: blogId})
             .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
             .toArray()
-
-        // return postHandlers.createPostPagingViewModelNew(totalPostsByBlogId, postsOutputFromDb, query)
     },
 }

@@ -12,6 +12,7 @@ import {postsRepositoryQuery} from "../../repositories/mongodb-repository/posts-
 import {postsService} from "../../services/posts-service";
 import {likeStatusBody} from "../../validations/like-status-validation";
 import {blogsRepository} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
+import {blogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 
 export const postRouter = Router ({})
 
@@ -21,7 +22,7 @@ postRouter.post('/',
     errorsOfValidate,
     async (req: Request, res: Response) => {
 
-        const blog = await blogsRepository.getBlogById(req.body.blogId)
+        const blog = await blogsRepositoryQuery.getBlogById(req.body.blogId)
 
         const post = await postsService.createPost(req.body, blog!.name)
 

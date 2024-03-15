@@ -1,11 +1,12 @@
 import {WithId} from "mongodb";
 
-export type BlogType = {
-    name: string
-    description: string
-    websiteUrl: string
-    createdAt: string
-    isMembership: boolean
+export class BlogType {
+    constructor(public name: string,
+                public description: string,
+                public websiteUrl: string,
+                public createdAt: string,
+                public isMembership: boolean) {
+    }
 }
 
 export type ViewBlogModelType = BlogType & {id: string}

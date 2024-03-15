@@ -1,5 +1,6 @@
 import {body} from "express-validator";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
+import {blogsRepositoryQuery} from "../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 
 const validTitle = body('title', 'title length is incorrect')
     .isString()
@@ -20,7 +21,7 @@ const validBlogIdBody = body('blogId')
     .isString().withMessage('Blog is not string')
     .trim()
     .custom(async id => {
-        if (!await blogsRepository.getBlogById(id)) {
+        if (!await blogsRepositoryQuery.getBlogById(id)) {
             throw new Error('Blog is not exist')
         }
     })

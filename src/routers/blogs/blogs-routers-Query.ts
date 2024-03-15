@@ -53,7 +53,7 @@ blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Reques
 
 blogRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
-    const blogs = await blogsRepository.getBlogById(req.params.id)
+    const blogs = await blogsRepositoryQuery.getBlogById(req.params.id)
 
     if (blogs) return res.status(200).send(blogs)
 

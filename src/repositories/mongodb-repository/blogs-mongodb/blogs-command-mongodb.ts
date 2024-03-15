@@ -1,29 +1,28 @@
-import {InputBlogModelType, ViewBlogModelType, BlogDBType, BlogType} from "../../../types/blogs-types";
+import {InputBlogModelType, BlogDBType, BlogType} from "../../../types/blogs-types";
 import {dbBlogsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {blogsService} from "../../../services/blogs-service";
 
 export const blogsRepository = {
 
-    async getAllBlogs(): Promise<ViewBlogModelType[]> {
+    // async getAllBlogs(): Promise<ViewBlogModelType[]> {
+    //
+    //     const allBlogs = await dbBlogsCollection.find().toArray()
+    //
+    //     return allBlogs.map(blogOutDb => blogsService.createViewBlogModel(blogOutDb))
+    // },
 
-        const allBlogs = await dbBlogsCollection.find().toArray()
-
-        return allBlogs.map(blogOutDb => blogsService.createViewBlogModel(blogOutDb))
-    },
-
-    async getBlogById(id: string): Promise<ViewBlogModelType | null> {
-
-        try {
-            const blogDB = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
-
-            if (blogDB) return blogsService.createViewBlogModel(blogDB)
-
-            return null
-        } catch (error) {
-            return null
-        }
-    },
+    // async getBlogById(id: string): Promise<ViewBlogModelType | null> {
+    //
+    //     try {
+    //         const blogDB = await dbBlogsCollection.findOne({_id: new ObjectId(id)})
+    //
+    //         if (blogDB) return blogsService.createViewBlogModel(blogDB)
+    //
+    //         return null
+    //     } catch (error) {
+    //         return null
+    //     }
+    // },
 
     async createBlog(body: BlogType): Promise<BlogDBType> {
 

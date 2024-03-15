@@ -47,7 +47,7 @@ postRouterQuery.get('/:id', async (req: Request, res: Response) => {
     const headersAuth = req.headers.authorization
 
     const postFromDB = await postsRepositoryQuery.getPostById(postId)
-    //console.log('postFromDB =',postFromDB)
+
     if (!postFromDB) return res.sendStatus(404)
 
     if (headersAuth) {
@@ -58,14 +58,13 @@ postRouterQuery.get('/:id', async (req: Request, res: Response) => {
 
             const postViewModel = postHandlers
                 .createPostViewModelNew(postFromDB, payLoad.userId)
-            console.log('postViewModel =', postViewModel)
-            console.log('newestLikes =', postViewModel.extendedLikesInfo.newestLikes)
+
             return res.status(200).send(postViewModel)
         }
     }
-    console.log('postFromDB =', postFromDB)
+
     const postViewModel = postHandlers.createPostViewModelNew(postFromDB)
-    console.log('postViewModel =', postViewModel)
+
     return res.status(200).send(postViewModel)
 })
 

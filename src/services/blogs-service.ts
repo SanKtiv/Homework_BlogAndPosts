@@ -6,14 +6,19 @@ import {
     InputBlogsPagingType,
     ViewBlogsPagingType
 } from "../types/blogs-types";
-import {dateNow} from "../variables/variables";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 
 export const blogsService = {
 
     async getCreatedBlog(body: InputBlogModelType): Promise<ViewBlogModelType> {
 
-        const newBlog = await this.createNewBlog(body)
+        const newBlog = new BlogType(
+            body.name,
+            body.description,
+            body.websiteUrl,
+            new Date().toISOString(),
+            false
+        )
 
         const blogFromDB = await blogsRepository.createBlog(newBlog)
 
@@ -45,13 +50,4 @@ export const blogsService = {
             items: blogsItems.map(blogOutDb => this.createViewBlogModel(blogOutDb))
         }
     },
-
-    async createNewBlog(body: InputBlogModelType): Promise<BlogType> {
-
-        return {
-            createdAt: dateNow().toISOString(),
-            isMembership: false,
-            ...body
-        }
-    }
 }

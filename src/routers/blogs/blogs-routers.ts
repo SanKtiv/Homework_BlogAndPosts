@@ -23,7 +23,7 @@ blogRouter.post( '/:blogId/posts', validPost, basicAuth, checkBlogByBlogId, erro
 
     const blogId = req.params.blogId
 
-    const blog = await blogsRepository.getBlogById(blogId)
+    const blog = await blogsRepositoryQuery.getBlogById(blogId)
 
     const post = await postsService.createPostByBlogId(blogId, req.body, blog!.name)
 
