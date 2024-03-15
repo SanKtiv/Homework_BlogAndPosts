@@ -7,15 +7,24 @@ import {InputBlogsPagingType} from "../../types/blogs-types";
 import {dbPostsCollection} from "../../repositories/mongodb-repository/db";
 import {postHandlers} from "../posts/post-handler";
 import {jwtService} from "../../applications/jwt-service";
+import {blogHandlers} from "./blog-handlers";
 
 export const blogRouterQuery = Router ({})
 
 blogRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
-    const blogsPaging = await blogsRepositoryQuery
-        .getBlogsWithPaging(req.query as InputBlogsPagingType)
+    const query = req.query as InputBlogsPagingType
 
-    res.status(200).send(blogsPaging)
+    const totalBlogs = query.searchNameTerm ?
+        await blogsRepositoryQuery.getTotalBlogsByName(query.searchNameTerm) :
+        await blogsRepositoryQuery.getTotalBlogs()
+
+    const blogsPagingDB = await blogsRepositoryQuery.getBlogsWithPaging(query)
+
+    const blogsPagingView = await blogHandlers
+        .blogPagingViewModel(totalBlogs, blogsPagingDB, query)
+
+    res.status(200).send(blogsPagingView)
 })
 
 blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Request, res: Response) => {
@@ -30,7 +39,7 @@ blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Reques
 
     const postsByBlogId = await blogsRepositoryQuery.getPostsByBlogId(blogId, query)
 
-    if (!postsByBlogId) return res.sendStatus(404)
+    if (!postsByBlogId.length) return res.sendStatus(404)
 
     if (headersAuth) {
 
@@ -53,9 +62,11 @@ blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Reques
 
 blogRouterQuery.get( '/:id', async (req: Request, res: Response) => {
 
-    const blogs = await blogsRepositoryQuery.getBlogById(req.params.id)
+    const blogDB = await blogsRepositoryQuery.getBlogById(req.params.id)
 
-    if (blogs) return res.status(200).send(blogs)
+    if (!blogDB) return res.sendStatus(404)
 
-    return res.sendStatus(404)
+    const blog = await blogHandlers.blogViewModel(blogDB)
+
+    return res.status(200).send(blog)
 })

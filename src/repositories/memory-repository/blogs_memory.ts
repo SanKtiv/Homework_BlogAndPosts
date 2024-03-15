@@ -10,7 +10,7 @@ export const blogsRepository = {
     async getBlogById(id: string): Promise<BlogModelOutMemoryType | undefined> {
         return  blogsDataBase.find(b => b.id === id)
     },
-    async createBlog(body: any): Promise<BlogModelOutMemoryType> {
+    async insertBlog(body: any): Promise<BlogModelOutMemoryType> {
         const newBlog = {id: idNumber(), ...body}
         blogsDataBase.push(newBlog)
         return newBlog

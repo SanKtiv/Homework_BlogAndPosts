@@ -11,7 +11,6 @@ import {commentService} from "../../services/comments-service";
 import {postsRepositoryQuery} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
 import {postsService} from "../../services/posts-service";
 import {likeStatusBody} from "../../validations/like-status-validation";
-import {blogsRepository} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 import {blogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 
 export const postRouter = Router ({})
@@ -22,9 +21,9 @@ postRouter.post('/',
     errorsOfValidate,
     async (req: Request, res: Response) => {
 
-        const blog = await blogsRepositoryQuery.getBlogById(req.body.blogId)
+        const blogDB = await blogsRepositoryQuery.getBlogById(req.body.blogId)
 
-        const post = await postsService.createPost(req.body, blog!.name)
+        const post = await postsService.createPost(req.body, blogDB!.name)
 
         return res.status(201).send(post)
     })

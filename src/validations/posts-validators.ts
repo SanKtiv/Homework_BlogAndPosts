@@ -21,7 +21,9 @@ const validBlogIdBody = body('blogId')
     .isString().withMessage('Blog is not string')
     .trim()
     .custom(async id => {
-        if (!await blogsRepositoryQuery.getBlogById(id)) {
+        const blogDB = await blogsRepositoryQuery.getBlogById(id)
+
+        if (!blogDB) {
             throw new Error('Blog is not exist')
         }
     })

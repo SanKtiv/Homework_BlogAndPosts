@@ -13,7 +13,7 @@ describe('TEST for BLOGS', () => {
 
     beforeAll(async () => {
         await client.connect()
-        await mongoose.connect('mongodb://0.0.0.0:27017/home_works')
+        //await mongoose.connect('mongodb://0.0.0.0:27017/home_works')
         await getRequest().delete(routePaths.deleteAllData)
     })
 

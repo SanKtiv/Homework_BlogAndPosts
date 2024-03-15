@@ -24,7 +24,7 @@ export const blogsRepository = {
     //     }
     // },
 
-    async createBlog(body: BlogType): Promise<BlogDBType> {
+    async insertBlog(body: BlogType): Promise<BlogDBType> {
 
         await dbBlogsCollection.insertOne(body)
 

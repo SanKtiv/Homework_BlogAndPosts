@@ -3,9 +3,12 @@ import {defaultQuery} from "../variables/variables";
 import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 import {blogsRepositoryQuery} from "../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 
-export const checkBlogByBlogId = async (req: Request, res: Response, next: NextFunction) => {
-    const blog = await blogsRepositoryQuery.getBlogById(req.params.blogId)
-    if (blog) return  next()
+export const checkExistBlogByBlogId = async (req: Request, res: Response, next: NextFunction) => {
+
+    const blogDB = await blogsRepositoryQuery.getBlogById(req.params.blogId)
+
+    if (blogDB) return  next()
+
     return res.sendStatus(404)
 }
 
