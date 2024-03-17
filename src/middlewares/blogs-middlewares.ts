@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express";
 import {defaultQuery} from "../variables/variables";
-import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 import {blogsRepositoryQuery} from "../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 
 export const checkExistBlogByBlogId = async (req: Request, res: Response, next: NextFunction) => {
