@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import {MongoClient, WithId} from 'mongodb'
 import {PostType} from "../../types/posts-types";
 import {UserDBType, UserType} from "../../types/users-types";
-import {CommentType} from "../../types/comments-types";
+import {CommentType, LikesInfoType, UserStatusType} from "../../types/comments-types";
 import {BlogType} from "../../types/blogs-types";
 import {UserSessionType} from "../../types/security-device-types";
 import {ApiRequestType} from "../../types/count-request-types";
@@ -26,15 +26,28 @@ const countReqCollection: string = 'requests'
 
 export const BlogSchema = new mongoose.Schema<BlogType>({
     //id: { type: String, require: true },
-    name: { type: String, require: true },
-    description: { type: String, require: true },
+    name: {type: String, require: true},
+    description: {type: String, require: true},
     websiteUrl: String,
     createdAt: String,
     isMembership: Boolean,
     //versionKey: false
+}, {versionKey: false})
+
+const CommentSchema = new mongoose.Schema<CommentType>({
+    content: {type: String, require: true},
+    commentatorInfo: {
+        userId: {type: String, require: true},
+        userLogin: {type: String, require: true},
+    },
+    createdAt: {type: String, require: true},
+    postId: {type: String, require: true},
+    likesInfo: {likesCount: Number, dislikesCount: Number,},
+    usersLikeStatuses: [{userId: String, userStatus: String,}]
 }, { versionKey: false })
 
 export const BlogModel = mongoose.model('blogs1', BlogSchema)
+export const CommentModel = mongoose.model('comments', CommentSchema)
 
 export const dbBlogsCollection = client.db(db).collection<BlogType>(blogsCollection)
 export const dbPostsCollection = client.db(db).collection<PostType>(postsCollection)
