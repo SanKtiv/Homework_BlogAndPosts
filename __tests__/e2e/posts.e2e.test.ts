@@ -12,11 +12,13 @@ import {user} from "./test-utility/test-users-utility";
 import {commentAction} from "./test-services/test-comments-services";
 import {commentSendBody_TRUE} from "./test-utility/test-comments-utility";
 import {authActions} from "./test-services/test-auth-servises";
+import mongoose from "mongoose";
 
 describe('TEST for POSTS', () => {
 
     beforeAll(async () => {
         await client.connect()
+        await mongoose.connect(process.env.MONGO_URL + '/tube')
         await getRequest().delete(routePaths.deleteAllData)
     })
 
@@ -26,6 +28,35 @@ describe('TEST for POSTS', () => {
 
     afterAll(async () => {
         await client.close()
+        await mongoose.disconnect()
+    })
+
+    it('-POST /posts: postId/comments, should return status 201 and post with comments', async () => {
+
+        await getRequest().delete(routePaths.deleteAllData)
+        // Create two users
+        await userActions.createManyUsers(user.sendManyBody(2))
+
+        // Create array with two user's access tokens
+        const accessTokenArray = await userActions
+            .authManyUser(user.sendAuthManyBody(2))
+
+        const accessToken1 = accessTokenArray[0].body.accessToken
+        const accessToken2 = accessTokenArray[1].body.accessToken
+
+        // Create Blog and get him id
+        const blogId = (await blogActions
+            .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)).body.id
+
+        // Create Post and get him id
+        const postId = (await postActions
+            .createPost(post.sendBody(post.body_TRUE, blogId), auth.basic_TRUE)).body.id
+
+        // Create first comment for Post by first user's access token
+        const comment1 = await commentAction
+            .createComment(accessToken1, commentSendBody_TRUE, postId)
+
+        await expect(comment1.statusCode).toBe(201)
     })
 
     it('-GET /posts: postId/comments, should return status 200 and post with comments', async () => {

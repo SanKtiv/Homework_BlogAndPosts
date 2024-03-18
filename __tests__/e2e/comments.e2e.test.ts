@@ -10,25 +10,28 @@ import {auth} from "./test-utility/test-auth-utility";
 import {user} from "./test-utility/test-users-utility";
 import {blog} from "./test-utility/test-blogs-utility";
 import {post} from "./test-utility/test-posts-utility";
+import mongoose from "mongoose";
 
 
 describe('TEST for comments', () => {
 
     beforeAll(async () => {
         await client.connect()
+        await mongoose.connect(process.env.MONGO_URL + '/tube')
+    })
+
+    beforeEach(async () => {
         await getRequest().delete(routePaths.deleteAllData)
     })
 
-    // beforeEach(async () => {
-    //
-    // })
-
     afterAll(async () => {
         await client.close()
+        await mongoose.disconnect()
     })
 
     let accessToken = ''
     let comment: any = {}
+
 
     it(`-GET /comments:id, should return code 200 and comment` , async () => {
 

@@ -45,6 +45,7 @@ export const commentsRepository = {
     },
 
     async deleteAll(): Promise<void> {
+
         await CommentModel.deleteMany({})
     }
 }
