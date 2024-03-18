@@ -10,7 +10,7 @@ import mongoose from 'mongoose'
 
 dotenv.config()
 
-const dbName = '/home_works'
+const dbName = '/tube'
 const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
 //const mongoURI = 'mongodb://0.0.0.0:27017' || process.env.MONGO_URL
 
@@ -67,5 +67,6 @@ export async function runDb() {
     } catch(e) {
         console.log('no connection')
         await client.close()
+        await mongoose.disconnect()
     }
 }
