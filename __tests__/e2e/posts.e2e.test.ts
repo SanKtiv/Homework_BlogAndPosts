@@ -18,7 +18,8 @@ describe('TEST for POSTS', () => {
 
     beforeAll(async () => {
         await client.connect()
-        await mongoose.connect(process.env.MONGO_URL + '/tube')
+        const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+        await mongoose.connect(mongoURI)
         await getRequest().delete(routePaths.deleteAllData)
     })
 

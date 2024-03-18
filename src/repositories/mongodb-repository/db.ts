@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import {MongoClient, WithId} from 'mongodb'
+import {MongoClient, WithId, ObjectId} from 'mongodb'
 import {PostType} from "../../types/posts-types";
 import {UserDBType, UserType} from "../../types/users-types";
 import {CommentDBType, CommentType, LikesInfoType, UserStatusType} from "../../types/comments-types";
@@ -10,7 +10,7 @@ import mongoose from 'mongoose'
 
 dotenv.config()
 
-const dbName = '/tube'
+const dbName = '/mongoose'
 const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
 //const mongoURI = 'mongodb://0.0.0.0:27017' || process.env.MONGO_URL
 
@@ -34,7 +34,7 @@ export const BlogSchema = new mongoose.Schema<BlogType>({
     //versionKey: false
 }, {versionKey: false})
 
-const CommentSchema = new mongoose.Schema<CommentType>({
+const CommentSchema = new mongoose.Schema<CommentDBType>({
     content: {type: String, require: true},
     commentatorInfo: {
         userId: {type: String, require: true},
@@ -44,7 +44,7 @@ const CommentSchema = new mongoose.Schema<CommentType>({
     postId: {type: String, require: true},
     likesInfo: {likesCount: Number, dislikesCount: Number,},
     usersLikeStatuses: [{userId: String, userStatus: String,}]
-}, { versionKey: false })
+},{versionKey: false})
 
 export const BlogModel = mongoose.model('blogs1', BlogSchema)
 export const CommentModel = mongoose.model('comments', CommentSchema)
@@ -62,8 +62,9 @@ export async function runDb() {
         await client.db(db).command({ping: 1})
         console.log('Connect successfully to mongo server')
 
-        await mongoose.connect(mongoURI + dbName)
-        console.log('Connect mongoose is ok')
+        await mongoose.connect(mongoURI)
+        console.log(mongoose.connection.readyState)
+        //console.log('Connect mongoose is ok')
     } catch(e) {
         console.log('no connection')
         await client.close()
