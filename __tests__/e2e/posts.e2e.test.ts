@@ -57,7 +57,7 @@ describe('TEST for POSTS', () => {
         const comment1 = await commentAction
             .createComment(accessToken1, commentSendBody_TRUE, postId)
 
-        const viewComment3 = await commentAction.getCommentById(comment1.body.id, accessToken1)
+        const viewComment3 = await commentAction.getCommentById(comment1.body.id, 'accessToken1')
 
         await expect(comment1.statusCode).toBe(201)
         await expect(viewComment3.statusCode).toBe(200)

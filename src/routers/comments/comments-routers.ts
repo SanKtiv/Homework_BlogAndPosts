@@ -33,7 +33,7 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
     if (!payload) {
 
         const comment = commentHandlers.createCommentViewModel(commentDBStatusNone)
-
+        console.log('comment =', comment)
         return res.status(200).send(comment)
     }
 

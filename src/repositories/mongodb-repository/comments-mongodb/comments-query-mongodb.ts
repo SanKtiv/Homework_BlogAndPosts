@@ -1,4 +1,4 @@
-import {dbCommentsCollection} from "../db";
+import {CommentModel, dbCommentsCollection} from "../db";
 import {CommentDBType} from "../../../types/comments-types";
 import {ObjectId} from "mongodb";
 
@@ -7,7 +7,7 @@ export const commentsRepositoryQuery = {
     async getCommentById(id: string): Promise<CommentDBType | null> {
 
         try {
-            return dbCommentsCollection.findOne({_id: new ObjectId(id)})
+            return CommentModel.findOne({_id: new ObjectId(id)})
         } catch (error) {
             return null
         }

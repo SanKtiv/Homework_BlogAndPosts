@@ -8,16 +8,21 @@ export const commentHandlers = {
 
         if (userId) {
             const index = dbComment.usersLikeStatuses.findIndex(el => el.userId === userId)
+
             if (index !== -1) userStatus = dbComment.usersLikeStatuses[index].userStatus!
         }
 
-        const {_id, usersLikeStatuses, postId, ...viewModel} = dbComment
-
-        const newLikesInfo = {...dbComment.likesInfo, myStatus: userStatus}
+        const newLikesInfo = {
+            likesCount: dbComment.likesInfo.likesCount,
+            dislikesCount: dbComment.likesInfo.dislikesCount,
+            myStatus: userStatus
+        }
 
         return {
             id: dbComment._id.toString(),
-            ...viewModel,
+            content: dbComment.content,
+            commentatorInfo: dbComment.commentatorInfo,
+            createdAt: dbComment.createdAt,
             likesInfo: newLikesInfo
         }
     },
