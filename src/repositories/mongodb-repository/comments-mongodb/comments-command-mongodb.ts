@@ -6,9 +6,9 @@ export const commentsRepository = {
 
     async insertComment(comment: CommentType): Promise<CommentDBType> {
 
-        await CommentModel.insertMany([comment])
-console.log(comment)
-        return comment as CommentDBType
+        const commentDB = await CommentModel.create(comment)
+
+        return commentDB as CommentDBType
     },
 
     async updateCommentContentById(id: string, content: string): Promise<void> {
@@ -46,7 +46,7 @@ console.log(comment)
 
     async deleteAll(): Promise<void> {
 
-        await dbCommentsCollection.deleteMany({})
+        await CommentModel.deleteMany({})
     }
 }
 

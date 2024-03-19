@@ -75,21 +75,20 @@ export const commentService = {
             .updateCommentLikesInfoByCommentId(commentId, userId, likeStatus, likesInfo)
     },
 
-    createCommentViewModel(dbComment: CommentDBType): ViewCommentModelType {
+    async createCommentViewModel(dbComment: CommentDBType): Promise<ViewCommentModelType> {
 
-        const {_id, postId, usersLikeStatuses, ...viewComment} = dbComment
-
-        const myStatus = usersLikeStatuses[0].userStatus
-
-        const newLikesInfo = {
-            ...dbComment.likesInfo,
-            myStatus: myStatus
+        const likesInfo = {
+            likesCount: dbComment.likesInfo.likesCount,
+            dislikesCount: dbComment.likesInfo.dislikesCount,
+            myStatus: dbComment.usersLikeStatuses[0].userStatus
         }
 
         return {
             id: dbComment._id.toString(),
-            ...viewComment,
-            likesInfo: newLikesInfo
+            content: dbComment.content,
+            commentatorInfo: dbComment.commentatorInfo,
+            createdAt: dbComment.createdAt,
+            likesInfo: likesInfo
         }
     }
 }

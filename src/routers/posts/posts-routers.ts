@@ -42,7 +42,7 @@ postRouter.post('/:postId/comments',
 
         const comment = await commentService
             .createCommentForPost(postId, content, userId, userLogin)
-console.log(comment)
+
         res.status(201).send(comment)
     })
 
