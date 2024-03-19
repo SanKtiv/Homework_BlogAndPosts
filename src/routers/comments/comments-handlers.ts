@@ -5,7 +5,7 @@ export const commentHandlers = {
     createCommentViewModel(dbComment: CommentDBType, userId?: string): ViewCommentModelType {
 
         let userStatus = 'None'
-
+console.log('dbComment.usersLikeStatuses =', dbComment.usersLikeStatuses)
         if (userId) {
             const index = dbComment.usersLikeStatuses.findIndex(el => el.userId === userId)
 

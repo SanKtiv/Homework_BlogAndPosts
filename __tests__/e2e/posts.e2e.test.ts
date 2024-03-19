@@ -97,11 +97,6 @@ describe('TEST for POSTS', () => {
 
         const result = await postActions
             .getPostWithCommentsByPostIdAndQuery(postId, accessToken1, post.query(post.paging.preset1))
-        console.log(result.body)
-        console.log('items =', result.body.items)
-        console.log('likesInfo1 =', result.body.items[0].likesInfo)
-        console.log('likesInfo2 =', result.body.items[1].likesInfo)
-        console.log('get comment from db',viewComment3.body)
     })
 
     it('-POST /posts, should return status 201 and post', async () => {

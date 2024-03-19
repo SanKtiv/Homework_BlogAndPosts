@@ -33,7 +33,7 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
     if (!payload) {
 
         const comment = commentHandlers.createCommentViewModel(commentDBStatusNone)
-        console.log('comment =', comment)
+
         return res.status(200).send(comment)
     }
 
@@ -47,7 +47,7 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
         return res.status(200).send(comment)
     }
 
-    const comment = commentHandlers.createCommentViewModel(commentDB, payload.userId)
+    const comment = commentHandlers.createCommentViewModel(commentDBStatusNone, payload.userId)
 
     return res.status(200).send(comment)
 })

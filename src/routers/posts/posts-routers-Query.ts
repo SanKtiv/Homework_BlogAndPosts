@@ -80,7 +80,7 @@ postRouterQuery.get('/:postId/comments',
 
         const commentsPaging = await commentsRepositoryQuery.getCommentsByPostId(postId, query)
 
-        console.log('commentsPaging =', commentsPaging)
+
         if (!req.headers.authorization) {
 
             const paginatorCommentViewModel = await commentHandlers

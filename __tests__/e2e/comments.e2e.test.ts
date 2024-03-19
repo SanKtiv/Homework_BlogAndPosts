@@ -16,8 +16,9 @@ import mongoose from "mongoose";
 describe('TEST for comments', () => {
 
     beforeAll(async () => {
+        const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
         await client.connect()
-        await mongoose.connect(process.env.MONGO_URL + '/tube')
+        await mongoose.connect(mongoURI)
     })
 
     beforeEach(async () => {
@@ -35,17 +36,54 @@ describe('TEST for comments', () => {
 
     it(`-GET /comments:id, should return code 200 and comment` , async () => {
 
-        await userActions.createUser(user.sendBody_TRUE(), auth.basic_TRUE)
-        const result = await userActions.authUser(user.sendBodyAuth_TRUE())
-        accessToken = result.body.accessToken
-        const bodyId = (await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)).body.id
-        const postId = await postActions
-            .createPost(post.sendBody(post.body_TRUE, bodyId), auth.basic_TRUE)
-        comment = await commentAction
-            .createComment(accessToken, commentSendBody_TRUE, postId.body.id)
+        // Creat four user
+        await userActions.createManyUsers(user.sendManyBody(4))
 
-        // await commentAction
-        //     .expectGetCommentById_(comment.body.id, 200, commentCorrect)
+        // Create array with two user's access tokens
+        const accessTokenArray = await userActions
+            .authManyUser(user.sendAuthManyBody(4))
+
+        const accessToken1 = accessTokenArray[0].body.accessToken
+        const accessToken2 = accessTokenArray[1].body.accessToken
+        const accessToken3 = accessTokenArray[2].body.accessToken
+        const accessToken4 = accessTokenArray[3].body.accessToken
+
+        // Create Blog and get him id
+        const blogId = (await blogActions
+            .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)).body.id
+
+        // Create Post and get him id
+        const postId = (await postActions
+            .createPost(post.sendBody(post.body_TRUE, blogId), auth.basic_TRUE)).body.id
+
+        // Create first comment for Post by first user's access token
+        const comment1 = await commentAction
+            .createComment(accessToken1, commentSendBody_TRUE, postId)
+
+        // Like the comment by user1 and get comment by user1
+        await commentAction
+            .updateCommentLikesStatus(comment1.body.id, accessToken1, 'Like')
+
+        await commentAction.getCommentById(comment1.body.id, accessToken1)
+
+        // Like the comment by user2 and get comment by user1
+        await commentAction
+            .updateCommentLikesStatus(comment1.body.id, accessToken2, 'Like')
+
+        await commentAction.getCommentById(comment1.body.id, accessToken1)
+
+        // Like the comment by user3 and get comment by user1
+        await commentAction
+            .updateCommentLikesStatus(comment1.body.id, accessToken3, 'Like')
+
+        await commentAction.getCommentById(comment1.body.id, accessToken1)
+
+        // Like the comment by user4 and get comment by user1
+        await commentAction
+            .updateCommentLikesStatus(comment1.body.id, accessToken4, 'Like')
+
+        await commentAction.getCommentById(comment1.body.id, accessToken1)
+
     })
 
     it(`-PUT /comments:commentId/like-status, should return code 204 and comment` , async () => {
