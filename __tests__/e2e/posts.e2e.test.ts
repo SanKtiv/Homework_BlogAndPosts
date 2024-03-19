@@ -59,6 +59,9 @@ describe('TEST for POSTS', () => {
 
         const viewComment3 = await commentAction.getCommentById(comment1.body.id, 'accessToken1')
 
+        const result = await postActions
+            .getPostWithCommentsByPostIdAndQuery(postId, accessToken1, post.query(post.paging.preset1))
+
         await expect(comment1.statusCode).toBe(201)
         await expect(viewComment3.statusCode).toBe(200)
     })

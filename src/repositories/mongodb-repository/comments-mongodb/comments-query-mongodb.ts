@@ -16,7 +16,7 @@ export const commentsRepositoryQuery = {
     async findCommentWithUserLikeStatus(commentId: string, userId: string): Promise<CommentDBType | null> {
 
         try {
-            return dbCommentsCollection
+            return CommentModel
                 .findOne({_id: new ObjectId(commentId), 'usersLikeStatuses.userId': userId},
                     {
                         projection: {
@@ -34,16 +34,16 @@ export const commentsRepositoryQuery = {
     },
 
     async getTotalCommentsByPostId(postId: string): Promise<number> {
-        return dbCommentsCollection.countDocuments({postId: postId})
+        return CommentModel.countDocuments({postId: postId})
     },
 
     async getCommentsByPostId(postId: string, query: any) {
 
-        return dbCommentsCollection
+        return CommentModel
             .find({postId: postId})
             .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
-            .toArray()
+            //.toArray()
     }
 }
