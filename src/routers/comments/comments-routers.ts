@@ -36,36 +36,6 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
     const viewModel = commentHandlers.createCommentViewModel(commentDB)
 
     return res.status(200).send(viewModel)
-
-    // if (!authorization) {
-    //
-    //     const viewModel = commentHandlers.createCommentViewModel(commentDB)
-    //
-    //     return res.status(200).send(viewModel)
-    // }
-    //
-    // const payload = await jwtService.getPayloadAccessToken(authorization)
-    //
-    // if (!payload) {
-    //
-    //     const comment = commentHandlers.createCommentViewModel(commentDB)
-    //
-    //     return res.status(200).send(comment)
-    // }
-    //
-    // const commentDB1 = await commentsRepositoryQuery
-    //     .findCommentWithUserLikeStatus(id, payload.userId)
-    //
-    // if (!commentDB1) {
-    //
-    //     const comment = commentHandlers.createCommentViewModel(commentDB)
-    //
-    //     return res.status(200).send(comment)
-    // }
-    //
-    // const comment = commentHandlers.createCommentViewModel(commentDB, payload.userId)
-    //
-    // return res.status(200).send(comment)
 })
 
 commentRouter.put('/:commentId',
