@@ -12,8 +12,10 @@ import {postsRepositoryQuery} from "../../repositories/mongodb-repository/posts-
 import {postsService} from "../../services/posts-service";
 import {likeStatusBody} from "../../validations/like-status-validation";
 import {blogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
+import {constants} from "http2";
 
-export const postRouter = Router ({})
+
+export const postRouter = Router({})
 
 postRouter.post('/',
     validPostBlogId,
@@ -25,7 +27,7 @@ postRouter.post('/',
 
         const post = await postsService.createPost(req.body, blogDB!.name)
 
-        return res.status(201).send(post)
+        return res.status(constants.HTTP_STATUS_CREATED).send(post)
     })
 
 postRouter.post('/:postId/comments',
@@ -43,7 +45,7 @@ postRouter.post('/:postId/comments',
         const comment = await commentService
             .createCommentForPost(postId, content, userId, userLogin)
 
-        res.status(201).send(comment)
+        res.status(constants.HTTP_STATUS_CREATED).send(comment)
     })
 
 postRouter.put('/:id',
@@ -55,10 +57,10 @@ postRouter.put('/:id',
 
         const postIsUpdate = await postsRepository.updatePost(req.params.id, req.body)
 
-        if (postIsUpdate) return res.sendStatus(204)
+        if (postIsUpdate) return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
 
-        return res.sendStatus(404)
-})
+        return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+    })
 
 postRouter.put('/:postId/like-status', authAccessToken, likeStatusBody, errorsOfValidate, async (req: Request, res: Response) => {
 
@@ -71,7 +73,7 @@ postRouter.put('/:postId/like-status', authAccessToken, likeStatusBody, errorsOf
 
     const likesInfo = await postsRepositoryQuery.getLikesInfoByPostId(dataBody.id)
 
-    if (!likesInfo) return res.sendStatus(404)
+    if (!likesInfo) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
 
     const userLikeStatus = await postsRepositoryQuery
         .getPostUserLikeStatusByPostId(dataBody.id, dataBody.userId)
@@ -80,17 +82,17 @@ postRouter.put('/:postId/like-status', authAccessToken, likeStatusBody, errorsOf
         await postsService
             .addLikesInfoInPost(dataBody, likesInfo.extendedLikesInfo)
 
-        return res.sendStatus(204)
+        return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     }
 
     const userStatus = userLikeStatus.userLikesInfo[0].userStatus
 
-    if (userStatus === dataBody.likeStatus) return res.sendStatus(204)
+    if (userStatus === dataBody.likeStatus) return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
 
     await postsService
         .changeLikesInfoInPost(dataBody, likesInfo.extendedLikesInfo, userStatus)
 
-    return res.sendStatus(204)
+    return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
 })
 
 postRouter.delete('/:id',
@@ -100,7 +102,7 @@ postRouter.delete('/:id',
 
         const postIsDelete = await postsRepository.deletePostById(req.params.id)
 
-        if (postIsDelete) return res.sendStatus(204)
+        if (postIsDelete) return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
 
-        return res.sendStatus(404)
-})
+        return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+    })

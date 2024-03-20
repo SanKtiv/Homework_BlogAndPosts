@@ -4,6 +4,7 @@ import {
     ViewCommentModelType,
 } from "../types/comments-types";
 import {commentsRepository} from "../repositories/mongodb-repository/comments-mongodb/comments-command-mongodb";
+import {commentHandler} from "../routers/comments/comments-handlers";
 
 export const commentService = {
 
@@ -32,7 +33,7 @@ export const commentService = {
 
         const commentDB = await commentsRepository.insertComment(comment)
 
-        return this.createCommentViewModel(commentDB)
+        return commentHandler.createCommentViewModel(commentDB)
     },
 
     async addOrChangeLikesInfo(commentDB: CommentDBType, userId: string, likeStatus: string) {

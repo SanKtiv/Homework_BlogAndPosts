@@ -1,8 +1,8 @@
 import dotenv from 'dotenv'
-import {MongoClient, WithId, ObjectId} from 'mongodb'
+import {MongoClient} from 'mongodb'
 import {PostType} from "../../types/posts-types";
-import {UserDBType, UserType} from "../../types/users-types";
-import {CommentDBType, CommentType, LikesInfoType, UserStatusType} from "../../types/comments-types";
+import {UserType} from "../../types/users-types";
+import {CommentDBType, CommentType} from "../../types/comments-types";
 import {BlogType} from "../../types/blogs-types";
 import {UserSessionType} from "../../types/security-device-types";
 import {ApiRequestType} from "../../types/count-request-types";
@@ -63,8 +63,7 @@ export async function runDb() {
         console.log('Connect successfully to mongo server')
 
         await mongoose.connect(mongoURI)
-        console.log(mongoose.connection.readyState)
-        //console.log('Connect mongoose is ok')
+        console.log('Connect mongoose is ok')
     } catch(e) {
         console.log('no connection')
         await client.close()
