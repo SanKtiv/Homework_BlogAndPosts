@@ -6,7 +6,7 @@ import {checkPostByPostId} from "../../middlewares/posts-middlewares";
 import {jwtService} from "../../applications/jwt-service";
 import {postHandlers} from "./post-handler";
 import {InputPostsPagingType} from "../../types/posts-types";
-import {commentHandlers} from "../comments/comments-handlers";
+import {commentHandler} from "../comments/comments-handlers";
 import {commentsRepositoryQuery} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
 
 export const postRouterQuery = Router({})
@@ -83,7 +83,7 @@ postRouterQuery.get('/:postId/comments',
 
         if (!req.headers.authorization) {
 
-            const paginatorCommentViewModel = await commentHandlers
+            const paginatorCommentViewModel = await commentHandler
                 .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
 
             return res.status(200).send(paginatorCommentViewModel)
@@ -93,13 +93,13 @@ postRouterQuery.get('/:postId/comments',
 
         if (!payload) {
 
-            const paginatorCommentViewModel = await commentHandlers
+            const paginatorCommentViewModel = await commentHandler
                 .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
 
             return res.status(200).send(paginatorCommentViewModel)
         }
 
-        const paginatorCommentViewModel = await commentHandlers
+        const paginatorCommentViewModel = await commentHandler
             .paginatorCommentViewModel(postId, query, totalComment, commentsPaging, payload.userId)
 
         return res.status(200).send(paginatorCommentViewModel)

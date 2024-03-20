@@ -8,7 +8,7 @@ import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 import {jwtService} from "../../applications/jwt-service";
 import {likeStatusBody} from "../../validations/like-status-validation";
 import {commentsRepositoryQuery} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
-import {commentHandlers} from "./comments-handlers";
+import {commentHandler} from "./comments-handlers";
 import {constants} from "http2";
 
 
@@ -29,13 +29,13 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
 
         if (payload) {
 
-            const viewModel = commentHandlers.createCommentViewModel(commentDB, payload.userId)
+            const viewModel = commentHandler.createCommentViewModel(commentDB, payload.userId)
 
             return res.status(constants.HTTP_STATUS_OK).send(viewModel)
         }
     }
 
-    const viewModel = commentHandlers.createCommentViewModel(commentDB)
+    const viewModel = commentHandler.createCommentViewModel(commentDB)
 
     return res.status(constants.HTTP_STATUS_OK).send(viewModel)
 })
