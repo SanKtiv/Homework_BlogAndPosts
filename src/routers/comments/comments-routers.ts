@@ -9,6 +9,8 @@ import {jwtService} from "../../applications/jwt-service";
 import {likeStatusBody} from "../../validations/like-status-validation";
 import {commentsRepositoryQuery} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
 import {commentHandlers} from "./comments-handlers";
+import {constants} from "http2";
+
 
 export const commentRouter = Router({})
 
@@ -19,7 +21,7 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
 
     const commentDB = await commentsRepositoryQuery.getCommentById(id)
 
-    if (!commentDB) return res.sendStatus(404)
+    if (!commentDB) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
 
     if (authorization) {
 
@@ -29,13 +31,13 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
 
             const viewModel = commentHandlers.createCommentViewModel(commentDB, payload.userId)
 
-            return res.status(200).send(viewModel)
+            return res.status(constants.HTTP_STATUS_OK).send(viewModel)
         }
     }
 
     const viewModel = commentHandlers.createCommentViewModel(commentDB)
 
-    return res.status(200).send(viewModel)
+    return res.status(constants.HTTP_STATUS_OK).send(viewModel)
 })
 
 commentRouter.put('/:commentId',
@@ -45,9 +47,13 @@ commentRouter.put('/:commentId',
     checkOwnCommentById,
     async (req: Request, res: Response) => {
 
-    await commentsRepository.updateCommentContentById(req.params.commentId, req.body.content)
-    res.sendStatus(204)
-})
+        const id = req.params.commentId
+        const content = req.body.content
+
+        await commentsRepository.updateCommentContentById(id, content)
+
+        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+    })
 
 commentRouter.put('/:commentId/like-status',
     authAccessToken,
@@ -65,7 +71,7 @@ commentRouter.put('/:commentId/like-status',
         await commentService
             .addOrChangeLikesInfo(commentDB!, userId, likeStatus)
 
-        return res.sendStatus(204)
+        return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     })
 
 commentRouter.delete('/:commentId',
@@ -73,6 +79,7 @@ commentRouter.delete('/:commentId',
     checkOwnCommentById,
     async (req: Request, res: Response) => {
 
-    await commentsRepository.deleteCommentById(req.params.commentId)
-    res.sendStatus(204)
-})
+        await commentsRepository.deleteCommentById(req.params.commentId)
+
+        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+    })
