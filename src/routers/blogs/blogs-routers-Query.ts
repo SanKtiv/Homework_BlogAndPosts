@@ -1,6 +1,5 @@
 import {Request, Response, Router} from 'express';
 import {blogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
-import {blogsRepository} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
 import {InputPostsPagingType} from "../../types/posts-types";
 import {InputBlogsPagingType} from "../../types/blogs-types";
@@ -8,10 +7,11 @@ import {dbPostsCollection} from "../../repositories/mongodb-repository/db";
 import {postHandlers} from "../posts/post-handler";
 import {jwtService} from "../../applications/jwt-service";
 import {blogHandlers} from "./blog-handlers";
+import {constants} from "http2";
 
-export const blogRouterQuery = Router ({})
+export const blogRouterQuery = Router({})
 
-blogRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Response) => {
+blogRouterQuery.get('/', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
     const query = req.query as InputBlogsPagingType
 
@@ -24,10 +24,10 @@ blogRouterQuery.get( '/', blogsPaginatorDefault, async (req: Request, res: Respo
     const blogsPagingView = await blogHandlers
         .blogPagingViewModel(totalBlogs, blogsPagingDB, query)
 
-    res.status(200).send(blogsPagingView)
+    res.status(constants.HTTP_STATUS_OK).send(blogsPagingView)
 })
 
-blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Request, res: Response) => {
+blogRouterQuery.get('/:blogId/posts', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
     const blogId = req.params.blogId
 
@@ -39,7 +39,7 @@ blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Reques
 
     const postsByBlogId = await blogsRepositoryQuery.getPostsByBlogId(blogId, query)
 
-    if (!postsByBlogId.length) return res.sendStatus(404)
+    if (!postsByBlogId.length) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
 
     if (headersAuth) {
 
@@ -47,26 +47,26 @@ blogRouterQuery.get( '/:blogId/posts', blogsPaginatorDefault, async (req: Reques
 
         if (payLoad) {
 
-            const view = await postHandlers
+            const postPagingViewModel = await postHandlers
                 .createPostPagingViewModelNew(totalPostsByBlogId, postsByBlogId, query, payLoad.userId)
 
-            return res.status(200).send(view)
+            return res.status(constants.HTTP_STATUS_OK).send(postPagingViewModel)
         }
     }
 
-    const view = await postHandlers
+    const postPagingViewModel = await postHandlers
         .createPostPagingViewModelNew(totalPostsByBlogId, postsByBlogId, query)
 
-    return res.status(200).send(view)
+    return res.status(constants.HTTP_STATUS_OK).send(postPagingViewModel)
 })
 
-blogRouterQuery.get( '/:id', async (req: Request, res: Response) => {
+blogRouterQuery.get('/:id', async (req: Request, res: Response) => {
 
     const blogDB = await blogsRepositoryQuery.getBlogById(req.params.id)
 
-    if (!blogDB) return res.sendStatus(404)
+    if (!blogDB) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
 
     const blog = await blogHandlers.blogViewModel(blogDB)
 
-    return res.status(200).send(blog)
+    return res.status(constants.HTTP_STATUS_OK).send(blog)
 })

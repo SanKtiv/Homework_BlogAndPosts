@@ -18,7 +18,6 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
 
     const id = req.params.id
     const authorization = req.headers.authorization
-
     const commentDB = await commentsRepositoryQuery.getCommentById(id)
 
     if (!commentDB) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
@@ -65,7 +64,6 @@ commentRouter.put('/:commentId/like-status',
         const commentId = req.params.commentId
         const likeStatus = req.body.likeStatus
         const userId = req.user!.userId
-
         const commentDB = await commentsRepositoryQuery.getCommentById(commentId)
 
         await commentService

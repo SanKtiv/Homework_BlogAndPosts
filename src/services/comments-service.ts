@@ -76,20 +76,20 @@ export const commentService = {
             .updateCommentLikesInfoByCommentId(commentId, userId, likeStatus, likesInfo)
     },
 
-    async createCommentViewModel(dbComment: CommentDBType): Promise<ViewCommentModelType> {
-
-        const likesInfo = {
-            likesCount: dbComment.likesInfo.likesCount,
-            dislikesCount: dbComment.likesInfo.dislikesCount,
-            myStatus: dbComment.usersLikeStatuses[0].userStatus
-        }
-
-        return {
-            id: dbComment._id.toString(),
-            content: dbComment.content,
-            commentatorInfo: dbComment.commentatorInfo,
-            createdAt: dbComment.createdAt,
-            likesInfo: likesInfo
-        }
-    }
+    // async createCommentViewModel(dbComment: CommentDBType): Promise<ViewCommentModelType> {
+    //
+    //     const likesInfo = {
+    //         likesCount: dbComment.likesInfo.likesCount,
+    //         dislikesCount: dbComment.likesInfo.dislikesCount,
+    //         myStatus: dbComment.usersLikeStatuses[0].userStatus
+    //     }
+    //
+    //     return {
+    //         id: dbComment._id.toString(),
+    //         content: dbComment.content,
+    //         commentatorInfo: dbComment.commentatorInfo,
+    //         createdAt: dbComment.createdAt,
+    //         likesInfo: likesInfo
+    //     }
+    // }
 }

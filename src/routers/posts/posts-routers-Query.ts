@@ -8,6 +8,7 @@ import {postHandlers} from "./post-handler";
 import {InputPostsPagingType} from "../../types/posts-types";
 import {commentHandler} from "../comments/comments-handlers";
 import {commentsRepositoryQuery} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
+import {constants} from "http2";
 
 export const postRouterQuery = Router({})
 
@@ -15,7 +16,8 @@ postRouterQuery.get('/', blogsPaginatorDefault, async (req: Request, res: Respon
 
     const headersAuth = req.headers.authorization
     const postsTotalCount = await postsRepositoryQuery.getPostsTotalCount()
-    const postsPagingFromDB = await postsRepositoryQuery.getPostsWithPaging(req.query)
+    const query = req.query as InputPostsPagingType
+    const postsPagingFromDB = await postsRepositoryQuery.getPostsWithPaging(query)
 
     if (headersAuth) {
 
@@ -24,31 +26,25 @@ postRouterQuery.get('/', blogsPaginatorDefault, async (req: Request, res: Respon
         if (payLoad) {
 
             const postViewPagingModel = postHandlers
-                .createPostPagingViewModelNew(postsTotalCount,
-                    postsPagingFromDB,
-                    req.query as InputPostsPagingType,
-                    payLoad.userId)
+                .createPostPagingViewModelNew(postsTotalCount, postsPagingFromDB, query, payLoad.userId)
 
-            return res.status(200).send(postViewPagingModel)
+            return res.status(constants.HTTP_STATUS_OK).send(postViewPagingModel)
         }
     }
 
     const postViewPagingModel = postHandlers
-        .createPostPagingViewModelNew(postsTotalCount,
-            postsPagingFromDB,
-            req.query as InputPostsPagingType)
+        .createPostPagingViewModelNew(postsTotalCount, postsPagingFromDB, query)
 
-    return res.status(200).send(postViewPagingModel)
+    return res.status(constants.HTTP_STATUS_OK).send(postViewPagingModel)
 })
 
 postRouterQuery.get('/:id', async (req: Request, res: Response) => {
 
     const postId = req.params.id
     const headersAuth = req.headers.authorization
-
     const postFromDB = await postsRepositoryQuery.getPostById(postId)
 
-    if (!postFromDB) return res.sendStatus(404)
+    if (!postFromDB) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
 
     if (headersAuth) {
 
@@ -59,13 +55,13 @@ postRouterQuery.get('/:id', async (req: Request, res: Response) => {
             const postViewModel = postHandlers
                 .createPostViewModelNew(postFromDB, payLoad.userId)
 
-            return res.status(200).send(postViewModel)
+            return res.status(constants.HTTP_STATUS_OK).send(postViewModel)
         }
     }
 
     const postViewModel = postHandlers.createPostViewModelNew(postFromDB)
 
-    return res.status(200).send(postViewModel)
+    return res.status(constants.HTTP_STATUS_OK).send(postViewModel)
 })
 
 postRouterQuery.get('/:postId/comments',
@@ -73,34 +69,50 @@ postRouterQuery.get('/:postId/comments',
     usersPaginatorDefault,
     async (req: Request, res: Response) => {
 
-        const postId = req.params.postId
         const query = req.query
-
+        const postId = req.params.postId
+        const headersAuth = req.headers.authorization
         const totalComment = await commentsRepositoryQuery.getTotalCommentsByPostId(postId)
-
         const commentsPaging = await commentsRepositoryQuery.getCommentsByPostId(postId, query)
 
+        if (headersAuth) {
 
-        if (!req.headers.authorization) {
+            const payload = await jwtService.getPayloadAccessToken(headersAuth)
 
-            const paginatorCommentViewModel = await commentHandler
-                .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
+            if (payload) {
 
-            return res.status(200).send(paginatorCommentViewModel)
+                const commentsPagingViewModel = await commentHandler
+                    .paginatorCommentViewModel(postId, query, totalComment, commentsPaging, payload.userId)
+
+                return res.status(constants.HTTP_STATUS_OK).send(commentsPagingViewModel)
+            }
         }
 
-        const payload = await jwtService.getPayloadAccessToken(req.headers.authorization)
+        const commentsPagingViewModel = await commentHandler
+            .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
 
-        if (!payload) {
+        return res.status(constants.HTTP_STATUS_OK).send(commentsPagingViewModel)
 
-            const paginatorCommentViewModel = await commentHandler
-                .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
-
-            return res.status(200).send(paginatorCommentViewModel)
-        }
-
-        const paginatorCommentViewModel = await commentHandler
-            .paginatorCommentViewModel(postId, query, totalComment, commentsPaging, payload.userId)
-
-        return res.status(200).send(paginatorCommentViewModel)
+        // if (!req.headers.authorization) {
+        //
+        //     const paginatorCommentViewModel = await commentHandler
+        //         .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
+        //
+        //     return res.status(constants.HTTP_STATUS_OK).send(paginatorCommentViewModel)
+        // }
+        //
+        // const payload = await jwtService.getPayloadAccessToken(req.headers.authorization)
+        //
+        // if (!payload) {
+        //
+        //     const paginatorCommentViewModel = await commentHandler
+        //         .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
+        //
+        //     return res.status(constants.HTTP_STATUS_OK).send(paginatorCommentViewModel)
+        // }
+        //
+        // const paginatorCommentViewModel = await commentHandler
+        //     .paginatorCommentViewModel(postId, query, totalComment, commentsPaging, payload.userId)
+        //
+        // return res.status(constants.HTTP_STATUS_OK).send(paginatorCommentViewModel)
     })
