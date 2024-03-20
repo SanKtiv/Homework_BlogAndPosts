@@ -49,10 +49,5 @@ export const jwtService = {
         } catch (error) {
             return null
         }
-    },
-
-    // async getUserIdByHeadersAuthorization(headersAuth: string): Promise<string | null> {
-    //
-    //
-    // }
+    }
 }

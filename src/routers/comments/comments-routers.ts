@@ -17,39 +17,55 @@ commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
     const id = req.params.id
     const authorization = req.headers.authorization
 
-    const commentDBStatusNone = await commentsRepositoryQuery.getCommentById(id)
+    const commentDB = await commentsRepositoryQuery.getCommentById(id)
 
-    if (!commentDBStatusNone) return res.sendStatus(404)
+    if (!commentDB) return res.sendStatus(404)
 
-    if (!authorization) {
+    if (authorization) {
 
-        const comment = commentHandlers.createCommentViewModel(commentDBStatusNone)
+        const payload = await jwtService.getPayloadAccessToken(authorization)
 
-        return res.status(200).send(comment)
+        if (payload) {
+
+            const viewModel = commentHandlers.createCommentViewModel(commentDB, payload.userId)
+
+            return res.status(200).send(viewModel)
+        }
     }
 
-    const payload = await jwtService.getPayloadAccessToken(authorization)
+    const viewModel = commentHandlers.createCommentViewModel(commentDB)
 
-    if (!payload) {
+    return res.status(200).send(viewModel)
 
-        const comment = commentHandlers.createCommentViewModel(commentDBStatusNone)
-
-        return res.status(200).send(comment)
-    }
-
-    const commentDB = await commentsRepositoryQuery
-        .findCommentWithUserLikeStatus(id, payload.userId)
-
-    if (!commentDB) {
-
-        const comment = commentHandlers.createCommentViewModel(commentDBStatusNone)
-
-        return res.status(200).send(comment)
-    }
-
-    const comment = commentHandlers.createCommentViewModel(commentDBStatusNone, payload.userId)
-
-    return res.status(200).send(comment)
+    // if (!authorization) {
+    //
+    //     const viewModel = commentHandlers.createCommentViewModel(commentDB)
+    //
+    //     return res.status(200).send(viewModel)
+    // }
+    //
+    // const payload = await jwtService.getPayloadAccessToken(authorization)
+    //
+    // if (!payload) {
+    //
+    //     const comment = commentHandlers.createCommentViewModel(commentDB)
+    //
+    //     return res.status(200).send(comment)
+    // }
+    //
+    // const commentDB1 = await commentsRepositoryQuery
+    //     .findCommentWithUserLikeStatus(id, payload.userId)
+    //
+    // if (!commentDB1) {
+    //
+    //     const comment = commentHandlers.createCommentViewModel(commentDB)
+    //
+    //     return res.status(200).send(comment)
+    // }
+    //
+    // const comment = commentHandlers.createCommentViewModel(commentDB, payload.userId)
+    //
+    // return res.status(200).send(comment)
 })
 
 commentRouter.put('/:commentId',
