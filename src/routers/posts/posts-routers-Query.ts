@@ -1,5 +1,5 @@
 import {Request, Response, Router} from 'express';
-import {postsRepositoryQuery} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
+import {postsQueryRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
 import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
 import {usersPaginatorDefault} from "../../middlewares/users-middleware";
 import {checkPostByPostId} from "../../middlewares/posts-middlewares";
@@ -15,9 +15,9 @@ export const postRouterQuery = Router({})
 postRouterQuery.get('/', blogsPaginatorDefault, async (req: Request, res: Response) => {
 
     const headersAuth = req.headers.authorization
-    const postsTotalCount = await postsRepositoryQuery.getPostsTotalCount()
+    const postsTotalCount = await postsQueryRepository.getPostsTotalCount()
     const query = req.query as InputPostsPagingType
-    const postsPagingFromDB = await postsRepositoryQuery.getPostsWithPaging(query)
+    const postsPagingFromDB = await postsQueryRepository.getPostsWithPaging(query)
 
     if (headersAuth) {
 
@@ -42,7 +42,7 @@ postRouterQuery.get('/:id', async (req: Request, res: Response) => {
 
     const postId = req.params.id
     const headersAuth = req.headers.authorization
-    const postFromDB = await postsRepositoryQuery.getPostById(postId)
+    const postFromDB = await postsQueryRepository.getPostById(postId)
 
     if (!postFromDB) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
 

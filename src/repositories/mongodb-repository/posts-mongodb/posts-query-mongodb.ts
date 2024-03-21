@@ -2,7 +2,7 @@ import {dbPostsCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {PostDBType} from "../../../types/posts-types";
 
-class PostsRepositoryQuery {
+class PostsQueryRepository {
 
     async getPostsTotalCount(): Promise<number> {
 
@@ -54,4 +54,4 @@ class PostsRepositoryQuery {
     }
 }
 
-export const postsRepositoryQuery = new PostsRepositoryQuery()
+export const postsQueryRepository = new PostsQueryRepository()

@@ -1,8 +1,8 @@
 import {UserSessionType, UserSessionTypeDB} from "../types/security-device-types";
-import {deviceSessionRepository} from "../repositories/mongodb-repository/user-sessions-repository/user-session-mongodb";
+import {deviceSessionRepository} from "../repositories/mongodb-repository/user-sessions-mongodb/user-session-mongodb";
 import {jwtService} from "../applications/jwt-service";
 
-export const deviceSessionService = {
+class DeviceSessionService {
 
     async createDeviceSession(title: string, ip: string, userId: string,): Promise<string> {
 
@@ -18,7 +18,7 @@ export const deviceSessionService = {
             .insertDeviceSession(userSession)
 
         return userSessionDB._id.toString()
-    },
+    }
 
     async updateDatesDeviceSession(refreshToken: string) {
 
@@ -31,33 +31,11 @@ export const deviceSessionService = {
 
         return deviceSessionRepository
             .updateDeviceSession(result.deviceId, lastActiveDate, expirationDate)
-    },
-
-    async getDeviceSessionByDeviceId(deviceId: string) {
-        return deviceSessionRepository.getDeviceByDeviceId(deviceId)
-    },
-
-    async getAllUserSessions(refreshToken: string) {
-
-        const viewUserSessions = []
-        const result = await jwtService.getPayloadRefreshToken(refreshToken)
-        const userSessions = await deviceSessionRepository.getDeviceSessionsByUserId(result!.userId)
-
-        for (const userSession of userSessions) {
-            const viewUserSession = {
-                ip: userSession.ip,
-                title: userSession.title,
-                deviceId: userSession._id.toString(),
-                lastActiveDate: userSession.lastActiveDate
-            }
-            viewUserSessions.push(viewUserSession)
-        }
-        return viewUserSessions
-    },
+    }
 
     async deleteDeviceSessionByDeviceId(deviceId: string) {
         return deviceSessionRepository.deleteDeviceSessionByDeviceId(deviceId)
-    },
+    }
 
     async deleteAllDevicesExcludeCurrent(refreshToken: string) {
         const result = await jwtService.getPayloadRefreshToken(refreshToken)
@@ -65,3 +43,5 @@ export const deviceSessionService = {
             .deleteAllDevicesExcludeCurrent(result!.deviceId, result!.userId)
     }
 }
+
+export const deviceSessionService = new DeviceSessionService()

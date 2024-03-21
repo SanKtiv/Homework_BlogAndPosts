@@ -10,7 +10,7 @@ import {authRouters} from "./routers/auth-routers";
 import {commentRouter} from "./routers/comments/comments-routers";
 import {mailRouter} from "./routers/mail-router";
 import cookieParser from 'cookie-parser'
-import {securityRouter} from "./routers/security-router";
+import {securityRouter} from "./routers/security/security-router";
 
 export const app = express()
 

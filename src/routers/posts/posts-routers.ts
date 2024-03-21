@@ -8,7 +8,7 @@ import {authAccessToken} from "../../middlewares/authorization-jwt";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
 import {commentService} from "../../services/comments-service";
-import {postsRepositoryQuery} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
+import {postsQueryRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
 import {postsService} from "../../services/posts-service";
 import {likeStatusBody} from "../../validations/like-status-validation";
 import {blogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
@@ -71,11 +71,11 @@ postRouter.put('/:postId/like-status', authAccessToken, likeStatusBody, errorsOf
         login: req.user!.login,
     }
 
-    const likesInfo = await postsRepositoryQuery.getLikesInfoByPostId(dataBody.id)
+    const likesInfo = await postsQueryRepository.getLikesInfoByPostId(dataBody.id)
 
     if (!likesInfo) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
 
-    const userLikeStatus = await postsRepositoryQuery
+    const userLikeStatus = await postsQueryRepository
         .getPostUserLikeStatusByPostId(dataBody.id, dataBody.userId)
 
     if (!userLikeStatus) {
