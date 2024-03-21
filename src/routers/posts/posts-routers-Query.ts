@@ -92,27 +92,4 @@ postRouterQuery.get('/:postId/comments',
             .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
 
         return res.status(constants.HTTP_STATUS_OK).send(commentsPagingViewModel)
-
-        // if (!req.headers.authorization) {
-        //
-        //     const paginatorCommentViewModel = await commentHandler
-        //         .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
-        //
-        //     return res.status(constants.HTTP_STATUS_OK).send(paginatorCommentViewModel)
-        // }
-        //
-        // const payload = await jwtService.getPayloadAccessToken(req.headers.authorization)
-        //
-        // if (!payload) {
-        //
-        //     const paginatorCommentViewModel = await commentHandler
-        //         .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
-        //
-        //     return res.status(constants.HTTP_STATUS_OK).send(paginatorCommentViewModel)
-        // }
-        //
-        // const paginatorCommentViewModel = await commentHandler
-        //     .paginatorCommentViewModel(postId, query, totalComment, commentsPaging, payload.userId)
-        //
-        // return res.status(constants.HTTP_STATUS_OK).send(paginatorCommentViewModel)
     })
