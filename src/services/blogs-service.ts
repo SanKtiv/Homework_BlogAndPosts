@@ -1,13 +1,16 @@
-import {
-    BlogType,
-    InputBlogModelType,
-    ViewBlogModelType,
-} from "../types/blogs-types";
-import {blogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
-import {blogHandlers} from "../routers/blogs/blog-handlers";
+import {BlogDBType, BlogType, InputBlogModelType} from "../types/blogs-types";
+import {BlogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 
 class BlogsService {
-    async createBlog(body: InputBlogModelType): Promise<ViewBlogModelType> {
+
+    private blogsRepository: BlogsRepository
+
+    constructor() {
+
+        this.blogsRepository = new BlogsRepository()
+    }
+
+    async createBlog(body: InputBlogModelType): Promise<BlogDBType> {
 
         const newBlog = new BlogType(
             body.name,
@@ -17,9 +20,22 @@ class BlogsService {
             false
         )
 
-        const blogFromDB = await blogsRepository.insertBlog(newBlog)
+        return this.blogsRepository.insertBlog(newBlog)
+    }
 
-        return blogHandlers.blogViewModel(blogFromDB)
+    async updateBlogById(id: string, body: InputBlogModelType) {
+
+        return this.blogsRepository.updateBlog(id, body)
+    }
+
+    async deleteBlogById(id: string) {
+
+        return this.blogsRepository.deleteBlogById(id)
+    }
+
+    async deleteAllBlogs() {
+
+        await this.blogsRepository.deleteAll()
     }
 }
 
