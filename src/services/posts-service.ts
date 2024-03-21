@@ -10,7 +10,8 @@ import {postHandlers} from "../routers/posts/post-handler";
 
 class PostService {
 
-    async createPost(body: InputPostModelType, blogName: string): Promise<ViewPostModelType> {
+    async createPost(body: InputPostModelType,
+                     blogName: string): Promise<ViewPostModelType> {
 
         const newPost = new PostType(
             body.title,
@@ -28,7 +29,9 @@ class PostService {
         return postHandlers.createPostViewModelNew(postDB)
     }
 
-    async createPostByBlogId(blogId: string, body: PostBodyWithoutBlogIdType, blogName: string): Promise<ViewPostModelType> {
+    async createPostByBlogId(blogId: string,
+                             body: PostBodyWithoutBlogIdType,
+                             blogName: string): Promise<ViewPostModelType> {
 
         const newPost = new PostType(
             body.title,
@@ -46,7 +49,8 @@ class PostService {
         return postHandlers.createPostViewModelNew(postDB)
     }
 
-    async addLikesInfoInPost(dataBody: TransactBodyType, likesInfo: ExtendedLikesInfoType) {
+    async addLikesInfoInPost(dataBody: TransactBodyType,
+                             likesInfo: ExtendedLikesInfoType) {
 
         const userLikesInfo = {
             userStatus: dataBody.likeStatus,
@@ -96,7 +100,6 @@ class PostService {
             .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         return
     }
-
 }
 
 export const postsService = new PostService()
