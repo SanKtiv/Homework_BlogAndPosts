@@ -12,6 +12,7 @@ export const commentsRepository = {
     },
 
     async updateCommentContentById(id: string, content: string): Promise<void> {
+
         await CommentModel.findOneAndUpdate({_id: new ObjectId(id)}, {$set: {content: content}})
     },
 

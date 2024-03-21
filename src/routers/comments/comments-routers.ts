@@ -49,7 +49,7 @@ commentRouter.put('/:commentId',
         const id = req.params.commentId
         const content = req.body.content
 
-        await commentsRepository.updateCommentContentById(id, content)
+        await commentService.updateCommentContentById(id, content)
 
         res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     })
