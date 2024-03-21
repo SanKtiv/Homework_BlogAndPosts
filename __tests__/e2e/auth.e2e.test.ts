@@ -9,16 +9,20 @@ import {authActions} from "./test-services/test-auth-servises";
 import {email} from "./test-utility/test-mail-utility";
 import {constants} from "http2";
 import {usersQueryRepository} from "../../src/repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import mongoose from "mongoose";
 
 describe('TEST for AUTH', () => {
 
     beforeAll(async () => {
+        const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
         await client.connect()
+        await mongoose.connect(mongoURI)
         await getRequest().delete(routePaths.deleteAllData)
     })
 
     afterAll(async () => {
         await client.close()
+        await mongoose.disconnect()
     })
 
     it('-POST /auth/login, should return status 429 if requests more then five per ten sec', async () => {

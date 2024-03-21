@@ -9,24 +9,9 @@ import {postActions} from "./test-services/test-posts-services";
 import {post} from "./test-utility/test-posts-utility";
 import mongoose from 'mongoose'
 
-describe('TEST for BLOGS', () => {
+class TestingBlogs {
 
-    beforeAll(async () => {
-        await client.connect()
-        //await mongoose.connect('mongodb://0.0.0.0:27017/home_works')
-        await getRequest().delete(routePaths.deleteAllData)
-    })
-
-    beforeEach(async () => {
-        //await getRequest().delete(routePaths.deleteAllData)
-    })
-
-    afterAll(async () => {
-        await client.close()
-        await mongoose.connection.close()
-    })
-
-    it('-POST /blogs, create new blog, should return status 201 and blog', async () => {
+    async testCreateBlog() {
 
         const countBlogsBeforeCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
 
@@ -38,7 +23,44 @@ describe('TEST for BLOGS', () => {
         // await expect(countBlogsBeforeCreate).toEqual(0)
         // await expect(countBlogsAfterCreate).toEqual(1)
         await expect(result.body).toEqual(blog.expectBlog_TRUE())
+    }
+}
+
+const testingBlogs = new TestingBlogs()
+
+describe('TEST for BLOGS', function () {
+
+    beforeAll(async function () {
+        const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+        await client.connect()
+        await mongoose.connect(mongoURI)
+        await getRequest().delete(routePaths.deleteAllData)
     })
+
+    beforeEach(async function () {
+        //await getRequest().delete(routePaths.deleteAllData)
+    })
+
+    afterAll(async function () {
+        await client.close()
+        await mongoose.connection.close()
+    })
+
+    it('-POST /blogs, create new blog, should return status 201 and blog',
+        testingBlogs.testCreateBlog)
+    // it('-POST /blogs, create new blog, should return status 201 and blog', async () => {
+    //
+    //     const countBlogsBeforeCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
+    //
+    //     const result = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
+    //
+    //     const countBlogsAfterCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
+    //
+    //     await expect(result.statusCode).toBe(201)
+    //     // await expect(countBlogsBeforeCreate).toEqual(0)
+    //     // await expect(countBlogsAfterCreate).toEqual(1)
+    //     await expect(result.body).toEqual(blog.expectBlog_TRUE())
+    // })
 
     it('-POST, should return status 400 and error errorsMessages: [{message: anyString, field: name}]',
         async () => {

@@ -7,6 +7,7 @@ import {auth} from "./test-utility/test-auth-utility";
 import {userSessionActions} from "./test-services/test-security-devices-services";
 import {device} from "./test-utility/test-security-devices-test-utility";
 import {setTimeout} from "timers";
+import mongoose from "mongoose";
 
 
 describe('TEST for SecurityDevices', () => {
@@ -15,12 +16,15 @@ describe('TEST for SecurityDevices', () => {
     let refreshTokenDevice2: string
 
     beforeAll(async () => {
+        const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
         await client.connect()
+        await mongoose.connect(mongoURI)
         await getRequest().delete(routePaths.deleteAllData)
     })
 
     afterAll(async () => {
         await client.close()
+        await mongoose.disconnect()
     })
 
     it('-GET /security/devices, should return status 200 and all devices for current user', async () => {

@@ -5,16 +5,20 @@ import {userActions} from "./test-services/test-users-services";
 import {user} from "./test-utility/test-users-utility";
 import {auth} from "./test-utility/test-auth-utility";
 import {constants} from "http2";
+import mongoose from "mongoose";
 
 describe('TEST for USERS', () => {
 
     beforeAll(async () => {
+        const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
         await client.connect()
+        await mongoose.connect(mongoURI)
         await getRequest().delete(routePaths.deleteAllData)
     })
 
     afterAll(async () => {
         await client.close()
+        await mongoose.disconnect()
     })
 
     it('-POST /users, should return status 201 and user', async () => {

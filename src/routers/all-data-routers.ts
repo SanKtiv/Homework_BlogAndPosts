@@ -9,7 +9,7 @@ import {blogsService} from "../services/blogs-service";
 
 export const dellAllRouter = Router ({})
 
-dellAllRouter.delete('/', async (req: Request, res: Response) => {
+dellAllRouter.delete('/', async function (req: Request, res: Response) {
 
     await blogsService.deleteAllBlogs()
     await postsRepository.deleteAll()

@@ -48,6 +48,7 @@ class CommentsRepository {
     }
 
     async deleteCommentById(id: string): Promise<void> {
+
         await CommentModel.deleteOne({_id: new ObjectId(id)})
     }
 
