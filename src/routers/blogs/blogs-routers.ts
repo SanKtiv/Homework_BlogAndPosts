@@ -12,40 +12,91 @@ import {blogHandlers} from "./blog-handlers";
 
 export const blogRouter = Router({})
 
-blogRouter.post('/', validBlog, basicAuth, errorsOfValidate, async (req: Request, res: Response) => {
+class BlogsController {
 
-    const blogDB = await blogsService.createBlog(req.body)
+    async createBlog(req: Request, res: Response) {
 
-    const blogViewModel = await blogHandlers.blogViewModel(blogDB)
+        const blogDB = await blogsService.createBlog(req.body)
 
-    return res.status(constants.HTTP_STATUS_CREATED).send(blogViewModel)
-})
+        const blogViewModel = await blogHandlers.blogViewModel(blogDB)
 
-blogRouter.post('/:blogId/posts', validPost, basicAuth, checkExistBlogByBlogId, errorsOfValidate, async (req: Request, res: Response) => {
+        return res.status(constants.HTTP_STATUS_CREATED).send(blogViewModel)
+    }
 
-    const blogId = req.params.blogId
+    async getBlogById(req: Request, res: Response) {
 
-    const blogDB = await blogsRepositoryQuery.getBlogById(blogId)
+        const blogId = req.params.blogId
 
-    const post = await postsService.createPostByBlogId(blogId, req.body, blogDB!.name)
+        const blogDB = await blogsRepositoryQuery.getBlogById(blogId)
 
-    return res.status(constants.HTTP_STATUS_CREATED).send(post)
-})
+        const post = await postsService.createPostByBlogId(blogId, req.body, blogDB!.name)
 
-blogRouter.put('/:id', validBlog, basicAuth, validId, errorsOfValidate, async (req: Request, res: Response) => {
+        return res.status(constants.HTTP_STATUS_CREATED).send(post)
+    }
 
-    const resultUpdate = await blogsService. updateBlogById(req.params.id, req.body)
+    async updateBlogById(req: Request, res: Response) {
 
-    if (resultUpdate) return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        const resultUpdate = await blogsService. updateBlogById(req.params.id, req.body)
 
-    return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
-})
+        if (resultUpdate) return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
 
-blogRouter.delete('/:id', basicAuth, validId, async (req: Request, res: Response) => {
+        return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+    }
 
-    const result = await blogsService.deleteBlogById(req.params.id)
+    async deleteBlogById(req: Request, res: Response) {
 
-    if (result) return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        const result = await blogsService.deleteBlogById(req.params.id)
 
-    return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
-})
+        if (result) return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+
+        return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+    }
+}
+
+const blogsController = new BlogsController()
+
+blogRouter.post('/', validBlog, basicAuth, errorsOfValidate, blogsController.createBlog)
+
+blogRouter.post('/:blogId/posts', validPost, basicAuth, checkExistBlogByBlogId, errorsOfValidate, blogsController.getBlogById)
+
+blogRouter.put('/:id', validBlog, basicAuth, validId, errorsOfValidate, blogsController.updateBlogById)
+
+blogRouter.delete('/:id', basicAuth, validId, blogsController.deleteBlogById)
+
+// blogRouter.post('/', validBlog, basicAuth, errorsOfValidate, async (req: Request, res: Response) => {
+//
+//     const blogDB = await blogsService.createBlog(req.body)
+//
+//     const blogViewModel = await blogHandlers.blogViewModel(blogDB)
+//
+//     return res.status(constants.HTTP_STATUS_CREATED).send(blogViewModel)
+// })
+
+// blogRouter.post('/:blogId/posts', validPost, basicAuth, checkExistBlogByBlogId, errorsOfValidate, async (req: Request, res: Response) => {
+//
+//     const blogId = req.params.blogId
+//
+//     const blogDB = await blogsRepositoryQuery.getBlogById(blogId)
+//
+//     const post = await postsService.createPostByBlogId(blogId, req.body, blogDB!.name)
+//
+//     return res.status(constants.HTTP_STATUS_CREATED).send(post)
+// })
+
+// blogRouter.put('/:id', validBlog, basicAuth, validId, errorsOfValidate, async (req: Request, res: Response) => {
+//
+//     const resultUpdate = await blogsService. updateBlogById(req.params.id, req.body)
+//
+//     if (resultUpdate) return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+//
+//     return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+// })
+
+// blogRouter.delete('/:id', basicAuth, validId, async (req: Request, res: Response) => {
+//
+//     const result = await blogsService.deleteBlogById(req.params.id)
+//
+//     if (result) return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+//
+//     return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+// })
