@@ -8,7 +8,7 @@ import {setTimeout} from "timers";
 import {authActions} from "./test-services/test-auth-servises";
 import {email} from "./test-utility/test-mail-utility";
 import {constants} from "http2";
-import {usersRepositoryReadOnly} from "../../src/repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import {usersQueryRepository} from "../../src/repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 
 describe('TEST for AUTH', () => {
 
@@ -152,7 +152,7 @@ describe('TEST for AUTH', () => {
         await authActions.sendRecoveryCode((user.sendBody_TRUE()).email)
 
         //get recovery code
-        const userFromDb = await usersRepositoryReadOnly
+        const userFromDb = await usersQueryRepository
             .getUserByLoginOrEmail((user.sendBody_TRUE()).login)
         console.log('get user from DB=', userFromDb)
         const recoveryCode = userFromDb!.passwordRecovery!.recoveryCode
@@ -164,7 +164,7 @@ describe('TEST for AUTH', () => {
         await expect(resultNewCreatePassword.statusCode).toBe(204)
 
         //login with old password, should return 401
-        const userFromDbAfter = await usersRepositoryReadOnly
+        const userFromDbAfter = await usersQueryRepository
             .getUserByLoginOrEmail((user.sendBody_TRUE()).login)
         console.log('get user from DB after=', userFromDbAfter)
         const resultLoginUser = await userActions.authUser(user.sendBodyAuth_TRUE())

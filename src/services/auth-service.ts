@@ -11,7 +11,7 @@ import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/
 import {userService} from "./users-service";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import {usersQueryRepository} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 
 export const authService = {
 
@@ -52,7 +52,7 @@ export const authService = {
 
     async checkCredentials(LoginBody: InputUserAuthModelType): Promise<string | null> {
 
-        const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(LoginBody.loginOrEmail)
+        const user = await usersQueryRepository.getUserByLoginOrEmail(LoginBody.loginOrEmail)
         if (!user) return null
         const result = await bcrypt.compare(LoginBody.password, user.accountData.passwordHash)
         if (!result) return null
@@ -66,7 +66,7 @@ export const authService = {
 
     async confirmationRegistration(code: string): Promise<boolean> {
 
-        const user = await usersRepositoryReadOnly.getUserByConfirmationCode(code)
+        const user = await usersQueryRepository.getUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false
         return usersRepository.updateUserExpirationDate(user._id)
@@ -90,7 +90,7 @@ export const authService = {
     },
 
     async getExpDateOfRecoveryCode(recoveryCode: string) {
-        const user = await usersRepositoryReadOnly
+        const user = await usersQueryRepository
             .getUserByRecoveryCode(recoveryCode)
         if (!user || !user.passwordRecovery) return null
         return user.passwordRecovery.expirationDate

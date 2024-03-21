@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import {usersQueryRepository} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 
 const loginRegex: RegExp = /^[a-zA-Z0-9_-]*$/
 const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
@@ -11,7 +11,7 @@ const userLogin = body('login')
     .isLength({min: 3, max: 10}).withMessage('login length is incorrect')
     .matches(loginRegex).withMessage('login have invalid characters')
     .custom(async login => {
-        if (await usersRepositoryReadOnly.getUserByLoginOrEmail(login)) {
+        if (await usersQueryRepository.getUserByLoginOrEmail(login)) {
             throw new Error('This login already use')
         }
     })
@@ -26,7 +26,7 @@ export const userEmail = body('email')
     .trim()
     .matches(emailRegex).withMessage('email have invalid characters')
     .custom(async email => {
-        if (await usersRepositoryReadOnly.getUserByLoginOrEmail(email)) {
+        if (await usersQueryRepository.getUserByLoginOrEmail(email)) {
             throw new Error('This email already use')
         }
     })
@@ -45,7 +45,7 @@ export const userEmailResending = body('email')
     .trim()
     .matches(emailRegex).withMessage('email have invalid characters')
     .custom(async email => {
-        const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(email)
+        const user = await usersQueryRepository.getUserByLoginOrEmail(email)
 
         if (!user || user.emailConfirmation.isConfirmed) {
             throw new Error('This email is confirmed')

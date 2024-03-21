@@ -1,11 +1,11 @@
 import {InputUserPagingType, UserDBType, ViewUserModelType, ViewUsersPagingType} from "../../types/users-types";
-import {usersRepositoryReadOnly} from "../../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import {usersQueryRepository} from "../../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 
 export const userHandlers = {
 
     async createUserRequest(userId: string) {
 
-        const user = await usersRepositoryReadOnly.findUserByUserId(userId)
+        const user = await usersQueryRepository.findUserByUserId(userId)
 
         if (!user) return null
 

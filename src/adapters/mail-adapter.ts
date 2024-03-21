@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import {usersRepositoryReadOnly} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import {usersQueryRepository} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 import {authService} from "../services/auth-service";
 import {passwordRecovery, registrationConfirmation} from "../utility/email-utilits";
 
@@ -7,7 +7,7 @@ export const emailAdapter = {
 
     async sendConfirmationCodeByEmail(email: string) {
 
-        const user = await usersRepositoryReadOnly.getUserByLoginOrEmail(email)
+        const user = await usersQueryRepository.getUserByLoginOrEmail(email)
         if (!user) return null // User dont find
         const confirmationCode = user.emailConfirmation.confirmationCode
 
