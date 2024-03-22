@@ -13,11 +13,11 @@ class TestingBlogs {
 
     async testCreateBlog() {
 
-        const countBlogsBeforeCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
+        //const countBlogsBeforeCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
 
         const result = await blogActions.createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)
 
-        const countBlogsAfterCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
+        //const countBlogsAfterCreate = (await blogActions.getBlogsPagingDefault()).body.items.length
 
         await expect(result.statusCode).toBe(201)
         // await expect(countBlogsBeforeCreate).toEqual(0)
@@ -47,7 +47,7 @@ describe('TEST for BLOGS', function () {
     })
 
     it('-POST /blogs, create new blog, should return status 201 and blog',
-        testingBlogs.testCreateBlog)
+        testingBlogs.testCreateBlog.bind(testingBlogs))
     // it('-POST /blogs, create new blog, should return status 201 and blog', async () => {
     //
     //     const countBlogsBeforeCreate = (await blogActions.getBlogsPagingDefault()).body.items.length

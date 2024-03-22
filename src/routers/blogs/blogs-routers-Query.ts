@@ -1,72 +1,111 @@
 import {Request, Response, Router} from 'express';
-import {blogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
+import {BlogsRepositoryQuery,} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
 import {InputPostsPagingType} from "../../types/posts-types";
 import {InputBlogsPagingType} from "../../types/blogs-types";
-import {dbPostsCollection} from "../../repositories/mongodb-repository/db";
-import {postHandlers} from "../posts/post-handler";
-import {jwtService} from "../../applications/jwt-service";
-import {blogHandlers} from "./blog-handlers";
+import {PostsHandler} from "../posts/post-handler";
+import {JwtService} from "../../applications/jwt-service";
+import {BlogHandlers} from "./blog-handlers";
 import {constants} from "http2";
+import {PostsQueryRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
 
 export const blogRouterQuery = Router({})
 
-blogRouterQuery.get('/', blogsPaginatorDefault, async (req: Request, res: Response) => {
+class BlogsQueryController {
 
-    const query = req.query as InputBlogsPagingType
+    private postsRepositoryQuery: PostsQueryRepository
 
-    const totalBlogs = query.searchNameTerm ?
-        await blogsRepositoryQuery.getTotalBlogsByName(query.searchNameTerm) :
-        await blogsRepositoryQuery.getTotalBlogs()
+    private blogsRepositoryQuery: BlogsRepositoryQuery
 
-    const blogsPagingDB = await blogsRepositoryQuery.getBlogsWithPaging(query)
+    private blogHandlers: BlogHandlers
 
-    const blogsPagingView = await blogHandlers
-        .blogPagingViewModel(totalBlogs, blogsPagingDB, query)
+    private postHandlers: PostsHandler
 
-    res.status(constants.HTTP_STATUS_OK).send(blogsPagingView)
-})
+    private jwtService: JwtService
 
-blogRouterQuery.get('/:blogId/posts', blogsPaginatorDefault, async (req: Request, res: Response) => {
+    constructor() {
 
-    const blogId = req.params.blogId
+        this.jwtService = new JwtService()
 
-    const headersAuth = req.headers.authorization
+        this.postHandlers = new PostsHandler()
 
-    const query = req.query as InputPostsPagingType
+        this.blogHandlers = new BlogHandlers()
 
-    const totalPostsByBlogId = await dbPostsCollection.countDocuments({blogId: blogId})
+        this.postsRepositoryQuery = new PostsQueryRepository()
 
-    const postsByBlogId = await blogsRepositoryQuery.getPostsByBlogId(blogId, query)
-
-    if (!postsByBlogId.length) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
-
-    if (headersAuth) {
-
-        const payLoad = await jwtService.getPayloadAccessToken(headersAuth)
-
-        if (payLoad) {
-
-            const postPagingViewModel = await postHandlers
-                .createPostPagingViewModelNew(totalPostsByBlogId, postsByBlogId, query, payLoad.userId)
-
-            return res.status(constants.HTTP_STATUS_OK).send(postPagingViewModel)
-        }
+        this.blogsRepositoryQuery = new BlogsRepositoryQuery()
     }
 
-    const postPagingViewModel = await postHandlers
-        .createPostPagingViewModelNew(totalPostsByBlogId, postsByBlogId, query)
+    async getBlogsWithPaging(req: Request, res: Response) {
 
-    return res.status(constants.HTTP_STATUS_OK).send(postPagingViewModel)
-})
+        const query = req.query as InputBlogsPagingType
 
-blogRouterQuery.get('/:id', async (req: Request, res: Response) => {
+        const totalBlogs = query.searchNameTerm ?
+            await this.blogsRepositoryQuery.getTotalBlogsByName(query.searchNameTerm) :
+            await this.blogsRepositoryQuery.getTotalBlogs()
 
-    const blogDB = await blogsRepositoryQuery.getBlogById(req.params.id)
+        const blogsPagingDB = await this.blogsRepositoryQuery.getBlogsWithPaging(query)
 
-    if (!blogDB) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+        const blogsPagingView = await this.blogHandlers
+            .blogPagingViewModel(totalBlogs, blogsPagingDB, query)
 
-    const blog = await blogHandlers.blogViewModel(blogDB)
+        res.status(constants.HTTP_STATUS_OK).send(blogsPagingView)
+    }
 
-    return res.status(constants.HTTP_STATUS_OK).send(blog)
-})
+    async getPostsByBlogId(req: Request, res: Response) {
+
+        const blogId = req.params.blogId
+
+        const headersAuth = req.headers.authorization
+
+        const query = req.query as InputPostsPagingType
+
+        const totalPostsByBlogId = await this.postsRepositoryQuery.getCountPostsByBlogId(blogId)
+
+        const postsByBlogId = await this.blogsRepositoryQuery.getPostsByBlogId(blogId, query)
+
+        if (!postsByBlogId.length) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+
+        if (headersAuth) {
+
+            const payLoad = await this.jwtService.getPayloadAccessToken(headersAuth)
+
+            if (payLoad) {
+
+                const postPagingViewModel = await this.postHandlers
+                    .createPostPagingViewModel(totalPostsByBlogId, postsByBlogId, query, payLoad.userId)
+
+                return res.status(constants.HTTP_STATUS_OK).send(postPagingViewModel)
+            }
+        }
+
+        const postPagingViewModel = await this.postHandlers
+            .createPostPagingViewModel(totalPostsByBlogId, postsByBlogId, query)
+
+        return res.status(constants.HTTP_STATUS_OK).send(postPagingViewModel)
+    }
+
+    async getBlogById(req: Request, res: Response) {
+
+        const blogDB = await this.blogsRepositoryQuery.getBlogById(req.params.id)
+
+        if (!blogDB) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+
+        const blog = await this.blogHandlers.blogViewModel(blogDB)
+
+        return res.status(constants.HTTP_STATUS_OK).send(blog)
+    }
+}
+
+const blogsQueryController = new BlogsQueryController()
+
+blogRouterQuery.get('/',
+    blogsPaginatorDefault,
+    blogsQueryController.getBlogsWithPaging.bind(blogsQueryController))
+
+blogRouterQuery.get('/:blogId/posts',
+    blogsPaginatorDefault,
+    blogsQueryController.getPostsByBlogId.bind(blogsQueryController))
+
+blogRouterQuery.get('/:id',
+    blogsQueryController.getBlogById.bind(blogsQueryController))

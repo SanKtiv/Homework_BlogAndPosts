@@ -6,7 +6,7 @@ import {
 import {commentsRepository} from "../repositories/mongodb-repository/comments-mongodb/comments-command-mongodb";
 import {commentHandler} from "../routers/comments/comments-handlers";
 
-class CommentService {
+export class CommentsService {
 
     async createCommentForPost(postId: string,
                                content: string,
@@ -82,4 +82,4 @@ class CommentService {
     }
 }
 
-export const commentService = new CommentService()
+export const commentService = new CommentsService()

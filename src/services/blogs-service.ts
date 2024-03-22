@@ -1,7 +1,7 @@
 import {BlogDBType, BlogType, InputBlogModelType} from "../types/blogs-types";
 import {BlogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 
-class BlogsService {
+export class BlogsService {
 
     private blogsRepository: BlogsRepository
 

@@ -6,7 +6,7 @@ import {
 import {dbPostsCollection} from "../db";
 import {ObjectId} from "mongodb";
 
-class PostsRepository {
+export class PostsRepository {
 
     async insertPostToDB(post: PostType): Promise<PostDBType> {
 

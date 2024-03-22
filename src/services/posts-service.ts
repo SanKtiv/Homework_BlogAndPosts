@@ -1,17 +1,22 @@
 import {
-    ViewPostModelType,
     PostType,
     ExtendedLikesInfoType,
     TransactBodyType,
-    InputPostModelType, PostBodyWithoutBlogIdType
+    InputPostModelType, PostBodyWithoutBlogIdType, PostDBType
 } from "../types/posts-types";
-import {postsRepository} from "../repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
-import {postHandlers} from "../routers/posts/post-handler";
+import {PostsRepository} from "../repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
 
-class PostService {
+export class PostsService {
+
+    private postsRepository: PostsRepository
+
+    constructor() {
+
+        this.postsRepository = new PostsRepository()
+    }
 
     async createPost(body: InputPostModelType,
-                     blogName: string): Promise<ViewPostModelType> {
+                     blogName: string): Promise<PostDBType> {
 
         const newPost = new PostType(
             body.title,
@@ -24,14 +29,12 @@ class PostService {
             []
         )
 
-        const postDB = await postsRepository.insertPostToDB(newPost)
-
-        return postHandlers.createPostViewModelNew(postDB)
+        return this.postsRepository.insertPostToDB(newPost)
     }
 
     async createPostByBlogId(blogId: string,
                              body: PostBodyWithoutBlogIdType,
-                             blogName: string): Promise<ViewPostModelType> {
+                             blogName: string): Promise<PostDBType> {
 
         const newPost = new PostType(
             body.title,
@@ -44,9 +47,12 @@ class PostService {
             []
         )
 
-        const postDB = await postsRepository.insertPostToDB(newPost)
+        return this.postsRepository.insertPostToDB(newPost)
+    }
 
-        return postHandlers.createPostViewModelNew(postDB)
+    async updatePost(id: string, body: InputPostModelType): Promise<Boolean> {
+
+        return this.postsRepository.updatePost(id, body)
     }
 
     async addLikesInfoInPost(dataBody: TransactBodyType,
@@ -62,7 +68,7 @@ class PostService {
         if (dataBody.likeStatus === 'Like') likesInfo.likesCount++
         if (dataBody.likeStatus === 'Dislike') likesInfo.dislikesCount++
 
-        await postsRepository.updatePostAddLikesInfo(dataBody.id, likesInfo, userLikesInfo)
+        await this.postsRepository.updatePostAddLikesInfo(dataBody.id, likesInfo, userLikesInfo)
     }
 
     async changeLikesInfoInPost(dataBody: TransactBodyType,
@@ -81,7 +87,7 @@ class PostService {
             if (userLikeStatus === 'Like') likesInfo.likesCount--
             if (userLikeStatus === 'Dislike') likesInfo.dislikesCount--
 
-            await postsRepository
+            await this.postsRepository
                 .updatePostRemoveUserLikeStatus(dataBody.id, dataBody.userId, likesInfo)
             return
         }
@@ -96,10 +102,14 @@ class PostService {
             likesInfo.likesCount--
         }
 
-        await postsRepository
+        await this.postsRepository
             .updatePostChangeLikesInfo(dataBody.id, dataBody.userId, likesInfo, userLikesInfo)
         return
     }
-}
 
-export const postsService = new PostService()
+    async deletePostById(id: string): Promise<Boolean> {
+
+        return this.postsRepository.deletePostById(id)
+    }
+}
+// export const postsService = new PostsService()

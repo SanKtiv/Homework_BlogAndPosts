@@ -2,11 +2,16 @@ import {dbPostsCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {PostDBType} from "../../../types/posts-types";
 
-class PostsQueryRepository {
+export class PostsQueryRepository {
 
     async getPostsTotalCount(): Promise<number> {
 
         return dbPostsCollection.countDocuments()
+    }
+
+    async getCountPostsByBlogId(blogId: string): Promise<number> {
+
+        return dbPostsCollection.countDocuments({blogId: blogId})
     }
 
     async getPostsWithPaging(query: any): Promise<PostDBType[]> {

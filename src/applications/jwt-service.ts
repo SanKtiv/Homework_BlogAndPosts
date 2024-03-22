@@ -2,7 +2,7 @@ import jwt, {JwtPayload, Secret} from 'jsonwebtoken'
 import {ViewTokenModelType} from "../types/users-types";
 import {deviceSessionService} from "../services/device-session-service";
 
-class JwtService {
+export class JwtService {
 
     async createAccessToken(userId: string): Promise<ViewTokenModelType> {
 

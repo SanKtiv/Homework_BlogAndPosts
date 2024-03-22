@@ -1,6 +1,6 @@
 import {BlogDBType, InputBlogsPagingType, ViewBlogModelType, ViewBlogsPagingType} from "../../types/blogs-types";
 
-class BlogHandlers {
+export class BlogHandlers {
 
     blogViewModel(blogOutDb: BlogDBType): ViewBlogModelType {
 

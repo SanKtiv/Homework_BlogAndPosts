@@ -5,9 +5,9 @@ import {
     ViewPostsPagingType
 } from "../../types/posts-types";
 
-class PostHandlers {
+export class PostsHandler {
 
-    createPostViewModelNew(postFromDB: PostDBType, userId?: string): ViewPostModelType {
+    createPostViewModel(postFromDB: PostDBType, userId?: string): ViewPostModelType {
 
         const {_id, userLikesInfo, extendedLikesInfo, ...postViewModelWithoutId} = postFromDB
 
@@ -37,14 +37,14 @@ class PostHandlers {
         }
     }
 
-    createPostPagingViewModelNew(totalPosts: number,
-                                 postsFromDB: PostDBType[],
-                                 query: InputPostsPagingType,
-                                 userId?: string): ViewPostsPagingType {
+    createPostPagingViewModel(totalPosts: number,
+                              postsFromDB: PostDBType[],
+                              query: InputPostsPagingType,
+                              userId?: string): ViewPostsPagingType {
 
         const items = userId ?
-            postsFromDB.map(postDB => this.createPostViewModelNew(postDB, userId)) :
-            postsFromDB.map(postDB => this.createPostViewModelNew(postDB))
+            postsFromDB.map(postDB => this.createPostViewModel(postDB, userId)) :
+            postsFromDB.map(postDB => this.createPostViewModel(postDB))
 
         return {
             pagesCount: Math.ceil(totalPosts / +query.pageSize),
@@ -56,7 +56,7 @@ class PostHandlers {
     }
 }
 
-export const postHandlers = new PostHandlers()
+export const postsHandler = new PostsHandler()
 // export const postHandlers = {
 //
 //     createPostViewModelNew(postFromDB: PostDBType, userId?: string): ViewPostModelType {
