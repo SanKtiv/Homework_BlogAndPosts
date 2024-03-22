@@ -1,17 +1,19 @@
-import {
-    CommentDBType,
-    CommentType,
-    ViewCommentModelType,
-} from "../types/comments-types";
-import {commentsRepository} from "../repositories/mongodb-repository/comments-mongodb/comments-command-mongodb";
-import {commentHandler} from "../routers/comments/comments-handlers";
+import {CommentDBType, CommentType,} from "../types/comments-types";
+import {CommentsRepository} from "../repositories/mongodb-repository/comments-mongodb/comments-command-mongodb";
 
 export class CommentsService {
+
+    private commentsRepository: CommentsRepository
+
+    constructor() {
+
+        this.commentsRepository = new CommentsRepository()
+    }
 
     async createCommentForPost(postId: string,
                                content: string,
                                userId: string,
-                               userLogin: string): Promise<ViewCommentModelType> {
+                               userLogin: string): Promise<CommentDBType> {
 
         const comment: CommentType = {
             content: content,
@@ -31,9 +33,7 @@ export class CommentsService {
             }]
         }
 
-        const commentDB = await commentsRepository.insertComment(comment)
-
-        return commentHandler.createCommentViewModel(commentDB)
+        return this.commentsRepository.insertComment(comment)
     }
 
     async addOrChangeLikesInfo(commentDB: CommentDBType, userId: string, likeStatus: string) {
@@ -48,7 +48,7 @@ export class CommentsService {
             if (likeStatus === 'Like') likesInfo.likesCount++
             if (likeStatus === 'Dislike') likesInfo.dislikesCount++
 
-            return commentsRepository
+            return this.commentsRepository
                 .updateCommentAddNewUserLikeStatus(commentId, userId, likeStatus, likesInfo)
         }
 
@@ -72,14 +72,17 @@ export class CommentsService {
 
         if (likeStatus === 'None' && userStatus === 'Dislike') likesInfo.dislikesCount--
 
-        return commentsRepository
+        return this.commentsRepository
             .updateCommentLikesInfoByCommentId(commentId, userId, likeStatus, likesInfo)
     }
 
     async updateCommentContentById(id: string, content: string): Promise<void> {
 
-        await commentsRepository.updateCommentContentById(id, content)
+        await this.commentsRepository.updateCommentContentById(id, content)
+    }
+
+    async deleteCommentById(id: string) {
+
+        await this.commentsRepository.deleteCommentById(id)
     }
 }
-
-export const commentService = new CommentsService()

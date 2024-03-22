@@ -5,14 +5,18 @@ import {errorsOfValidate} from "../middlewares/error-validators-middleware";
 import {jwtService} from "../applications/jwt-service";
 import {authAccessToken, checkRefreshToken} from "../middlewares/authorization-jwt";
 import {deviceSessionService} from "../services/device-session-service";
-import {apiRequests} from "../middlewares/count-api-request-middleware";
+import {apiRequests, countRequestsToApi} from "../middlewares/count-api-request-middleware";
 import {emailAdapter} from "../adapters/mail-adapter";
 import {newPassword, recoveryCode} from "../validations/recovery-password-validators";
 import {constants} from "http2";
 
 export const authRouters = Router({})
 
-authRouters.post('/login', apiRequests, ...userAuthValid, errorsOfValidate, async (req: Request, res: Response) => {
+authRouters.post('/login',
+    countRequestsToApi.countRequests.bind(countRequestsToApi),
+    ...userAuthValid,
+    errorsOfValidate,
+    async (req: Request, res: Response) => {
 
     const userId = await authService.checkCredentials(req.body)
 

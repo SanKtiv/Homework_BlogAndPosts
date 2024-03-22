@@ -13,6 +13,7 @@ import {likeStatusBody} from "../../validations/like-status-validation";
 import {BlogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 import {constants} from "http2";
 import {PostsHandler} from "./post-handler";
+import {CommentsHandler} from "../comments/comments-handlers";
 
 export const postRouter = Router({})
 
@@ -21,6 +22,7 @@ class PostsController {
     private blogsRepositoryQuery: BlogsRepositoryQuery
     private postsService: PostsService
     private commentService: CommentsService
+    private commentsHandler: CommentsHandler
     private postsQueryRepository: PostsQueryRepository
     private postsHandler: PostsHandler
 
@@ -29,6 +31,7 @@ class PostsController {
         this.blogsRepositoryQuery = new BlogsRepositoryQuery()
         this.postsService = new PostsService()
         this.commentService = new CommentsService()
+        this.commentsHandler = new CommentsHandler()
         this.postsQueryRepository = new PostsQueryRepository()
         this.postsHandler = new PostsHandler()
     }
@@ -51,10 +54,12 @@ class PostsController {
         const userId = req.user!.userId
         const userLogin = req.user!.login
 
-        const comment = await this.commentService
+        const commentDB = await this.commentService
             .createCommentForPost(postId, content, userId, userLogin)
 
-        res.status(constants.HTTP_STATUS_CREATED).send(comment)
+        const commentViewModel = await this.commentsHandler.createCommentViewModel(commentDB)
+
+        res.status(constants.HTTP_STATUS_CREATED).send(commentViewModel)
     }
 
     async updatePost(req: Request, res: Response) {

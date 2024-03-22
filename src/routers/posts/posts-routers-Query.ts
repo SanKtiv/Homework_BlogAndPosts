@@ -9,8 +9,8 @@ import {checkPostByPostId} from "../../middlewares/posts-middlewares";
 import {JwtService, jwtService} from "../../applications/jwt-service";
 import {PostsHandler, postsHandler} from "./post-handler";
 import {InputPostsPagingType} from "../../types/posts-types";
-import {commentHandler} from "../comments/comments-handlers";
-import {commentsRepositoryQuery} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
+import {commentsHandler} from "../comments/comments-handlers";
+import {commentsQueryRepository} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
 import {constants} from "http2";
 
 export const postRouterQuery = Router({})
@@ -85,8 +85,8 @@ class PostsQueryController {
         const query = req.query
         const postId = req.params.postId
         const headersAuth = req.headers.authorization
-        const totalComment = await commentsRepositoryQuery.getTotalCommentsByPostId(postId)
-        const commentsPaging = await commentsRepositoryQuery.getCommentsByPostId(postId, query)
+        const totalComment = await commentsQueryRepository.getTotalCommentsByPostId(postId)
+        const commentsPaging = await commentsQueryRepository.getCommentsByPostId(postId, query)
 
         if (headersAuth) {
 
@@ -94,14 +94,14 @@ class PostsQueryController {
 
             if (payload) {
 
-                const commentsPagingViewModel = await commentHandler
+                const commentsPagingViewModel = await commentsHandler
                     .paginatorCommentViewModel(postId, query, totalComment, commentsPaging, payload.userId)
 
                 return res.status(constants.HTTP_STATUS_OK).send(commentsPagingViewModel)
             }
         }
 
-        const commentsPagingViewModel = await commentHandler
+        const commentsPagingViewModel = await commentsHandler
             .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
 
         return res.status(constants.HTTP_STATUS_OK).send(commentsPagingViewModel)
@@ -168,8 +168,8 @@ postRouterQuery.get('/:postId/comments',
         const query = req.query
         const postId = req.params.postId
         const headersAuth = req.headers.authorization
-        const totalComment = await commentsRepositoryQuery.getTotalCommentsByPostId(postId)
-        const commentsPaging = await commentsRepositoryQuery.getCommentsByPostId(postId, query)
+        const totalComment = await commentsQueryRepository.getTotalCommentsByPostId(postId)
+        const commentsPaging = await commentsQueryRepository.getCommentsByPostId(postId, query)
 
         if (headersAuth) {
 
@@ -177,14 +177,14 @@ postRouterQuery.get('/:postId/comments',
 
             if (payload) {
 
-                const commentsPagingViewModel = await commentHandler
+                const commentsPagingViewModel = await commentsHandler
                     .paginatorCommentViewModel(postId, query, totalComment, commentsPaging, payload.userId)
 
                 return res.status(constants.HTTP_STATUS_OK).send(commentsPagingViewModel)
             }
         }
 
-        const commentsPagingViewModel = await commentHandler
+        const commentsPagingViewModel = await commentsHandler
             .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
 
         return res.status(constants.HTTP_STATUS_OK).send(commentsPagingViewModel)

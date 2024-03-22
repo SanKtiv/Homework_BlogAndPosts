@@ -2,7 +2,7 @@ import {CommentDBType, CommentType, LikesInfoType} from "../../../types/comments
 import {CommentModel} from "../db";
 import {ObjectId} from "mongodb";
 
-class CommentsRepository {
+export class CommentsRepository {
 
     async insertComment(comment: CommentType): Promise<CommentDBType> {
 

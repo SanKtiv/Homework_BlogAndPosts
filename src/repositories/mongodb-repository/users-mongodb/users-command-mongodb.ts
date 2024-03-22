@@ -2,7 +2,7 @@ import {PasswordRecoveryType, UserDBType, UserType} from "../../../types/users-t
 import {dbUsersCollection} from "../db";
 import {ObjectId} from "mongodb";
 
-class UsersRepository {
+export class UsersRepository {
 
     async insertUserToDB(user: UserType): Promise<UserDBType> {
 

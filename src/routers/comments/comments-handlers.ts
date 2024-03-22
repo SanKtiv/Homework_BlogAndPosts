@@ -1,6 +1,6 @@
 import {CommentDBType, ViewCommentModelType, ViewCommentPagingType} from "../../types/comments-types";
 
-class CommentHandlers {
+export class CommentsHandler {
 
     createCommentViewModel(dbComment: CommentDBType, userId?: string): ViewCommentModelType {
 
@@ -44,4 +44,4 @@ class CommentHandlers {
     }
 }
 
-export const commentHandler = new CommentHandlers()
+export const commentsHandler = new CommentsHandler()
