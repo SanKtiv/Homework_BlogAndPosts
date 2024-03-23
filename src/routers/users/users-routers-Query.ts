@@ -1,14 +1,70 @@
 import {Request, Response, Router} from "express";
 import {usersPaginatorDefault} from "../../middlewares/users-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
-import {usersQueryRepository} from "../../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import {UsersQueryRepository} from "../../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 import {constants} from "http2";
+import {UsersHandler} from "./users-handlers";
+import {QueryPagingType} from "../../types/users-types";
 
 export const userRouterQuery = Router({})
 
-userRouterQuery.get('/', basicAuth, usersPaginatorDefault, async (req: Request, res: Response) => {
+class UsersQueryController {
 
-    const usersForm = await usersQueryRepository.getAllUsers(req.query)
+    private usersQueryRepository: UsersQueryRepository
+    private usersHandler: UsersHandler
 
-    res.status(constants.HTTP_STATUS_OK).send(usersForm)
-})
+    constructor() {
+        this.usersQueryRepository = new UsersQueryRepository()
+        this.usersHandler = new UsersHandler()
+    }
+
+    async getUsersPaging(req: Request, res: Response) {
+
+        const query = req.query as QueryPagingType
+        const filter = []
+        const login = new RegExp(query.searchLoginTerm, 'i')
+        const email = new RegExp(query.searchEmailTerm, 'i')
+
+        if (query.searchLoginTerm) filter.push({'accountData.login': login})
+        if (query.searchEmailTerm) filter.push({'accountData.email': email})
+
+        const countUsers = await this.usersQueryRepository.getCountUsers(filter)
+
+        const usersFilter = await this.usersQueryRepository.getUsersPaging(query, login, email)
+
+        //const usersForm = await usersQueryRepository.getAllUsers(req.query)
+
+        const usersPagingViewModel = await this.usersHandler
+            .createUsersPagingViewModel(countUsers, usersFilter, query)
+
+        res.status(constants.HTTP_STATUS_OK).send(usersPagingViewModel)
+    }
+}
+
+const usersQueryController = new UsersQueryController
+
+userRouterQuery.get('/',
+    basicAuth,
+    usersPaginatorDefault,
+    usersQueryController.getUsersPaging.bind(usersQueryController))
+// userRouterQuery.get('/', basicAuth, usersPaginatorDefault, async (req: Request, res: Response) => {
+//
+//     const query = req.query as QueryPagingType
+//     const filter = []
+//     const login = new RegExp(query.searchLoginTerm, 'i')
+//     const email = new RegExp(query.searchEmailTerm, 'i')
+//
+//     if (query.searchLoginTerm) filter.push({'accountData.login': login})
+//     if (query.searchEmailTerm) filter.push({'accountData.email': email})
+//
+//     const countUsers = await usersQueryRepository.getCountUsers(filter)
+//
+//     const usersFilter = await usersQueryRepository.getUsersPaging(query, login, email)
+//
+//     //const usersForm = await usersQueryRepository.getAllUsers(req.query)
+//
+//     const usersPagingViewModel = await usersHandler
+//         .createUsersPagingViewModel(countUsers, usersFilter, query)
+//
+//     res.status(constants.HTTP_STATUS_OK).send(usersPagingViewModel)
+// })

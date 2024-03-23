@@ -2,7 +2,7 @@ import {dbSecurityCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {UserSessionTypeDB} from "../../../types/security-device-types";
 
-class DeviceSessionQueryRepository {
+export class DeviceSessionQueryRepository {
 
     async getDeviceSessionsByDeviceIdAndUserId(deviceId: string, userId: string) {
 

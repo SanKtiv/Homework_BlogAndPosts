@@ -1,11 +1,10 @@
-import {UserDBType, ViewUsersPagingType} from "../../../types/users-types";
+import {UserDBType} from "../../../types/users-types";
 import {dbUsersCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {userHandlers} from "../../../routers/users/users-handlers";
 
-class UsersQueryRepository {
+export class UsersQueryRepository {
 
-    async userSearch(query: any, login?: RegExp, email?: RegExp): Promise<UserDBType[]> {
+    async getUsersPaging(query: any, login?: RegExp, email?: RegExp): Promise<UserDBType[]> {
 
         const sortBy = `accountData.${query.sortBy}`
         const filter = []
@@ -31,30 +30,38 @@ class UsersQueryRepository {
             .toArray()
     }
 
-    async getAllUsers(query: any): Promise<ViewUsersPagingType> {
+    // async getAllUsers(query: any): Promise<ViewUsersPagingType> {
+    //
+    //     const searchLoginTermRegexp = new RegExp(query.searchLoginTerm, 'i')
+    //     const searchEmailTermRegexp = new RegExp(query.searchEmailTerm, 'i')
+    //     let totalUsers: number
+    //     const filter = []
+    //
+    //     if (query.searchLoginTerm) filter.push({'accountData.login': searchLoginTermRegexp})
+    //     if (query.searchEmailTerm) filter.push({'accountData.email': searchEmailTermRegexp})
+    //
+    //     if (query.searchLoginTerm && query.searchEmailTerm) {
+    //
+    //         totalUsers = await dbUsersCollection.countDocuments({$or: filter})
+    //     }
+    //     else {
+    //
+    //         totalUsers = await dbUsersCollection.countDocuments(filter[0])
+    //     }
+    //
+    //     const usersSearch = await this.getUsersPaging(query, searchLoginTermRegexp, searchEmailTermRegexp)
+    //
+    //     return userHandlers.usersFormOutput(totalUsers, usersSearch, query)
+    // }
 
-        const searchLoginTermRegexp = new RegExp(query.searchLoginTerm, 'i')
-        const searchEmailTermRegexp = new RegExp(query.searchEmailTerm, 'i')
-        let totalUsers: number
-        const filter = []
+    async getCountUsers(filter: {}[]) {
 
-        if (query.searchLoginTerm) filter.push({'accountData.login': searchLoginTermRegexp})
-        if (query.searchEmailTerm) filter.push({'accountData.email': searchEmailTermRegexp})
+        const newFilter = filter.length > 1 ? {$or: filter}: filter[0]
 
-        if (query.searchLoginTerm && query.searchEmailTerm) {
-
-            totalUsers = await dbUsersCollection.countDocuments({$or: filter})
-        }
-
-        else {
-            totalUsers = await dbUsersCollection.countDocuments(filter[0])
-        }
-
-        const usersSearch = await this.userSearch(query, searchLoginTermRegexp, searchEmailTermRegexp)
-        return userHandlers.usersFormOutput(totalUsers, usersSearch, query)
+        return dbUsersCollection.countDocuments(newFilter)
     }
 
-    async findUserByUserId(userId: string): Promise<UserDBType | null> {
+    async getUserByUserId(userId: string): Promise<UserDBType | null> {
         return  dbUsersCollection.findOne({_id: new ObjectId(userId)})
     }
 

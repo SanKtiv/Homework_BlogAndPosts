@@ -3,7 +3,7 @@ import {validId} from "../../validations/blogs-validators";
 import {validPostBlogId} from "../../validations/posts-validators";
 import {checkPostByPostId} from "../../middlewares/posts-middlewares";
 import {checkInputFormComment} from "../../validations/comments-validators";
-import {authAccessToken} from "../../middlewares/authorization-jwt";
+import {authAccessToken, authorizationToken} from "../../middlewares/authorization-jwt";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
 import {CommentsService} from "../../services/comments-service";
@@ -124,7 +124,7 @@ postRouter.post('/',
     postsController.createPost.bind(postsController))
 
 postRouter.post('/:postId/comments',
-    authAccessToken,
+    authorizationToken.accessToken.bind(authorizationToken),
     checkInputFormComment,
     checkPostByPostId,
     errorsOfValidate,

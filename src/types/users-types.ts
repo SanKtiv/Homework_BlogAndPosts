@@ -72,12 +72,12 @@ export type RequestUserType = {
 }
 
 export type QueryPagingType = {
-    searchLoginTerm?: string
-    searchEmailTerm?: string
-    pageNumber?: string
-    pageSize?: string
-    sortBy?: string
-    sortDirection?: string
+    searchLoginTerm: string
+    searchEmailTerm: string
+    pageNumber: string
+    pageSize: string
+    sortBy: string
+    sortDirection: string
 }
 
 export type PasswordRecoveryInputType = {

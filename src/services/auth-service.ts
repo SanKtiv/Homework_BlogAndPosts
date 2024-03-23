@@ -8,10 +8,11 @@ import {
 import bcrypt from 'bcrypt'
 import {dateNow} from "../variables/variables";
 import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-command-mongodb";
-import {userService} from "./users-service";
+import {usersService} from "./users-service";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {usersQueryRepository} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import {usersHandler} from "../routers/users/users-handlers";
 
 export const authService = {
 
@@ -35,19 +36,19 @@ export const authService = {
         }
     },
 
-    async createSuperUser(body: InputUserModelType): Promise<UserType> {
-
-        const user = await this.createUser(body)
-        const superUser = {...user}
-        superUser.emailConfirmation.isConfirmed = true
-        return superUser
-    },
+    // async createSuperUser(body: InputUserModelType): Promise<UserType> {
+    //
+    //     const user = await this.createUser(body)
+    //     const superUser = {...user}
+    //     superUser.emailConfirmation.isConfirmed = true
+    //     return superUser
+    // },
 
     async insertUserInDB(body: InputUserModelType): Promise<ViewUserModelType> {
 
         const user = await this.createUser(body)
         const findUser = await usersRepository.insertUserToDB(user)
-        return userService.createViewUserModel(findUser)
+        return usersHandler.createUserViewModel(findUser)
     },
 
     async checkCredentials(LoginBody: InputUserAuthModelType): Promise<string | null> {
