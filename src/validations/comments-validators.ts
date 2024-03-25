@@ -2,6 +2,13 @@ import {body, param} from "express-validator";
 
 class CommentsValidation {
 
+    public id: any
+
+    constructor() {
+        this.id = param('id')
+            .trim()
+            .isLength({min: 1}).withMessage('id is empty')
+    }
     async postId() {
 
         await param('postId')
@@ -17,9 +24,9 @@ class CommentsValidation {
             .isLength({min: 20, max: 300}).withMessage('content has incorrect length')
     }
 
-    async id() {
-
-        await param('id')
+    async id1() {
+console.log('ID1')
+        return param('id')
             .trim()
             .isLength({min: 1}).withMessage('id is empty')
     }

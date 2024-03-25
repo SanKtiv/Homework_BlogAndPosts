@@ -29,21 +29,23 @@ class CommentsController {
     }
 
     async getCommentById(req: Request, res: Response) {
-
+console.log('1')
         const id = req.params.id
+        console.log('2')
         const authorization = req.headers.authorization
+        console.log('3')
         const commentDB = await this.commentsQueryRepository.getCommentById(id)
-
+        console.log('4')
         if (!commentDB) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
-
+        console.log('5')
         if (authorization) {
-
+            console.log('6')
             const payload = await this.jwtService.getPayloadAccessToken(authorization)
-
+            console.log('7')
             if (payload) {
-
+                console.log('8')
                 const viewModel = this.commentsHandler.createCommentViewModel(commentDB, payload.userId)
-
+                console.log('9')
                 return res.status(constants.HTTP_STATUS_OK).send(viewModel)
             }
         }
@@ -87,7 +89,8 @@ class CommentsController {
 const commentsController = new CommentsController()
 
 commentRouter.get('/:id',
-    commentsValidation.id.bind(commentsValidation),
+    commentsValidation.id,
+    // commentsValidation.id,
     commentsController.getCommentById.bind(commentsController))
 
 commentRouter.put('/:commentId',

@@ -59,13 +59,13 @@ describe('TEST for comments', () => {
         // Create first comment for Post by first user's access token
         const comment1 = await commentAction
             .createComment(accessToken1, commentSendBody_TRUE, postId)
-
+        console.log('test1')
         // Like the comment by user1 and get comment by user1
         await commentAction
             .updateCommentLikesStatus(comment1.body.id, accessToken1, 'Like')
-
+        console.log('test2')
         await commentAction.getCommentById(comment1.body.id, accessToken1)
-
+        console.log('test3')
         // Like the comment by user2 and get comment by user1
         await commentAction
             .updateCommentLikesStatus(comment1.body.id, accessToken2, 'Like')

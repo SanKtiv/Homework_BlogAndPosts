@@ -125,8 +125,8 @@ postRouter.post('/',
 
 postRouter.post('/:postId/comments',
     authorizationMiddleware.accessToken.bind(authorizationMiddleware),
-    commentsValidation.postId.bind(commentsValidation),
-    commentsValidation.content.bind(commentsValidation),
+    //commentsValidation.postId.bind(commentsValidation),
+    //commentsValidation.content.bind(commentsValidation),
     checkPostByPostId,
     errorMiddleware.error.bind(errorMiddleware),
     postsController.createCommentForPost.bind(postsController))
