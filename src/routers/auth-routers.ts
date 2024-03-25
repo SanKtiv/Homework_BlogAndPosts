@@ -1,13 +1,13 @@
 import {Router, Request, Response} from "express";
-import {AuthService, authService} from "../services/auth-service";
+import {AuthService} from "../services/auth-service";
 import {emailPasswordRecovery, userAuthValid} from "../validations/users-validators";
 import {errorsOfValidate} from "../middlewares/error-validators-middleware";
-import {JwtService, jwtService} from "../applications/jwt-service";
+import {JwtService} from "../applications/jwt-service";
 import {authAccessToken, checkRefreshToken} from "../middlewares/authorization-jwt";
-import {DeviceSessionService, deviceSessionService} from "../services/device-session-service";
+import {DeviceSessionService} from "../services/device-session-service";
 import {apiRequests, countRequestsToApi} from "../middlewares/count-api-request-middleware";
 import {EmailAdapter} from "../adapters/mail-adapter";
-import {ValidNewPassword, ValidRecoveryCode} from "../validations/recovery-password-validators";
+import {authValidation} from "../validations/recovery-password-validators";
 import {constants} from "http2";
 
 export const authRouters = Router({})
@@ -54,6 +54,46 @@ class AuthController {
 
         return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     }
+
+    async createNewPassword(req: Request, res: Response) {
+
+        await this.authService.createNewPassword(req.body)
+
+        return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+    }
+
+    async updateRefreshToken(req: Request, res: Response) {
+
+        const payload = await this.jwtService
+            .getPayloadRefreshToken(req.cookies.refreshToken)
+
+        const accessToken = await this.jwtService
+            .createAccessToken(payload!.userId)
+
+        const newRefreshToken = await this.jwtService
+            .createRefreshToken(payload!.userId, payload!.deviceId)
+
+        return res
+            .cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
+            .status(constants.HTTP_STATUS_OK)
+            .send(accessToken)
+    }
+
+    async deleteDeviceSession(req: Request, res: Response) {
+
+        const refreshToken = req.cookies.refreshToken
+
+        const payload = await this.jwtService.getPayloadRefreshToken(refreshToken)
+
+        await this.deviceSessionService.deleteDeviceSessionByDeviceId(payload!.deviceId)
+
+        return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+    }
+
+    async getInfoCurrentUser(req: Request, res: Response) {
+
+        return res.status(constants.HTTP_STATUS_OK).send(req.user!)
+    }
 }
 
 const authController = new AuthController()
@@ -68,6 +108,25 @@ authRouters.post('/password-recovery',
     apiRequests,
     emailPasswordRecovery,
     authController.sendRecoveryCode.bind(authController))
+
+authRouters.post('/new-password',
+    apiRequests,
+    authValidation.password.bind(authValidation),
+    authValidation.recoveryCode.bind(authValidation),
+    errorsOfValidate,
+    authController.createNewPassword.bind(authController))
+
+authRouters.post('/refresh-token',
+    checkRefreshToken,
+    authController.updateRefreshToken.bind(authController))
+
+authRouters.post('/logout',
+    checkRefreshToken,
+    authController.deleteDeviceSession.bind(authController))
+
+authRouters.get('/me',
+    authAccessToken,
+    authController.getInfoCurrentUser.bind(authController))
 
 // authRouters.post('/login',
 //     countRequestsToApi.countRequests.bind(countRequestsToApi),
@@ -104,35 +163,46 @@ authRouters.post('/password-recovery',
 //         return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
 //     })
 
-authRouters.post('/new-password', apiRequests, ValidNewPassword, ValidRecoveryCode, errorsOfValidate, async (req: Request, res: Response) => {
+// authRouters.post('/new-password',
+//     apiRequests,
+//     authValidation.password.bind(authValidation),
+//     authValidation.recoveryCode.bind(authValidation),
+//     errorsOfValidate,
+//     async (req: Request, res: Response) => {
+//
+//     await authService.createNewPassword(req.body)
+//
+//     return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+// })
 
-    await authService.createNewPassword(req.body)
+// authRouters.post('/refresh-token',
+//     checkRefreshToken,
+//     async (req: Request, res: Response) => {
+//
+//     const payload = await jwtService.getPayloadRefreshToken(req.cookies.refreshToken)
+//     const accessToken = await jwtService.createAccessToken(payload!.userId)
+//     const newRefreshToken = await jwtService.createRefreshToken(payload!.userId, payload!.deviceId)
+//
+//     return res
+//         .cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
+//         .status(constants.HTTP_STATUS_OK)
+//         .send(accessToken)
+// })
 
-    return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
-})
+// authRouters.post('/logout',
+//     checkRefreshToken,
+//     async (req: Request, res: Response) => {
+//
+//     const payload = await jwtService.getPayloadRefreshToken(req.cookies.refreshToken)
+//
+//     await deviceSessionService.deleteDeviceSessionByDeviceId(payload!.deviceId)
+//
+//     return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+// })
 
-authRouters.post('/refresh-token', checkRefreshToken, async (req: Request, res: Response) => {
-
-    const payload = await jwtService.getPayloadRefreshToken(req.cookies.refreshToken)
-    const accessToken = await jwtService.createAccessToken(payload!.userId)
-    const newRefreshToken = await jwtService.createRefreshToken(payload!.userId, payload!.deviceId)
-
-    return res
-        .cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
-        .status(constants.HTTP_STATUS_OK)
-        .send(accessToken)
-})
-
-authRouters.post('/logout', checkRefreshToken, async (req: Request, res: Response) => {
-
-    const payload = await jwtService.getPayloadRefreshToken(req.cookies.refreshToken)
-
-    await deviceSessionService.deleteDeviceSessionByDeviceId(payload!.deviceId)
-
-    return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
-})
-
-authRouters.get('/me', authAccessToken, async (req: Request, res: Response) => {
-
-    return res.status(constants.HTTP_STATUS_OK).send(req.user!)
-})
+// authRouters.get('/me',
+//     authAccessToken,
+//     async (req: Request, res: Response) => {
+//
+//     return res.status(constants.HTTP_STATUS_OK).send(req.user!)
+// })

@@ -2,7 +2,7 @@ import {UserSessionType, UserSessionTypeDB} from "../../../types/security-device
 import {dbSecurityCollection} from "../db";
 import {ObjectId} from "mongodb";
 
-class DeviceSessionRepository {
+export class DeviceSessionRepository {
 
     async insertDeviceSession(userSession: UserSessionType): Promise<UserSessionTypeDB> {
 
