@@ -1,9 +1,9 @@
 import {Router, Response, Request} from "express";
-import {checkCommentModelForUpdate, checkId} from "../../validations/comments-validators";
-import {checkCommentById, checkOwnCommentById} from "../../middlewares/comment-middleware";
+import {commentsValidation} from "../../validations/comments-validators";
+import {commentsMiddleware} from "../../middlewares/comment-middleware";
 import {CommentsService} from "../../services/comments-service";
-import {authAccessToken} from "../../middlewares/authorization-jwt";
-import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
+import {authorizationMiddleware} from "../../middlewares/authorization-jwt";
+import {errorMiddleware} from "../../middlewares/error-validators-middleware";
 import {JwtService} from "../../applications/jwt-service";
 import {likeStatusBody} from "../../validations/like-status-validation";
 import {CommentsQueryRepository} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
@@ -86,26 +86,29 @@ class CommentsController {
 
 const commentsController = new CommentsController()
 
-commentRouter.get('/:id', checkId, commentsController.getCommentById.bind(commentsController))
+commentRouter.get('/:id',
+    commentsValidation.id.bind(commentsValidation),
+    commentsController.getCommentById.bind(commentsController))
 
 commentRouter.put('/:commentId',
-    authAccessToken,
-    checkCommentModelForUpdate,
-    errorsOfValidate,
-    checkOwnCommentById,
+    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
+    commentsValidation.commentId.bind(commentsValidation),
+    errorMiddleware.error.bind(errorMiddleware),
+    commentsMiddleware.commentOwner.bind(commentsMiddleware),
     commentsController.updateCommentById.bind(commentsController))
 
 commentRouter.put('/:commentId/like-status',
-    authAccessToken,
-    checkCommentById,
+    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
+    commentsMiddleware.commentId.bind(commentsMiddleware),
     likeStatusBody,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     commentsController.updateCommentLikeStatusById.bind(commentsController))
 
 commentRouter.delete('/:commentId',
-    authAccessToken,
-    checkOwnCommentById,
+    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
+    commentsMiddleware.commentOwner.bind(commentsMiddleware),
     commentsController.deleteCommentById.bind(commentsController))
+
 // commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
 //
 //     const id = req.params.id

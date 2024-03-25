@@ -55,4 +55,4 @@ export class DeviceSessionService {
     }
 }
 
-export const deviceSessionService = new DeviceSessionService()
+// export const deviceSessionService = new DeviceSessionService()

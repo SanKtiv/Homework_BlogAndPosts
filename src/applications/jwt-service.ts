@@ -1,6 +1,5 @@
 import jwt, {JwtPayload, Secret} from 'jsonwebtoken'
 import {ViewTokenModelType} from "../types/users-types";
-import {deviceSessionService} from "../services/device-session-service";
 
 export class JwtService {
 
@@ -21,11 +20,11 @@ export class JwtService {
 
         const payload = {deviceId: deviceId, userId: userId}
 
-        const refreshToken = jwt.sign(payload, secretRefresh, {expiresIn: '1h'})
+        return jwt.sign(payload, secretRefresh, {expiresIn: '1h'})
 
-        await deviceSessionService.updateDatesDeviceSession(refreshToken)
+        //await deviceSessionService.updateDatesDeviceSession(refreshToken)
 
-        return refreshToken
+        //return refreshToken
     }
 
     async getPayloadRefreshToken(token: string): Promise<JwtPayload | null> {
@@ -39,7 +38,6 @@ export class JwtService {
         } catch (error) {
 
             return null
-
         }
     }
 
@@ -56,9 +54,8 @@ export class JwtService {
         } catch (error) {
 
             return null
-
         }
     }
 }
 
-export const jwtService = new JwtService()
+// export const jwtService = new JwtService()

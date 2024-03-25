@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express'
 import {EmailAdapter} from "../adapters/mail-adapter";
 import {userEmailResending, userInputValid} from "../validations/users-validators";
-import {errorsOfValidate} from "../middlewares/error-validators-middleware";
+import {errorMiddleware} from "../middlewares/error-validators-middleware";
 import {AuthService} from "../services/auth-service";
 import {confirmationEmailCode} from "../validations/confirmation-code-validator";
 import {apiRequests} from "../middlewares/count-api-request-middleware";
@@ -52,19 +52,19 @@ const mailController = new MailController()
 mailRouter.post('/registration',
     apiRequests,
     ...userInputValid,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     mailController.createUser.bind(mailController))
 
 mailRouter.post('/registration-confirmation',
     apiRequests,
     confirmationEmailCode,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     mailController.registrationConfirmation.bind(mailController))
 
 mailRouter.post('/registration-email-resending',
     apiRequests,
     userEmailResending,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     mailController.resendConfirmationCode.bind(mailController))
 
 // mailRouter.post('/registration',

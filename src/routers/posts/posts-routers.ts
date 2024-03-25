@@ -2,9 +2,9 @@ import {Request, Response, Router} from 'express';
 import {validId} from "../../validations/blogs-validators";
 import {validPostBlogId} from "../../validations/posts-validators";
 import {checkPostByPostId} from "../../middlewares/posts-middlewares";
-import {checkInputFormComment} from "../../validations/comments-validators";
-import {authAccessToken, authorizationToken} from "../../middlewares/authorization-jwt";
-import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
+import {commentsValidation} from "../../validations/comments-validators";
+import {authorizationMiddleware} from "../../middlewares/authorization-jwt";
+import {errorMiddleware} from "../../middlewares/error-validators-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
 import {CommentsService} from "../../services/comments-service";
 import {PostsQueryRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
@@ -120,33 +120,35 @@ const postsController = new PostsController()
 postRouter.post('/',
     validPostBlogId,
     basicAuth,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     postsController.createPost.bind(postsController))
 
 postRouter.post('/:postId/comments',
-    authorizationToken.accessToken.bind(authorizationToken),
-    checkInputFormComment,
+    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
+    commentsValidation.postId.bind(commentsValidation),
+    commentsValidation.content.bind(commentsValidation),
     checkPostByPostId,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     postsController.createCommentForPost.bind(postsController))
 
 postRouter.put('/:id',
     validPostBlogId,
     basicAuth,
     validId,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     postsController.updatePost.bind(postsController))
 
 postRouter.put('/:postId/like-status',
-    authAccessToken,
+    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
     likeStatusBody,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     postsController.createLikeStatusForPost.bind(postsController))
 
 postRouter.delete('/:id',
     basicAuth,
     validId,
     postsController.deletePostById.bind(postsController))
+
 // postRouter.post('/',
 //     validPostBlogId,
 //     basicAuth,

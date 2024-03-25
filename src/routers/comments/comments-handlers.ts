@@ -2,28 +2,28 @@ import {CommentDBType, ViewCommentModelType, ViewCommentPagingType} from "../../
 
 export class CommentsHandler {
 
-    createCommentViewModel(dbComment: CommentDBType, userId?: string): ViewCommentModelType {
+    createCommentViewModel(commentDB: CommentDBType, userId?: string): ViewCommentModelType {
 
         let userStatus = 'None'
 
         if (userId) {
 
-            const index = dbComment.usersLikeStatuses.findIndex(el => el.userId === userId)
+            const index = commentDB.usersLikeStatuses.findIndex(el => el.userId === userId)
 
-            if (index !== -1) userStatus = dbComment.usersLikeStatuses[index].userStatus!
+            if (index !== -1) userStatus = commentDB.usersLikeStatuses[index].userStatus!
         }
 
         const newLikesInfo = {
-            likesCount: dbComment.likesInfo.likesCount,
-            dislikesCount: dbComment.likesInfo.dislikesCount,
+            likesCount: commentDB.likesInfo.likesCount,
+            dislikesCount: commentDB.likesInfo.dislikesCount,
             myStatus: userStatus
         }
 
         return {
-            id: dbComment._id.toString(),
-            content: dbComment.content,
-            commentatorInfo: dbComment.commentatorInfo,
-            createdAt: dbComment.createdAt,
+            id: commentDB._id.toString(),
+            content: commentDB.content,
+            commentatorInfo: commentDB.commentatorInfo,
+            createdAt: commentDB.createdAt,
             likesInfo: newLikesInfo
         }
     }
@@ -44,4 +44,4 @@ export class CommentsHandler {
     }
 }
 
-export const commentsHandler = new CommentsHandler()
+// export const commentsHandler = new CommentsHandler()

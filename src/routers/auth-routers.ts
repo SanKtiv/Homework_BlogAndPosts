@@ -1,9 +1,9 @@
 import {Router, Request, Response} from "express";
 import {AuthService} from "../services/auth-service";
 import {emailPasswordRecovery, userAuthValid} from "../validations/users-validators";
-import {errorsOfValidate} from "../middlewares/error-validators-middleware";
+import {errorMiddleware} from "../middlewares/error-validators-middleware";
 import {JwtService} from "../applications/jwt-service";
-import {authAccessToken, checkRefreshToken} from "../middlewares/authorization-jwt";
+import {authorizationMiddleware} from "../middlewares/authorization-jwt";
 import {DeviceSessionService} from "../services/device-session-service";
 import {apiRequests, countRequestsToApi} from "../middlewares/count-api-request-middleware";
 import {EmailAdapter} from "../adapters/mail-adapter";
@@ -34,11 +34,16 @@ class AuthController {
         if (!userId) return res.sendStatus(constants.HTTP_STATUS_UNAUTHORIZED)
 
         const title = req.headers["user-agent"] || 'chrome 105'
+
         const ip = req.header('x-forwarded-for') || req.ip
 
         const deviceId = await this.deviceSessionService.createDeviceSession(title, ip, userId)
+
         const accessToken = await this.jwtService.createAccessToken(userId)
+
         const refreshToken = await this.jwtService.createRefreshToken(userId, deviceId)
+
+        await this.deviceSessionService.updateDatesDeviceSession(refreshToken)
 
         return res
             .cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
@@ -73,6 +78,8 @@ class AuthController {
         const newRefreshToken = await this.jwtService
             .createRefreshToken(payload!.userId, payload!.deviceId)
 
+        await this.deviceSessionService.updateDatesDeviceSession(newRefreshToken)
+
         return res
             .cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
             .status(constants.HTTP_STATUS_OK)
@@ -101,7 +108,7 @@ const authController = new AuthController()
 authRouters.post('/login',
     countRequestsToApi.countRequests.bind(countRequestsToApi),
     ...userAuthValid,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     authController.createAndSendAccessToken.bind(authController))
 
 authRouters.post('/password-recovery',
@@ -113,19 +120,19 @@ authRouters.post('/new-password',
     apiRequests,
     authValidation.password.bind(authValidation),
     authValidation.recoveryCode.bind(authValidation),
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     authController.createNewPassword.bind(authController))
 
 authRouters.post('/refresh-token',
-    checkRefreshToken,
+    authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
     authController.updateRefreshToken.bind(authController))
 
 authRouters.post('/logout',
-    checkRefreshToken,
+    authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
     authController.deleteDeviceSession.bind(authController))
 
 authRouters.get('/me',
-    authAccessToken,
+    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
     authController.getInfoCurrentUser.bind(authController))
 
 // authRouters.post('/login',

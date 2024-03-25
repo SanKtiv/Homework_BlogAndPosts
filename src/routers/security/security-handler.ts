@@ -1,8 +1,8 @@
 import {UserSessionTypeDB} from "../../types/security-device-types";
 
-class SecurityHandler {
+export class SecurityHandler {
 
-    getDeviceSessionsViewModel(deviceSessions:UserSessionTypeDB[]) {
+    getDeviceSessionsViewModel(deviceSessions: UserSessionTypeDB[]) {
 
         const deviceSessionsViewModel = []
 
@@ -22,4 +22,4 @@ class SecurityHandler {
     }
 }
 
-export const securityHandler = new SecurityHandler()
+// export const securityHandler = new SecurityHandler()

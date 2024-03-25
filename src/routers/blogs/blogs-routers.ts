@@ -2,7 +2,7 @@ import {Request, Response, Router} from 'express';
 import {validId, validBlog} from "../../validations/blogs-validators";
 import {validPost} from "../../validations/posts-validators";
 import {checkExistBlogByBlogId} from "../../middlewares/blogs-middlewares";
-import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
+import {errorMiddleware} from "../../middlewares/error-validators-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
 import {BlogsService} from "../../services/blogs-service";
 import {BlogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
@@ -76,21 +76,21 @@ const blogsController = new BlogsController()
 blogRouter.post('/',
     validBlog,
     basicAuth,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     blogsController.createBlog.bind(blogsController))
 
 blogRouter.post('/:blogId/posts',
     validPost,
     basicAuth,
     checkExistBlogByBlogId,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     blogsController.createPostForBlog.bind(blogsController))
 
 blogRouter.put('/:id',
     validBlog,
     basicAuth,
     validId,
-    errorsOfValidate,
+    errorMiddleware.error.bind(errorMiddleware),
     blogsController.updateBlogById.bind(blogsController))
 
 blogRouter.delete('/:id',
