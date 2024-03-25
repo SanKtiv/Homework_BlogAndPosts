@@ -1,12 +1,48 @@
 import {body} from "express-validator";
-import {authService} from "../services/auth-service";
+import {AuthService, authService} from "../services/auth-service";
 
-export const newPassword = body('newPassword')
+export class AuthValidation {
+
+    private authService: AuthService
+
+    constructor() {
+
+        this.authService = new AuthService()
+    }
+
+    async customRecoveryCode(code: string) {
+
+        const ExpDate = await this.authService.getExpDateOfRecoveryCode(code)
+
+        if (!ExpDate) throw new Error('Recovery code is incorrect')
+
+        if (ExpDate <= new Date()) throw new Error('ExpDate is expired')
+    }
+
+    async password() {
+
+        await body('newPassword')
+            .isString().withMessage('newPassword is not string')
+            .trim()
+            .isLength({min: 6, max: 20}).withMessage('newPassword length is incorrect')
+    }
+
+    async recoveryCode() {
+
+        await body('recoveryCode')
+            .isString().withMessage('recoveryCode is not string')
+            .trim()
+            .isLength({min: 1}).withMessage('recoveryCode is empty string')
+            .custom(this.customRecoveryCode.bind(this))
+    }
+}
+
+export const ValidNewPassword = body('newPassword')
     .isString().withMessage('newPassword is not string')
     .trim()
     .isLength({min: 6, max: 20}).withMessage('newPassword length is incorrect')
 
-export const recoveryCode = body('recoveryCode')
+export const ValidRecoveryCode = body('recoveryCode')
     .isString().withMessage('recoveryCode is not string')
     .trim()
     .isLength({min: 1}).withMessage('recoveryCode is empty string')
@@ -16,4 +52,4 @@ export const recoveryCode = body('recoveryCode')
         if (ExpDate <= new Date()) throw new Error('ExpDate is expired')
     })
 
-export const recoveryPassValid = [newPassword, recoveryCode]
+export const recoveryPassValid = [ValidNewPassword, ValidRecoveryCode]

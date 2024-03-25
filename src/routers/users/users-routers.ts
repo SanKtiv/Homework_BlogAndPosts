@@ -2,7 +2,7 @@ import {Request, Response, Router} from "express";
 import {userInputValid} from "../../validations/users-validators";
 import {basicAuth} from "../../middlewares/authorization-basic";
 import {errorsOfValidate} from "../../middlewares/error-validators-middleware";
-import {UsersService, usersService} from "../../services/users-service";
+import {UsersService} from "../../services/users-service";
 import {constants} from "http2";
 import {UsersHandler} from "./users-handlers";
 

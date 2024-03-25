@@ -2,7 +2,7 @@ import {UserSessionType, UserSessionTypeDB} from "../types/security-device-types
 import {deviceSessionRepository} from "../repositories/mongodb-repository/user-sessions-mongodb/user-session-mongodb";
 import {jwtService} from "../applications/jwt-service";
 
-class DeviceSessionService {
+export class DeviceSessionService {
 
     async createDeviceSession(title: string, ip: string, userId: string,): Promise<string> {
 
