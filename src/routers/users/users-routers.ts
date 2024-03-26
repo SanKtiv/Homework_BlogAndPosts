@@ -1,10 +1,10 @@
 import {Request, Response, Router} from "express";
 import {userInputValid} from "../../validations/users-validators";
-import {basicAuth} from "../../middlewares/authorization-basic";
-import {errorMiddleware} from "../../middlewares/error-validators-middleware";
+import {errorMiddleware} from "../../middlewares/errors-middleware";
 import {UsersService} from "../../services/users-service";
 import {constants} from "http2";
 import {UsersHandler} from "./users-handlers";
+import {authorizationMiddleware} from "../../middlewares/authorization-jwt";
 
 export const userRouter = Router({})
 
@@ -40,13 +40,14 @@ class UsersController {
 
 const usersController = new UsersController()
 
-userRouter.post('/', basicAuth,
+userRouter.post('/',
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     ...userInputValid,
     errorMiddleware.error.bind(errorMiddleware),
     usersController.createSuperUser.bind(usersController))
 
 userRouter.delete('/:id',
-    basicAuth,
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     usersController.deleteUserById.bind(usersController))
 // userRouter.post('/', basicAuth,
 //     ...userInputValid,

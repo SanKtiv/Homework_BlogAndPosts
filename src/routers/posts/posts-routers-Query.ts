@@ -2,7 +2,7 @@ import {Request, Response, Router} from 'express';
 import {PostsQueryRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
 import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
 import {usersPaginatorDefault} from "../../middlewares/users-middleware";
-import {checkPostByPostId} from "../../middlewares/posts-middlewares";
+import {postsMiddleware} from "../../middlewares/posts-middlewares";
 import {JwtService} from "../../applications/jwt-service";
 import {PostsHandler} from "./post-handler";
 import {InputPostsPagingType} from "../../types/posts-types";
@@ -119,7 +119,7 @@ postRouterQuery.get('/:id',
     postsQueryController.getPostById.bind(postsQueryController))
 
 postRouterQuery.get('/:postId/comments',
-    checkPostByPostId,
+    postsMiddleware.postId.bind(postsMiddleware),
     usersPaginatorDefault,
     postsQueryController.getCommentsByPostId.bind(postsQueryController))
 // postRouterQuery.get('/',

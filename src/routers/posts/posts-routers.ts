@@ -1,18 +1,18 @@
 import {Request, Response, Router} from 'express';
 import {blogsValidation} from "../../validations/blogs-validators";
-import {postsValidation, validPostBlogId} from "../../validations/posts-validators";
-import {checkPostByPostId} from "../../middlewares/posts-middlewares";
+import {postsValidation} from "../../validations/posts-validators";
+import {postsMiddleware} from "../../middlewares/posts-middlewares";
 import {authorizationMiddleware} from "../../middlewares/authorization-jwt";
-import {errorMiddleware} from "../../middlewares/error-validators-middleware";
-import {basicAuth} from "../../middlewares/authorization-basic";
+import {errorMiddleware} from "../../middlewares/errors-middleware";
 import {CommentsService} from "../../services/comments-service";
 import {PostsQueryRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
 import {PostsService} from "../../services/posts-service";
-import {likeStatusBody} from "../../validations/like-status-validation";
+import {likeStatusValidation} from "../../validations/like-status-validation";
 import {BlogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 import {constants} from "http2";
 import {PostsHandler} from "./post-handler";
 import {CommentsHandler} from "../comments/comments-handlers";
+import {commentsValidation} from "../../validations/comments-validators";
 
 export const postRouter = Router({})
 
@@ -118,34 +118,39 @@ const postsController = new PostsController()
 
 postRouter.post('/',
     postsValidation.blogId.bind(postsValidation),
-    validPostBlogId,
-    basicAuth,
+    postsValidation.title.bind(postsValidation),
+    postsValidation.content.bind(postsValidation),
+    postsValidation.shortDescription.bind(postsValidation),
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     errorMiddleware.error.bind(errorMiddleware),
     postsController.createPost.bind(postsController))
 
 postRouter.post('/:postId/comments',
     authorizationMiddleware.accessToken.bind(authorizationMiddleware),
-    //commentsValidation.postId.bind(commentsValidation),
-    //commentsValidation.content.bind(commentsValidation),
-    checkPostByPostId,
+    commentsValidation.postId.bind(commentsValidation),
+    commentsValidation.content.bind(commentsValidation),
+    postsMiddleware.postId.bind(postsMiddleware),
     errorMiddleware.error.bind(errorMiddleware),
     postsController.createCommentForPost.bind(postsController))
 
 postRouter.put('/:id',
-    validPostBlogId,
-    basicAuth,
+    postsValidation.blogId.bind(postsValidation),
+    postsValidation.title.bind(postsValidation),
+    postsValidation.content.bind(postsValidation),
+    postsValidation.shortDescription.bind(postsValidation),
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     blogsValidation.id.bind(blogsValidation),
     errorMiddleware.error.bind(errorMiddleware),
     postsController.updatePost.bind(postsController))
 
 postRouter.put('/:postId/like-status',
     authorizationMiddleware.accessToken.bind(authorizationMiddleware),
-    likeStatusBody,
+    likeStatusValidation.likeStatus.bind(likeStatusValidation),
     errorMiddleware.error.bind(errorMiddleware),
     postsController.createLikeStatusForPost.bind(postsController))
 
 postRouter.delete('/:id',
-    basicAuth,
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     blogsValidation.id.bind(blogsValidation),
     postsController.deletePostById.bind(postsController))
 

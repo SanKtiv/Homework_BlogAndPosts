@@ -3,9 +3,9 @@ import {commentsValidation} from "../../validations/comments-validators";
 import {commentsMiddleware} from "../../middlewares/comment-middleware";
 import {CommentsService} from "../../services/comments-service";
 import {authorizationMiddleware} from "../../middlewares/authorization-jwt";
-import {errorMiddleware} from "../../middlewares/error-validators-middleware";
+import {errorMiddleware} from "../../middlewares/errors-middleware";
 import {JwtService} from "../../applications/jwt-service";
-import {likeStatusBody} from "../../validations/like-status-validation";
+import {likeStatusValidation} from "../../validations/like-status-validation";
 import {CommentsQueryRepository} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
 import {CommentsHandler} from "./comments-handlers";
 import {constants} from "http2";
@@ -102,7 +102,7 @@ commentRouter.put('/:commentId',
 commentRouter.put('/:commentId/like-status',
     authorizationMiddleware.accessToken.bind(authorizationMiddleware),
     commentsMiddleware.commentId.bind(commentsMiddleware),
-    likeStatusBody,
+    likeStatusValidation.likeStatus.bind(likeStatusValidation),
     errorMiddleware.error.bind(errorMiddleware),
     commentsController.updateCommentLikeStatusById.bind(commentsController))
 

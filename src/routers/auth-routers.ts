@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {AuthService} from "../services/auth-service";
 import {emailPasswordRecovery, userAuthValid} from "../validations/users-validators";
-import {errorMiddleware} from "../middlewares/error-validators-middleware";
+import {errorMiddleware} from "../middlewares/errors-middleware";
 import {JwtService} from "../applications/jwt-service";
 import {authorizationMiddleware} from "../middlewares/authorization-jwt";
 import {DeviceSessionService} from "../services/device-session-service";

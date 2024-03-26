@@ -4,7 +4,7 @@ import {validationResult} from "express-validator";
 
 class ErrorMiddleware {
 
-    private customError({msg, path}: any): ErrorMessType {
+    private static customError({msg, path}: any): ErrorMessType {
 
         return {message: msg, field: path}
     }
@@ -16,7 +16,7 @@ class ErrorMiddleware {
         if (!result.isEmpty()) {
 
             const error = result
-                .array({onlyFirstError: true}).map(error => this.customError(error))
+                .array({onlyFirstError: true}).map(error => ErrorMiddleware.customError(error))
 
             res.status(400).send({errorsMessages: error})
         }

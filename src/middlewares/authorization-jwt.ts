@@ -15,6 +15,13 @@ class AuthorizationMiddleware {
         this.deviceSessionQueryRepository = new DeviceSessionQueryRepository()
     }
 
+    basic(req: Request, res: Response, next: NextFunction) {
+
+        if (req.headers.authorization === 'Basic YWRtaW46cXdlcnR5') return next()
+
+        return res.sendStatus(401)
+    }
+
     async accessToken(req: Request, res: Response, next: NextFunction) {
 
         const headersAuth = req.headers.authorization

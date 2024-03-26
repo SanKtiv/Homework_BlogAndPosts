@@ -1,10 +1,10 @@
 import {Request, Response, Router} from "express";
 import {usersPaginatorDefault} from "../../middlewares/users-middleware";
-import {basicAuth} from "../../middlewares/authorization-basic";
 import {UsersQueryRepository} from "../../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 import {constants} from "http2";
 import {UsersHandler} from "./users-handlers";
 import {QueryPagingType} from "../../types/users-types";
+import {authorizationMiddleware} from "../../middlewares/authorization-jwt";
 
 export const userRouterQuery = Router({})
 
@@ -44,7 +44,7 @@ class UsersQueryController {
 const usersQueryController = new UsersQueryController
 
 userRouterQuery.get('/',
-    basicAuth,
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     usersPaginatorDefault,
     usersQueryController.getUsersPaging.bind(usersQueryController))
 // userRouterQuery.get('/', basicAuth, usersPaginatorDefault, async (req: Request, res: Response) => {

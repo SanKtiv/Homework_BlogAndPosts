@@ -1,15 +1,15 @@
 import {Request, Response, Router} from 'express';
 import {blogsValidation} from "../../validations/blogs-validators";
-import {validPost} from "../../validations/posts-validators";
+import {postsValidation} from "../../validations/posts-validators";
 import {checkExistBlogByBlogId} from "../../middlewares/blogs-middlewares";
-import {errorMiddleware} from "../../middlewares/error-validators-middleware";
-import {basicAuth} from "../../middlewares/authorization-basic";
+import {errorMiddleware} from "../../middlewares/errors-middleware";
 import {BlogsService} from "../../services/blogs-service";
 import {BlogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 import {PostsService} from "../../services/posts-service";
 import {constants} from "http2";
 import {BlogHandlers} from "./blog-handlers";
 import {PostsHandler} from "../posts/post-handler";
+import {authorizationMiddleware} from "../../middlewares/authorization-jwt";
 
 export const blogRouter = Router({})
 
@@ -77,13 +77,15 @@ blogRouter.post('/',
     blogsValidation.name.bind(blogsValidation),
     blogsValidation.description.bind(blogsValidation),
     blogsValidation.websiteUrl.bind(blogsValidation),
-    basicAuth,
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     errorMiddleware.error.bind(errorMiddleware),
     blogsController.createBlog.bind(blogsController))
 
 blogRouter.post('/:blogId/posts',
-    validPost,
-    basicAuth,
+    postsValidation.title.bind(postsValidation),
+    postsValidation.shortDescription.bind(postsValidation),
+    postsValidation.content.bind(postsValidation),
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     checkExistBlogByBlogId,
     errorMiddleware.error.bind(errorMiddleware),
     blogsController.createPostForBlog.bind(blogsController))
@@ -92,12 +94,12 @@ blogRouter.put('/:id',
     blogsValidation.name.bind(blogsValidation),
     blogsValidation.description.bind(blogsValidation),
     blogsValidation.websiteUrl.bind(blogsValidation),
-    basicAuth,
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     blogsValidation.id.bind(blogsValidation),
     errorMiddleware.error.bind(errorMiddleware),
     blogsController.updateBlogById.bind(blogsController))
 
 blogRouter.delete('/:id',
-    basicAuth,
+    authorizationMiddleware.basic.bind(authorizationMiddleware),
     blogsValidation.id.bind(blogsValidation),
     blogsController.deleteBlogById.bind(blogsController))

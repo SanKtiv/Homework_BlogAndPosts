@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express'
 import {EmailAdapter} from "../adapters/mail-adapter";
 import {userEmailResending, userInputValid} from "../validations/users-validators";
-import {errorMiddleware} from "../middlewares/error-validators-middleware";
+import {errorMiddleware} from "../middlewares/errors-middleware";
 import {AuthService} from "../services/auth-service";
 import {emailValidation} from "../validations/confirmation-code-validator";
 import {apiRequests} from "../middlewares/count-api-request-middleware";
