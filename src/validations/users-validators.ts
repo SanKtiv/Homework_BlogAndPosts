@@ -1,5 +1,24 @@
-import {body} from "express-validator";
+import {body, ValidationChain} from "express-validator";
 import {usersQueryRepository} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+
+class UsersValidation {
+
+    public login: ValidationChain
+
+    constructor() {
+
+        this.login = body('login')
+            .isString().withMessage('login is not string')
+            .trim()
+            .isLength({min: 3, max: 10}).withMessage('login length is incorrect')
+            .matches(loginRegex).withMessage('login have invalid characters')
+            .custom(async login => {
+                if (await usersQueryRepository.getUserByLoginOrEmail(login)) {
+                    throw new Error('This login already use')
+                }
+            })
+    }
+}
 
 const loginRegex: RegExp = /^[a-zA-Z0-9_-]*$/
 const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/

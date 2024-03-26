@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express';
 import {blogsValidation} from "../../validations/blogs-validators";
 import {postsValidation} from "../../validations/posts-validators";
-import {checkExistBlogByBlogId} from "../../middlewares/blogs-middlewares";
+import {blogsMiddleware} from "../../middlewares/blogs-middlewares";
 import {errorMiddleware} from "../../middlewares/errors-middleware";
 import {BlogsService} from "../../services/blogs-service";
 import {BlogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
@@ -86,7 +86,7 @@ blogRouter.post('/:blogId/posts',
     postsValidation.shortDescription.bind(postsValidation),
     postsValidation.content.bind(postsValidation),
     authorizationMiddleware.basic.bind(authorizationMiddleware),
-    checkExistBlogByBlogId,
+    blogsMiddleware.existBlog.bind(blogsMiddleware),
     errorMiddleware.error.bind(errorMiddleware),
     blogsController.createPostForBlog.bind(blogsController))
 

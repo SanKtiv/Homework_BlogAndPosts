@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {PostsQueryRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
-import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
+import {blogsMiddleware} from "../../middlewares/blogs-middlewares";
 import {usersPaginatorDefault} from "../../middlewares/users-middleware";
 import {postsMiddleware} from "../../middlewares/posts-middlewares";
 import {JwtService} from "../../applications/jwt-service";
@@ -112,7 +112,7 @@ class PostsQueryController {
 const postsQueryController = new PostsQueryController()
 
 postRouterQuery.get('/',
-    blogsPaginatorDefault,
+    blogsMiddleware.setDefaultPaging.bind(blogsMiddleware),
     postsQueryController.getPostsPaging.bind(postsQueryController))
 
 postRouterQuery.get('/:id',

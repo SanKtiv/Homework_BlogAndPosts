@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {BlogsRepositoryQuery,} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
-import {blogsPaginatorDefault} from "../../middlewares/blogs-middlewares";
+import {blogsMiddleware} from "../../middlewares/blogs-middlewares";
 import {InputPostsPagingType} from "../../types/posts-types";
 import {InputBlogsPagingType} from "../../types/blogs-types";
 import {PostsHandler} from "../posts/post-handler";
@@ -100,11 +100,11 @@ class BlogsQueryController {
 const blogsQueryController = new BlogsQueryController()
 
 blogRouterQuery.get('/',
-    blogsPaginatorDefault,
+    blogsMiddleware.setDefaultPaging.bind(blogsMiddleware),
     blogsQueryController.getBlogsWithPaging.bind(blogsQueryController))
 
 blogRouterQuery.get('/:blogId/posts',
-    blogsPaginatorDefault,
+    blogsMiddleware.setDefaultPaging.bind(blogsMiddleware),
     blogsQueryController.getPostsByBlogId.bind(blogsQueryController))
 
 blogRouterQuery.get('/:id',
