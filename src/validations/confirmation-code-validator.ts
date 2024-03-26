@@ -1,16 +1,23 @@
-import {body} from "express-validator";
+import {body, ValidationChain} from "express-validator";
 import {AuthService} from "../services/auth-service";
 
-class ValidEmailCode {
+class EmailValidation {
 
     private authService: AuthService
+    public confirmationCode: ValidationChain
 
     constructor() {
 
         this.authService = new AuthService()
+
+        this.confirmationCode = body('code')
+            .isString().withMessage('code is not string')
+            .trim()
+            .isLength({min: 1}).withMessage('code is empty')
+            .custom(this.customFunc.bind(this))
     }
 
-    async custom(code: string) {
+    async customFunc(code: string) {
 
         const result = await this.authService.confirmationRegistration(code)
 
@@ -18,10 +25,10 @@ class ValidEmailCode {
     }
 }
 
-const validEmailCode = new ValidEmailCode
+export const emailValidation = new EmailValidation
 
 export const confirmationEmailCode = body('code')
     .isString().withMessage('code is not string')
     .trim()
     .isLength({min: 1}).withMessage('code is empty')
-    .custom(validEmailCode.custom.bind(validEmailCode))
+    .custom(emailValidation.customFunc.bind(emailValidation))

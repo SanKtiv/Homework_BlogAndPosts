@@ -3,7 +3,7 @@ import {EmailAdapter} from "../adapters/mail-adapter";
 import {userEmailResending, userInputValid} from "../validations/users-validators";
 import {errorMiddleware} from "../middlewares/error-validators-middleware";
 import {AuthService} from "../services/auth-service";
-import {confirmationEmailCode} from "../validations/confirmation-code-validator";
+import {emailValidation} from "../validations/confirmation-code-validator";
 import {apiRequests} from "../middlewares/count-api-request-middleware";
 import {constants} from "http2";
 import {UsersService} from "../services/users-service";
@@ -57,7 +57,7 @@ mailRouter.post('/registration',
 
 mailRouter.post('/registration-confirmation',
     apiRequests,
-    confirmationEmailCode,
+    emailValidation.confirmationCode.bind(emailValidation),
     errorMiddleware.error.bind(errorMiddleware),
     mailController.registrationConfirmation.bind(mailController))
 

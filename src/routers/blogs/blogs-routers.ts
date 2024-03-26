@@ -1,5 +1,5 @@
 import {Request, Response, Router} from 'express';
-import {validId, validBlog} from "../../validations/blogs-validators";
+import {blogsValidation} from "../../validations/blogs-validators";
 import {validPost} from "../../validations/posts-validators";
 import {checkExistBlogByBlogId} from "../../middlewares/blogs-middlewares";
 import {errorMiddleware} from "../../middlewares/error-validators-middleware";
@@ -74,7 +74,9 @@ class BlogsController {
 const blogsController = new BlogsController()
 
 blogRouter.post('/',
-    validBlog,
+    blogsValidation.name.bind(blogsValidation),
+    blogsValidation.description.bind(blogsValidation),
+    blogsValidation.websiteUrl.bind(blogsValidation),
     basicAuth,
     errorMiddleware.error.bind(errorMiddleware),
     blogsController.createBlog.bind(blogsController))
@@ -87,13 +89,15 @@ blogRouter.post('/:blogId/posts',
     blogsController.createPostForBlog.bind(blogsController))
 
 blogRouter.put('/:id',
-    validBlog,
+    blogsValidation.name.bind(blogsValidation),
+    blogsValidation.description.bind(blogsValidation),
+    blogsValidation.websiteUrl.bind(blogsValidation),
     basicAuth,
-    validId,
+    blogsValidation.id.bind(blogsValidation),
     errorMiddleware.error.bind(errorMiddleware),
     blogsController.updateBlogById.bind(blogsController))
 
 blogRouter.delete('/:id',
     basicAuth,
-    validId,
+    blogsValidation.id.bind(blogsValidation),
     blogsController.deleteBlogById.bind(blogsController))

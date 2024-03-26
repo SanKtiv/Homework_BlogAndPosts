@@ -1,8 +1,7 @@
 import {Request, Response, Router} from 'express';
-import {validId} from "../../validations/blogs-validators";
-import {validPostBlogId} from "../../validations/posts-validators";
+import {blogsValidation} from "../../validations/blogs-validators";
+import {postsValidation, validPostBlogId} from "../../validations/posts-validators";
 import {checkPostByPostId} from "../../middlewares/posts-middlewares";
-import {commentsValidation} from "../../validations/comments-validators";
 import {authorizationMiddleware} from "../../middlewares/authorization-jwt";
 import {errorMiddleware} from "../../middlewares/error-validators-middleware";
 import {basicAuth} from "../../middlewares/authorization-basic";
@@ -118,6 +117,7 @@ class PostsController {
 const postsController = new PostsController()
 
 postRouter.post('/',
+    postsValidation.blogId.bind(postsValidation),
     validPostBlogId,
     basicAuth,
     errorMiddleware.error.bind(errorMiddleware),
@@ -134,7 +134,7 @@ postRouter.post('/:postId/comments',
 postRouter.put('/:id',
     validPostBlogId,
     basicAuth,
-    validId,
+    blogsValidation.id.bind(blogsValidation),
     errorMiddleware.error.bind(errorMiddleware),
     postsController.updatePost.bind(postsController))
 
@@ -146,7 +146,7 @@ postRouter.put('/:postId/like-status',
 
 postRouter.delete('/:id',
     basicAuth,
-    validId,
+    blogsValidation.id.bind(blogsValidation),
     postsController.deletePostById.bind(postsController))
 
 // postRouter.post('/',

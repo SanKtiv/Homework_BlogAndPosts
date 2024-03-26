@@ -1,39 +1,28 @@
-import {body, param} from "express-validator";
+import {body, param, ValidationChain} from "express-validator";
 
 class CommentsValidation {
 
-    public id: any
+    public id: ValidationChain
+    public postId: ValidationChain
+    public content: ValidationChain
+    public commentId: ValidationChain
 
     constructor() {
+
         this.id = param('id')
             .trim()
             .isLength({min: 1}).withMessage('id is empty')
-    }
-    async postId() {
 
-        await param('postId')
+        this.postId = param('postId')
             .trim()
             .isString().withMessage('postId is not string')
-    }
 
-    async content() {
-
-        await body('content')
+        this.content = body('content')
             .isString().withMessage('content is not string')
             .trim()
             .isLength({min: 20, max: 300}).withMessage('content has incorrect length')
-    }
 
-    async id1() {
-console.log('ID1')
-        return param('id')
-            .trim()
-            .isLength({min: 1}).withMessage('id is empty')
-    }
-
-    async commentId() {
-
-        await param('commentId')
+        this.commentId = param('commentId')
             .trim()
             .isLength({min: 1}).withMessage('id is empty')
     }
