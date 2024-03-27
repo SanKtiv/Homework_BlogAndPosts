@@ -2,10 +2,10 @@ import express from 'express'
 import {blogsRouter} from './routers/blogs/blogs-routers';
 import {postRouter} from "./routers/posts/posts-routers";
 import {userRouter} from "./routers/users/users-routers";
-import {dellAllRouter} from "./routers/all-data-routers";
-import {authRouters} from "./routers/auth-routers";
+import {dellAllRouter} from "./routers/testing/all-data-routers";
+import {authRouters} from "./routers/auth/auth-routers";
 import {commentRouter} from "./routers/comments/comments-routers";
-import {mailRouter} from "./routers/mail-router";
+import {mailRouter} from "./routers/mail/mail-router";
 import cookieParser from 'cookie-parser'
 import {securityRouter} from "./routers/security/security-router";
 

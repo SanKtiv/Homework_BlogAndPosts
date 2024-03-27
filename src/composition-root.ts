@@ -21,19 +21,19 @@ import {BlogsHandler} from "./routers/blogs/blog-handlers";
 import {PostsHandler} from "./routers/posts/post-handler";
 import {CommentsHandler} from "./routers/comments/comments-handlers";
 import {UsersHandler} from "./routers/users/users-handlers";
-import {UsersController} from "./routers/users/users-routers";
-import {CommentsController} from "./routers/comments/comments-routers";
-import {AuthController} from "./routers/auth-routers";
 import {EmailAdapter} from "./adapters/mail-adapter";
-import {MailController} from "./routers/mail-router";
-import {DeleteAllController} from "./routers/all-data-routers";
 import {EmailValidation} from "./validations/confirmation-code-validator";
 import {AuthValidation} from "./validations/recovery-password-validators";
-import {SecurityDevicesController} from "./routers/security/security-router";
 import {SecurityHandler} from "./routers/security/security-handler";
 import {CountRequestsMiddleware} from "./middlewares/count-api-request-middleware";
 import {BlogsController} from "./routers/blogs/blogs-controller";
 import {PostsController} from "./routers/posts/posts-controller";
+import {CommentsController} from "./routers/comments/comments-controller";
+import {SecurityDevicesController} from "./routers/security/devices-controller";
+import {UsersController} from "./routers/users/users-controller";
+import {AuthController} from "./routers/auth/auth-controller";
+import {MailController} from "./routers/mail/mail-controller";
+import {DeleteAllController} from "./routers/testing/all-data-controller";
 
 const blogsRepository = new BlogsRepository()
 const blogsRepositoryQuery = new BlogsQueryRepository()
