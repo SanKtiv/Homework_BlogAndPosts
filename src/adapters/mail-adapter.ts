@@ -5,14 +5,8 @@ import {passwordRecovery, registrationConfirmation} from "../utility/email-utili
 
 export class EmailAdapter {
 
-    private usersQueryRepository: UsersQueryRepository
-    private authService: AuthService
-
-    constructor() {
-
-        this.usersQueryRepository = new UsersQueryRepository()
-        this.authService = new AuthService()
-    }
+    constructor(protected usersQueryRepository: UsersQueryRepository,
+                protected authService: AuthService) {}
 
     async sendConfirmationCodeByEmail(email: string) {
 

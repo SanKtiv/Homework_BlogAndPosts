@@ -1,14 +1,14 @@
 import {NextFunction, Request, Response} from "express";
 import {defaultQuery} from "../variables/variables";
-import {BlogsRepositoryQuery} from "../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
+import {BlogsQueryRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 
 class BlogsMiddleware {
 
-    private blogsRepositoryQuery: BlogsRepositoryQuery
+    private blogsRepositoryQuery: BlogsQueryRepository
 
     constructor() {
 
-        this.blogsRepositoryQuery = new BlogsRepositoryQuery()
+        this.blogsRepositoryQuery = new BlogsQueryRepository()
     }
 
     async existBlog(req: Request, res: Response, next: NextFunction) {

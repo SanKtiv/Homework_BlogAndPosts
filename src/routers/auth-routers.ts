@@ -5,27 +5,19 @@ import {errorMiddleware} from "../middlewares/errors-middleware";
 import {JwtService} from "../applications/jwt-service";
 import {authorizationMiddleware} from "../middlewares/authorization-jwt";
 import {DeviceSessionService} from "../services/device-session-service";
-import {apiRequests, countRequestsToApi} from "../middlewares/count-api-request-middleware";
 import {EmailAdapter} from "../adapters/mail-adapter";
-import {authValidation} from "../validations/recovery-password-validators";
+
 import {constants} from "http2";
+import {authController, authValidation, countRequestsMiddleware} from "../composition-root";
 
 export const authRouters = Router({})
 
-class AuthController {
+export class AuthController {
 
-    private authService: AuthService
-    private jwtService: JwtService
-    private deviceSessionService: DeviceSessionService
-    private emailAdapter: EmailAdapter
-
-    constructor() {
-
-        this.authService = new AuthService()
-        this.jwtService = new JwtService()
-        this.deviceSessionService = new DeviceSessionService()
-        this.emailAdapter = new EmailAdapter()
-    }
+    constructor(protected authService: AuthService,
+                protected jwtService: JwtService,
+                protected deviceSessionService: DeviceSessionService,
+                protected emailAdapter: EmailAdapter) {}
 
     async createAndSendAccessToken(req: Request, res: Response) {
 
@@ -103,21 +95,19 @@ class AuthController {
     }
 }
 
-const authController = new AuthController()
-
 authRouters.post('/login',
-    countRequestsToApi.countRequests.bind(countRequestsToApi),
+    countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
     ...userAuthValid,
     errorMiddleware.error.bind(errorMiddleware),
     authController.createAndSendAccessToken.bind(authController))
 
 authRouters.post('/password-recovery',
-    apiRequests,
+    countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
     emailPasswordRecovery,
     authController.sendRecoveryCode.bind(authController))
 
 authRouters.post('/new-password',
-    apiRequests,
+    countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
     authValidation.password.bind(authValidation),
     authValidation.recoveryCode.bind(authValidation),
     errorMiddleware.error.bind(errorMiddleware),

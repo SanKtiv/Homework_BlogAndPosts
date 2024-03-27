@@ -1,8 +1,4 @@
-import {
-    PostType,
-    InputPostModelType,
-    PostDBType, ExtendedLikesInfoType, UserLikesInfoType
-} from "../../../types/posts-types";
+import {PostType, InputPostModelType, PostDBType, ExtendedLikesInfoType, UserLikesInfoType} from "../../../types/posts-types";
 import {dbPostsCollection} from "../db";
 import {ObjectId} from "mongodb";
 

@@ -1,6 +1,6 @@
 import {BlogDBType, InputBlogsPagingType, ViewBlogModelType, ViewBlogsPagingType} from "../../types/blogs-types";
 
-export class BlogHandlers {
+export class BlogsHandler {
 
     blogViewModel(blogOutDb: BlogDBType): ViewBlogModelType {
 
@@ -29,4 +29,4 @@ export class BlogHandlers {
     }
 }
 
-export const blogHandlers = new BlogHandlers()
+export const blogsHandler = new BlogsHandler()

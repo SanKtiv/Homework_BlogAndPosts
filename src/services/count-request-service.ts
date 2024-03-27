@@ -6,25 +6,30 @@ import {
 
 export class ApiRequestService {
 
-    private apiRequestRepository: ApiRequestRepository
+    //private apiRequestRepository: ApiRequestRepository
 
-    constructor() {
-        this.apiRequestRepository = new ApiRequestRepository()
+    constructor(protected apiRequestRepository: ApiRequestRepository) {
+
+        //this.apiRequestRepository = new ApiRequestRepository()
     }
 
     async createApiRequest(apiRequest: ApiRequestType) {
+
         await this.apiRequestRepository.insertApiRequest(apiRequest)
     }
 
     async getAllApiRequestsByUri(apiRequest: ApiRequestType) {
+
         return this.apiRequestRepository.getAllApiRequestsByUri(apiRequest)
     }
 
     async getAllApiRequests() {
+
         return this.apiRequestRepository.getAllApiRequests()
     }
 
     async getCountOfApiRequests(limit: number, apiRequest: ApiRequestType) {
+
         const countOfRequest = await this.apiRequestRepository.getCountOfApiRequests(apiRequest)
 
         return countOfRequest.length > limit

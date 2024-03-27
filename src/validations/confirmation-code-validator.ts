@@ -1,14 +1,11 @@
 import {body, ValidationChain} from "express-validator";
 import {AuthService} from "../services/auth-service";
 
-class EmailValidation {
+export class EmailValidation {
 
-    private authService: AuthService
     public confirmationCode: ValidationChain
 
-    constructor() {
-
-        this.authService = new AuthService()
+    constructor(protected authService: AuthService) {
 
         this.confirmationCode = body('code')
             .isString().withMessage('code is not string')
@@ -25,10 +22,10 @@ class EmailValidation {
     }
 }
 
-export const emailValidation = new EmailValidation
+//export const emailValidation = new EmailValidation()
 
-export const confirmationEmailCode = body('code')
-    .isString().withMessage('code is not string')
-    .trim()
-    .isLength({min: 1}).withMessage('code is empty')
-    .custom(emailValidation.customFunc.bind(emailValidation))
+// export const confirmationEmailCode = body('code')
+//     .isString().withMessage('code is not string')
+//     .trim()
+//     .isLength({min: 1}).withMessage('code is empty')
+//     .custom(emailValidation.customFunc.bind(emailValidation))

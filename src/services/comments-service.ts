@@ -3,11 +3,11 @@ import {CommentsRepository} from "../repositories/mongodb-repository/comments-mo
 
 export class CommentsService {
 
-    private commentsRepository: CommentsRepository
+    //private commentsRepository: CommentsRepository
 
-    constructor() {
+    constructor(protected commentsRepository: CommentsRepository) {
 
-        this.commentsRepository = new CommentsRepository()
+        //this.commentsRepository = new CommentsRepository()
     }
 
     async createCommentForPost(postId: string,

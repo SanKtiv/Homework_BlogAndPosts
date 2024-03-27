@@ -4,14 +4,8 @@ import {JwtService} from "../applications/jwt-service";
 
 export class DeviceSessionService {
 
-    private deviceSessionRepository: DeviceSessionRepository
-    private jwtService: JwtService
-
-    constructor() {
-
-        this.deviceSessionRepository = new DeviceSessionRepository()
-        this.jwtService = new JwtService()
-    }
+    constructor(protected deviceSessionRepository: DeviceSessionRepository,
+                protected jwtService: JwtService) {}
 
     async createDeviceSession(title: string, ip: string, userId: string,): Promise<string> {
 
@@ -43,6 +37,7 @@ export class DeviceSessionService {
     }
 
     async deleteDeviceSessionByDeviceId(deviceId: string) {
+
         return this.deviceSessionRepository.deleteDeviceSessionByDeviceId(deviceId)
     }
 

@@ -1,18 +1,27 @@
 import {InputUserAuthModelType, PasswordRecoveryInputType} from "../types/users-types";
 import bcrypt from 'bcrypt'
-import {usersRepository} from "../repositories/mongodb-repository/users-mongodb/users-command-mongodb";
+import {UsersRepository} from "../repositories/mongodb-repository/users-mongodb/users-command-mongodb";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
-import {usersQueryRepository} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
+import {UsersQueryRepository} from "../repositories/mongodb-repository/users-mongodb/users-query-mongodb";
 
 export class AuthService {
 
+    constructor(protected usersQueryRepository: UsersQueryRepository,
+                protected usersRepository: UsersRepository) {
+    }
+
     async checkCredentials(LoginBody: InputUserAuthModelType): Promise<string | null> {
 
-        const user = await usersQueryRepository.getUserByLoginOrEmail(LoginBody.loginOrEmail)
+        const user = await this
+            .usersQueryRepository.getUserByLoginOrEmail(LoginBody.loginOrEmail)
+
         if (!user) return null
+
         const result = await bcrypt.compare(LoginBody.password, user.accountData.passwordHash)
+
         if (!result) return null
+
         return user._id.toString()
     }
 
@@ -25,17 +34,22 @@ export class AuthService {
 
     async confirmationRegistration(code: string): Promise<boolean> {
 
-        const user = await usersQueryRepository.getUserByConfirmationCode(code)
+        const user = await this.usersQueryRepository.getUserByConfirmationCode(code)
+
         if (!user) return false
+
         if (user.emailConfirmation.expirationDate < new Date()) return false
-        return usersRepository.updateUserExpirationDate(user._id)
+
+        return this.usersRepository.updateUserExpirationDate(user._id)
     }
 
     async changeConfirmationCode(email: string): Promise<boolean> {
 
         const newConfirmationCode = uuidv4()
+
         const newExpirationDate = add(new Date(), {hours: 1, minutes: 5})
-        return usersRepository.updateUserConfirmationCode(newConfirmationCode, email,newExpirationDate)
+
+        return this.usersRepository.updateUserConfirmationCode(newConfirmationCode, email,newExpirationDate)
     }
 
     async createRecoveryCode(email: string): Promise<string> {
@@ -44,14 +58,19 @@ export class AuthService {
             recoveryCode: uuidv4(),
             expirationDate: add(new Date(), {hours: 1, minutes: 5})
         }
-        await usersRepository.addRecoveryCode(email, passwordRecovery)
+
+        await this.usersRepository.addRecoveryCode(email, passwordRecovery)
+
         return passwordRecovery.recoveryCode
     }
 
     async getExpDateOfRecoveryCode(recoveryCode: string) {
-        const user = await usersQueryRepository
+
+        const user = await this.usersQueryRepository
             .getUserByRecoveryCode(recoveryCode)
+
         if (!user || !user.passwordRecovery) return null
+
         return user.passwordRecovery.expirationDate
     }
 
@@ -59,11 +78,13 @@ export class AuthService {
 
         const passwordHash = await this.genHash(passwordRecovery.newPassword)
 
-        await usersRepository.insertNewPasswordHash(passwordRecovery.recoveryCode, passwordHash)
+        await this.usersRepository
+            .insertNewPasswordHash(passwordRecovery.recoveryCode, passwordHash)
     }
 
     async recoveryPassword(email: string) {
-        await usersRepository.resetPasswordHash(email)
+
+        await this.usersRepository.resetPasswordHash(email)
     }
 }
 

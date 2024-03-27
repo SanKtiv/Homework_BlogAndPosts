@@ -3,12 +3,7 @@ import {BlogsRepository} from "../repositories/mongodb-repository/blogs-mongodb/
 
 export class BlogsService {
 
-    private blogsRepository: BlogsRepository
-
-    constructor() {
-
-        this.blogsRepository = new BlogsRepository()
-    }
+    constructor(protected blogsRepository: BlogsRepository) {}
 
     async createBlog(body: InputBlogModelType): Promise<BlogDBType> {
 
@@ -39,4 +34,4 @@ export class BlogsService {
     }
 }
 
-export const blogsService = new BlogsService()
+// export const blogsService = new BlogsService()

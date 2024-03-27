@@ -1,9 +1,9 @@
 import {body, ValidationChain} from "express-validator";
-import {BlogsRepositoryQuery} from "../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
+import {BlogsQueryRepository} from "../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 
 class PostsValidation {
 
-    private blogsRepositoryQuery: BlogsRepositoryQuery
+    private blogsRepositoryQuery: BlogsQueryRepository
     public title: ValidationChain
     public content: ValidationChain
     public blogId: ValidationChain
@@ -11,7 +11,7 @@ class PostsValidation {
 
     constructor() {
 
-        this.blogsRepositoryQuery = new BlogsRepositoryQuery()
+        this.blogsRepositoryQuery = new BlogsQueryRepository()
 
         this.title = body('title', 'title length is incorrect')
             .isString()

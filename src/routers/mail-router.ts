@@ -3,25 +3,17 @@ import {EmailAdapter} from "../adapters/mail-adapter";
 import {userEmailResending, userInputValid} from "../validations/users-validators";
 import {errorMiddleware} from "../middlewares/errors-middleware";
 import {AuthService} from "../services/auth-service";
-import {emailValidation} from "../validations/confirmation-code-validator";
-import {apiRequests} from "../middlewares/count-api-request-middleware";
 import {constants} from "http2";
 import {UsersService} from "../services/users-service";
+import {countRequestsMiddleware, emailValidation, mailController} from "../composition-root";
 
 export const mailRouter = Router({})
 
-class MailController {
+export class MailController {
 
-    private usersService: UsersService
-    private emailAdapter: EmailAdapter
-    private authService: AuthService
-
-    constructor() {
-
-        this.usersService = new UsersService()
-        this.emailAdapter = new EmailAdapter()
-        this.authService = new AuthService()
-    }
+    constructor(protected usersService: UsersService,
+                protected emailAdapter: EmailAdapter,
+                protected authService: AuthService) {}
 
     async createUser(req: Request, res: Response) {
 
@@ -47,22 +39,20 @@ class MailController {
     }
 }
 
-const mailController = new MailController()
-
 mailRouter.post('/registration',
-    apiRequests,
+    countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
     ...userInputValid,
     errorMiddleware.error.bind(errorMiddleware),
     mailController.createUser.bind(mailController))
 
 mailRouter.post('/registration-confirmation',
-    apiRequests,
+    countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
     emailValidation.confirmationCode.bind(emailValidation),
     errorMiddleware.error.bind(errorMiddleware),
     mailController.registrationConfirmation.bind(mailController))
 
 mailRouter.post('/registration-email-resending',
-    apiRequests,
+    countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
     userEmailResending,
     errorMiddleware.error.bind(errorMiddleware),
     mailController.resendConfirmationCode.bind(mailController))

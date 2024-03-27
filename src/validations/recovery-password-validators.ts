@@ -3,12 +3,7 @@ import {AuthService} from "../services/auth-service";
 
 export class AuthValidation {
 
-    private authService: AuthService
-
-    constructor() {
-
-        this.authService = new AuthService()
-    }
+    constructor(protected authService: AuthService) {}
 
     async customRecoveryCode(code: string) {
 
@@ -37,7 +32,7 @@ export class AuthValidation {
     }
 }
 
-export const authValidation = new AuthValidation()
+// export const authValidation = new AuthValidation()
 
 // export const ValidNewPassword = body('newPassword')
 //     .isString().withMessage('newPassword is not string')

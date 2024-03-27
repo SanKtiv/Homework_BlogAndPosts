@@ -6,23 +6,16 @@ import {constants} from "http2";
 import {JwtService} from "../../applications/jwt-service";
 import {DeviceSessionQueryRepository} from "../../repositories/mongodb-repository/user-sessions-mongodb/user-session-query-mongodb";
 import {SecurityHandler} from "./security-handler";
+import {securityDevicesController} from "../../composition-root";
 
 export const securityRouter = Router({})
 
-class SecurityDevicesController {
+export class SecurityDevicesController {
 
-    private jwtService: JwtService
-    private deviceSessionQueryRepository: DeviceSessionQueryRepository
-    private securityHandler: SecurityHandler
-    private deviceSessionService: DeviceSessionService
-
-    constructor() {
-
-        this.jwtService = new JwtService()
-        this.deviceSessionQueryRepository = new DeviceSessionQueryRepository()
-        this.securityHandler = new SecurityHandler()
-        this.deviceSessionService = new DeviceSessionService()
-    }
+    constructor(protected jwtService: JwtService,
+                protected deviceSessionQueryRepository: DeviceSessionQueryRepository,
+                protected securityHandler: SecurityHandler,
+                protected deviceSessionService: DeviceSessionService) {}
 
     async getDeviceSessions(req: Request, res: Response) {
 
@@ -56,7 +49,7 @@ class SecurityDevicesController {
     }
 }
 
-const securityDevicesController = new SecurityDevicesController()
+// const securityDevicesController = new SecurityDevicesController()
 
 securityRouter.get('/',
     authorizationMiddleware.refreshToken.bind(authorizationMiddleware),

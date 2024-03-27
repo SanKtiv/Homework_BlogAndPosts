@@ -9,24 +9,16 @@ import {likeStatusValidation} from "../../validations/like-status-validation";
 import {CommentsQueryRepository} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
 import {CommentsHandler} from "./comments-handlers";
 import {constants} from "http2";
-
+import {commentsController} from "../../composition-root";
 
 export const commentRouter = Router({})
 
-class CommentsController {
+export class CommentsController {
 
-    private commentsQueryRepository: CommentsQueryRepository
-    private jwtService: JwtService
-    private commentsHandler: CommentsHandler
-    private commentService: CommentsService
-
-    constructor() {
-
-        this.commentsQueryRepository = new CommentsQueryRepository()
-        this.jwtService = new JwtService()
-        this.commentsHandler = new CommentsHandler()
-        this.commentService = new CommentsService()
-    }
+    constructor(protected commentsQueryRepository: CommentsQueryRepository,
+                protected jwtService: JwtService,
+                protected commentsHandler: CommentsHandler,
+                protected commentsService: CommentsService) {}
 
     async getCommentById(req: Request, res: Response) {
 
@@ -60,7 +52,7 @@ class CommentsController {
         const id = req.params.commentId
         const content = req.body.content
 
-        await this.commentService.updateCommentContentById(id, content)
+        await this.commentsService.updateCommentContentById(id, content)
 
         res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     }
@@ -72,7 +64,7 @@ class CommentsController {
         const userId = req.user!.userId
         const commentDB = await this.commentsQueryRepository.getCommentById(commentId)
 
-        await this.commentService
+        await this.commentsService
             .addOrChangeLikesInfo(commentDB!, userId, likeStatus)
 
         return res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
@@ -80,13 +72,11 @@ class CommentsController {
 
     async deleteCommentById(req: Request, res: Response) {
 
-        await this.commentService.deleteCommentById(req.params.commentId)
+        await this.commentsService.deleteCommentById(req.params.commentId)
 
         res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
     }
 }
-
-const commentsController = new CommentsController()
 
 commentRouter.get('/:id',
     commentsValidation.id.bind(commentsValidation),

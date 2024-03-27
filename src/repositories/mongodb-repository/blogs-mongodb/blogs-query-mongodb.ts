@@ -3,7 +3,7 @@ import {InputPostsPagingType, PostDBType} from "../../../types/posts-types";
 import {BlogDBType, InputBlogsPagingType} from "../../../types/blogs-types";
 import {ObjectId} from "mongodb";
 
-export class BlogsRepositoryQuery {
+export class BlogsQueryRepository {
 
     async getBlogById(id: string): Promise<BlogDBType | null> {
 

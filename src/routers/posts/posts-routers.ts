@@ -8,32 +8,30 @@ import {CommentsService} from "../../services/comments-service";
 import {PostsQueryRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
 import {PostsService} from "../../services/posts-service";
 import {likeStatusValidation} from "../../validations/like-status-validation";
-import {BlogsRepositoryQuery} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
+import {BlogsQueryRepository} from "../../repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 import {constants} from "http2";
 import {PostsHandler} from "./post-handler";
 import {CommentsHandler} from "../comments/comments-handlers";
 import {commentsValidation} from "../../validations/comments-validators";
+import {postsController} from "../../composition-root";
+import {JwtService} from "../../applications/jwt-service";
+import {CommentsQueryRepository} from "../../repositories/mongodb-repository/comments-mongodb/comments-query-mongodb";
+import {InputPostsPagingType} from "../../types/posts-types";
+import {blogsMiddleware} from "../../middlewares/blogs-middlewares";
+import {usersPaginatorDefault} from "../../middlewares/users-middleware";
 
 export const postRouter = Router({})
 
-class PostsController {
+export class PostsController {
 
-    private blogsRepositoryQuery: BlogsRepositoryQuery
-    private postsService: PostsService
-    private commentService: CommentsService
-    private commentsHandler: CommentsHandler
-    private postsQueryRepository: PostsQueryRepository
-    private postsHandler: PostsHandler
-
-    constructor() {
-
-        this.blogsRepositoryQuery = new BlogsRepositoryQuery()
-        this.postsService = new PostsService()
-        this.commentService = new CommentsService()
-        this.commentsHandler = new CommentsHandler()
-        this.postsQueryRepository = new PostsQueryRepository()
-        this.postsHandler = new PostsHandler()
-    }
+    constructor(protected blogsRepositoryQuery: BlogsQueryRepository,
+                protected postsService: PostsService,
+                protected commentsService: CommentsService,
+                protected commentsHandler: CommentsHandler,
+                protected postsQueryRepository: PostsQueryRepository,
+                protected postsHandler: PostsHandler,
+                protected jwtService: JwtService,
+                protected commentsQueryRepository: CommentsQueryRepository) {}
 
     async createPost(req: Request, res: Response) {
 
@@ -53,12 +51,91 @@ class PostsController {
         const userId = req.user!.userId
         const userLogin = req.user!.login
 
-        const commentDB = await this.commentService
+        const commentDB = await this.commentsService
             .createCommentForPost(postId, content, userId, userLogin)
 
         const commentViewModel = await this.commentsHandler.createCommentViewModel(commentDB)
 
         res.status(constants.HTTP_STATUS_CREATED).send(commentViewModel)
+    }
+
+    async getPostsPaging(req: Request, res: Response) {
+
+        const headersAuth = req.headers.authorization
+        const postsTotalCount = await this.postsQueryRepository.getPostsTotalCount()
+        const query = req.query as InputPostsPagingType
+        const postsPagingFromDB = await this.postsQueryRepository.getPostsWithPaging(query)
+
+        if (headersAuth) {
+
+            const payLoad = await this.jwtService.getPayloadAccessToken(headersAuth)
+
+            if (payLoad) {
+
+                const postViewPagingModel = this.postsHandler
+                    .createPostPagingViewModel(postsTotalCount, postsPagingFromDB, query, payLoad.userId)
+
+                return res.status(constants.HTTP_STATUS_OK).send(postViewPagingModel)
+            }
+        }
+
+        const postViewPagingModel = this.postsHandler
+            .createPostPagingViewModel(postsTotalCount, postsPagingFromDB, query)
+
+        return res.status(constants.HTTP_STATUS_OK).send(postViewPagingModel)
+    }
+
+    async getPostById(req: Request, res: Response) {
+
+        const postId = req.params.id
+        const headersAuth = req.headers.authorization
+        const postFromDB = await this.postsQueryRepository.getPostById(postId)
+
+        if (!postFromDB) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+
+        if (headersAuth) {
+
+            const payLoad = await this.jwtService.getPayloadAccessToken(headersAuth)
+
+            if (payLoad) {
+
+                const postViewModel = this.postsHandler
+                    .createPostViewModel(postFromDB, payLoad.userId)
+
+                return res.status(constants.HTTP_STATUS_OK).send(postViewModel)
+            }
+        }
+
+        const postViewModel = this.postsHandler.createPostViewModel(postFromDB)
+
+        return res.status(constants.HTTP_STATUS_OK).send(postViewModel)
+    }
+
+    async getCommentsByPostId(req: Request, res: Response) {
+
+        const query = req.query
+        const postId = req.params.postId
+        const headersAuth = req.headers.authorization
+        const totalComment = await this.commentsQueryRepository.getTotalCommentsByPostId(postId)
+        const commentsPaging = await this.commentsQueryRepository.getCommentsByPostId(postId, query)
+
+        if (headersAuth) {
+
+            const payload = await this.jwtService.getPayloadAccessToken(headersAuth)
+
+            if (payload) {
+
+                const commentsPagingViewModel = await this.commentsHandler
+                    .paginatorCommentViewModel(postId, query, totalComment, commentsPaging, payload.userId)
+
+                return res.status(constants.HTTP_STATUS_OK).send(commentsPagingViewModel)
+            }
+        }
+
+        const commentsPagingViewModel = await this.commentsHandler
+            .paginatorCommentViewModel(postId, query, totalComment, commentsPaging)
+
+        return res.status(constants.HTTP_STATUS_OK).send(commentsPagingViewModel)
     }
 
     async updatePost(req: Request, res: Response) {
@@ -114,8 +191,6 @@ class PostsController {
     }
 }
 
-const postsController = new PostsController()
-
 postRouter.post('/',
     postsValidation.blogId.bind(postsValidation),
     postsValidation.title.bind(postsValidation),
@@ -132,6 +207,18 @@ postRouter.post('/:postId/comments',
     postsMiddleware.postId.bind(postsMiddleware),
     errorMiddleware.error.bind(errorMiddleware),
     postsController.createCommentForPost.bind(postsController))
+
+postRouter.get('/',
+    blogsMiddleware.setDefaultPaging.bind(blogsMiddleware),
+    postsController.getPostsPaging.bind(postsController))
+
+postRouter.get('/:id',
+    postsController.getPostById.bind(postsController))
+
+postRouter.get('/:postId/comments',
+    postsMiddleware.postId.bind(postsMiddleware),
+    usersPaginatorDefault,
+    postsController.getCommentsByPostId.bind(postsController))
 
 postRouter.put('/:id',
     postsValidation.blogId.bind(postsValidation),

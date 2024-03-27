@@ -7,12 +7,13 @@ import add from "date-fns/add";
 
 export class UsersService {
 
-    private usersRepository: UsersRepository
-    private authService: AuthService
+    // private usersRepository: UsersRepository
+    // private authService: AuthService
 
-    constructor() {
-        this.usersRepository = new UsersRepository()
-        this.authService = new AuthService()
+    constructor(protected usersRepository: UsersRepository,
+                protected authService: AuthService) {
+        // this.usersRepository = new UsersRepository()
+        // this.authService = new AuthService()
     }
 
     async createUser(body: InputUserModelType, isConfirmed?: boolean): Promise<UserDBType> {
