@@ -33,5 +33,3 @@ export class BlogsService {
         await this.blogsRepository.deleteAll()
     }
 }
-
-// export const blogsService = new BlogsService()

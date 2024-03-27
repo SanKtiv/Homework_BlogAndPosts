@@ -39,5 +39,3 @@ export class DeviceSessionRepository {
         await dbSecurityCollection.deleteMany({})
     }
 }
-
-// export const deviceSessionRepository = new DeviceSessionRepository()

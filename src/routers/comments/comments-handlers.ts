@@ -43,5 +43,3 @@ export class CommentsHandler {
         }
     }
 }
-
-// export const commentsHandler = new CommentsHandler()

@@ -2,10 +2,8 @@ import {BlogsService} from "../../services/blogs-service";
 import {PostsRepository} from "../../repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
 import {UsersRepository} from "../../repositories/mongodb-repository/users-mongodb/users-command-mongodb";
 import {CommentsRepository} from "../../repositories/mongodb-repository/comments-mongodb/comments-command-mongodb";
-import {ApiRequestRepository} from "../../repositories/mongodb-repository/api-request-repository/count-request-mongodb";
-import {
-    DeviceSessionRepository
-} from "../../repositories/mongodb-repository/user-sessions-mongodb/user-session-mongodb";
+import {ApiRequestRepository} from "../../repositories/mongodb-repository/apiRequest-repository/count-request-mongodb";
+import {DeviceSessionRepository} from "../../repositories/mongodb-repository/user-sessions-mongodb/user-session-mongodb";
 import {Request, Response} from "express";
 import {constants} from "http2";
 

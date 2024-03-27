@@ -82,5 +82,3 @@ export class PostsRepository {
         await dbPostsCollection.deleteMany({})
     }
 }
-
-// export const postsRepository = new PostsRepository()

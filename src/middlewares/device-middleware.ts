@@ -2,16 +2,10 @@ import {NextFunction, Request, Response} from "express";
 import {JwtService} from "../applications/jwt-service";
 import {DeviceSessionQueryRepository} from "../repositories/mongodb-repository/user-sessions-mongodb/user-session-query-mongodb";
 
-class DeviceMiddleware {
+export class DeviceMiddleware {
 
-    private deviceSessionQueryRepository: DeviceSessionQueryRepository
-    private jwtService: JwtService
-
-    constructor() {
-
-        this.deviceSessionQueryRepository = new DeviceSessionQueryRepository()
-        this.jwtService = new JwtService()
-    }
+    constructor(protected deviceSessionQueryRepository: DeviceSessionQueryRepository,
+                protected jwtService: JwtService) {}
 
     async deviceId(req: Request, res: Response, next: NextFunction) {
 
@@ -35,22 +29,3 @@ class DeviceMiddleware {
         return res.sendStatus(403)
     }
 }
-
-export const deviceMiddleware = new DeviceMiddleware()
-
-// export const checkDeviceId = async (req: Request, res: Response, next: NextFunction) => {
-//
-//     const deviceId = req.params.deviceId
-//     const userSession = await deviceSessionQueryRepository.getDeviceByDeviceId(deviceId)
-//     if (!userSession) return res.sendStatus(404)
-//
-//     const refreshToken = req.cookies.refreshToken
-//     const payLoadRefreshToken = await jwtService.getPayloadRefreshToken(refreshToken)
-//     const userId = payLoadRefreshToken!.userId
-//
-//     const result = await deviceSessionQueryRepository
-//         .getDeviceSessionsByDeviceIdAndUserId(deviceId, userId)
-//
-//     if (result) return next()
-//     return res.sendStatus(403)
-// }

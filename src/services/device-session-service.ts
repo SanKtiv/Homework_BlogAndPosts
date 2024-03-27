@@ -49,5 +49,3 @@ export class DeviceSessionService {
             .deleteAllDevicesExcludeCurrent(result!.deviceId, result!.userId)
     }
 }
-
-// export const deviceSessionService = new DeviceSessionService()

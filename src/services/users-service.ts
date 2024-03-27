@@ -7,14 +7,8 @@ import add from "date-fns/add";
 
 export class UsersService {
 
-    // private usersRepository: UsersRepository
-    // private authService: AuthService
-
     constructor(protected usersRepository: UsersRepository,
-                protected authService: AuthService) {
-        // this.usersRepository = new UsersRepository()
-        // this.authService = new AuthService()
-    }
+                protected authService: AuthService) {}
 
     async createUser(body: InputUserModelType, isConfirmed?: boolean): Promise<UserDBType> {
 
@@ -51,4 +45,3 @@ export class UsersService {
         return this.usersRepository.deleteUserById(id)
     }
 }
-//export const usersService = new UsersService()

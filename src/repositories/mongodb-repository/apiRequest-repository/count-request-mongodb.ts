@@ -33,36 +33,3 @@ export class ApiRequestRepository {
         await dbRequestCollection.deleteMany({})
     }
 }
-
-export const apiRequestRepository = {
-
-    async insertApiRequest(request: ApiRequestType) {
-        await dbRequestCollection.insertOne(request)
-    },
-
-    async getAllApiRequestsByUri(request: ApiRequestType) {
-        return dbRequestCollection
-            .find({ip: request.ip, url: request.url})
-            .toArray()
-    },
-
-    async getAllApiRequests() {
-        return dbRequestCollection
-            .find({})
-            .toArray()
-    },
-
-    async getCountOfApiRequests(request: ApiRequestType) {
-        return dbRequestCollection
-            .find({
-                ip: request.ip,
-                url: request.url,
-                date: {$gte: request.date}
-                })
-            .toArray()
-    },
-
-    async deleteAllApiRequests() {
-        await dbRequestCollection.deleteMany({})
-    }
-}

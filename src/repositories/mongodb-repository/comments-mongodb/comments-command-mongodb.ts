@@ -57,5 +57,3 @@ export class CommentsRepository {
         await CommentModel.deleteMany({})
     }
 }
-
-// export const commentsRepository = new CommentsRepository()

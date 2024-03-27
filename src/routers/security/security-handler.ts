@@ -21,5 +21,3 @@ export class SecurityHandler {
         return deviceSessionsViewModel
     }
 }
-
-// export const securityHandler = new SecurityHandler()

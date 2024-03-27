@@ -9,12 +9,12 @@ import {UsersQueryRepository} from "./repositories/mongodb-repository/users-mong
 import {UsersRepository} from "./repositories/mongodb-repository/users-mongodb/users-command-mongodb";
 import {DeviceSessionQueryRepository} from "./repositories/mongodb-repository/user-sessions-mongodb/user-session-query-mongodb";
 import {DeviceSessionRepository} from "./repositories/mongodb-repository/user-sessions-mongodb/user-session-mongodb";
-import {ApiRequestRepository} from "./repositories/mongodb-repository/api-request-repository/count-request-mongodb";
+import {ApiRequestRepository} from "./repositories/mongodb-repository/apiRequest-repository/count-request-mongodb";
 import {PostsService} from "./services/posts-service";
 import {UsersService} from "./services/users-service";
 import {CommentsService} from "./services/comments-service";
 import {AuthService} from "./services/auth-service";
-import {ApiRequestService} from "./services/count-request-service";
+import {ApiRequestService} from "./services/apiRequest-service";
 import {DeviceSessionService} from "./services/device-session-service";
 import {JwtService} from "./applications/jwt-service";
 import {BlogsHandler} from "./routers/blogs/blog-handlers";
@@ -34,6 +34,10 @@ import {UsersController} from "./routers/users/users-controller";
 import {AuthController} from "./routers/auth/auth-controller";
 import {MailController} from "./routers/mail/mail-controller";
 import {DeleteAllController} from "./routers/testing/all-data-controller";
+import {BlogsMiddleware} from "./middlewares/blogs-middlewares";
+import {CommentsMiddleware} from "./middlewares/comment-middleware";
+import {DeviceMiddleware} from "./middlewares/device-middleware";
+import {PostsMiddleware} from "./middlewares/posts-middlewares";
 
 const blogsRepository = new BlogsRepository()
 const blogsRepositoryQuery = new BlogsQueryRepository()
@@ -69,6 +73,10 @@ export const authValidation = new AuthValidation(authService)
 
 //MIDDLEWARE
 export const countRequestsMiddleware = new CountRequestsMiddleware(apiRequestService)
+export const blogsMiddleware = new BlogsMiddleware(blogsRepositoryQuery)
+export const commentsMiddleware = new CommentsMiddleware(commentsQueryRepository)
+export const deviceMiddleware = new DeviceMiddleware(deviceSessionQueryRepository, jwtService)
+export const postsMiddleware = new PostsMiddleware(postsQueryRepository)
 
 // CONTROLLERS
 export const blogsController = new BlogsController(

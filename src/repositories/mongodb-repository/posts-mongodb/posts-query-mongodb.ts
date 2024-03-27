@@ -58,5 +58,3 @@ export class PostsQueryRepository {
         catch (error) {return null}
     }
 }
-
-//export const postsQueryRepository = new PostsQueryRepository()

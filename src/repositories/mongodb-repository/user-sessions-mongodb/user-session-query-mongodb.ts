@@ -19,5 +19,3 @@ export class DeviceSessionQueryRepository {
         return dbSecurityCollection.find({userId: userId}).toArray()
     }
 }
-
-export const deviceSessionQueryRepository = new DeviceSessionQueryRepository()

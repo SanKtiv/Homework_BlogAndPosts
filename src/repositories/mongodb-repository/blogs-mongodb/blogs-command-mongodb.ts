@@ -35,5 +35,3 @@ export class BlogsRepository {
         await dbBlogsCollection.deleteMany({})
     }
 }
-
-// export const blogsRepository = new BlogsRepository()

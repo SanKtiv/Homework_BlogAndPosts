@@ -107,4 +107,3 @@ export class PostsService {
         return this.postsRepository.deletePostById(id)
     }
 }
-// export const postsService = new PostsService()

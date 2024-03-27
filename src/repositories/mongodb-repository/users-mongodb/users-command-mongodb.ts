@@ -67,5 +67,3 @@ export class UsersRepository {
         return result.modifiedCount === 1
     }
 }
-
-// export const usersRepository = new UsersRepository()

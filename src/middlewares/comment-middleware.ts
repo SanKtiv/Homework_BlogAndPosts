@@ -3,12 +3,7 @@ import {CommentsQueryRepository} from "../repositories/mongodb-repository/commen
 
 export class CommentsMiddleware {
 
-    private commentsQueryRepository: CommentsQueryRepository
-
-    constructor() {
-
-        this.commentsQueryRepository = new CommentsQueryRepository()
-    }
+    constructor(protected commentsQueryRepository: CommentsQueryRepository) {}
 
     async commentId(req: Request, res:Response, next: NextFunction) {
 
@@ -32,21 +27,3 @@ export class CommentsMiddleware {
         res.sendStatus(403)
     }
 }
-
-export const commentsMiddleware = new CommentsMiddleware()
-
-// export const checkCommentById = async (req: Request, res:Response, next: NextFunction) => {
-//
-//     const id = req.params.id || req.params.commentId
-//     const comment = await commentsQueryRepository.getCommentById(id)
-//     if (!comment) return res.sendStatus(404)
-//     return next()
-// }
-
-// export const checkOwnCommentById = async (req: Request, res:Response, next: NextFunction) => {
-//
-//     const comment = await commentsQueryRepository.getCommentById(req.params.commentId)
-//     if (!comment) return res.sendStatus(404)
-//     if (comment.commentatorInfo.userId === req.user!.userId) return next()
-//     res.sendStatus(403)
-// }
