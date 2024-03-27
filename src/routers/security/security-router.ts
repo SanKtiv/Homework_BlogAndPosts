@@ -49,20 +49,20 @@ export class SecurityDevicesController {
     }
 }
 
-// const securityDevicesController = new SecurityDevicesController()
+// securityRouter.get('/',
+//     authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
+//     securityDevicesController.getDeviceSessions.bind(securityDevicesController))
+//
+// securityRouter.delete('/:deviceId',
+//     authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
+//     deviceMiddleware.deviceId.bind(deviceMiddleware),
+//     securityDevicesController.deleteDeviceSessionById.bind(securityDevicesController))
+//
+// securityRouter.delete('/',
+//     authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
+//     securityDevicesController.deleteAllDevicesExcludeCurrent.bind(securityDevicesController))
 
-securityRouter.get('/',
-    authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
-    securityDevicesController.getDeviceSessions.bind(securityDevicesController))
 
-securityRouter.delete('/:deviceId',
-    authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
-    deviceMiddleware.deviceId.bind(deviceMiddleware),
-    securityDevicesController.deleteDeviceSessionById.bind(securityDevicesController))
-
-securityRouter.delete('/',
-    authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
-    securityDevicesController.deleteAllDevicesExcludeCurrent.bind(securityDevicesController))
 
 // securityRouter.get('/',
 //     checkRefreshToken,

@@ -59,4 +59,4 @@ export class PostsQueryRepository {
     }
 }
 
-export const postsQueryRepository = new PostsQueryRepository()
+//export const postsQueryRepository = new PostsQueryRepository()

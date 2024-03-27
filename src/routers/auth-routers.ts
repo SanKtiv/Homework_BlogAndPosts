@@ -95,35 +95,37 @@ export class AuthController {
     }
 }
 
-authRouters.post('/login',
-    countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
-    ...userAuthValid,
-    errorMiddleware.error.bind(errorMiddleware),
-    authController.createAndSendAccessToken.bind(authController))
+// authRouters.post('/login',
+//     countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
+//     ...userAuthValid,
+//     errorMiddleware.error.bind(errorMiddleware),
+//     authController.createAndSendAccessToken.bind(authController))
+//
+// authRouters.post('/password-recovery',
+//     countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
+//     emailPasswordRecovery,
+//     authController.sendRecoveryCode.bind(authController))
+//
+// authRouters.post('/new-password',
+//     countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
+//     authValidation.password.bind(authValidation),
+//     authValidation.recoveryCode.bind(authValidation),
+//     errorMiddleware.error.bind(errorMiddleware),
+//     authController.createNewPassword.bind(authController))
+//
+// authRouters.post('/refresh-token',
+//     authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
+//     authController.updateRefreshToken.bind(authController))
+//
+// authRouters.post('/logout',
+//     authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
+//     authController.deleteDeviceSession.bind(authController))
+//
+// authRouters.get('/me',
+//     authorizationMiddleware.accessToken.bind(authorizationMiddleware),
+//     authController.getInfoCurrentUser.bind(authController))
 
-authRouters.post('/password-recovery',
-    countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
-    emailPasswordRecovery,
-    authController.sendRecoveryCode.bind(authController))
 
-authRouters.post('/new-password',
-    countRequestsMiddleware.countRequests.bind(countRequestsMiddleware),
-    authValidation.password.bind(authValidation),
-    authValidation.recoveryCode.bind(authValidation),
-    errorMiddleware.error.bind(errorMiddleware),
-    authController.createNewPassword.bind(authController))
-
-authRouters.post('/refresh-token',
-    authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
-    authController.updateRefreshToken.bind(authController))
-
-authRouters.post('/logout',
-    authorizationMiddleware.refreshToken.bind(authorizationMiddleware),
-    authController.deleteDeviceSession.bind(authController))
-
-authRouters.get('/me',
-    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
-    authController.getInfoCurrentUser.bind(authController))
 
 // authRouters.post('/login',
 //     countRequestsToApi.countRequests.bind(countRequestsToApi),

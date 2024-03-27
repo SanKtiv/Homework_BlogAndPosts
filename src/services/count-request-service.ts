@@ -1,17 +1,9 @@
 import {ApiRequestType} from "../types/count-request-types";
-import {
-    ApiRequestRepository,
-    apiRequestRepository
-} from "../repositories/mongodb-repository/api-request-repository/count-request-mongodb";
+import {ApiRequestRepository} from "../repositories/mongodb-repository/api-request-repository/count-request-mongodb";
 
 export class ApiRequestService {
 
-    //private apiRequestRepository: ApiRequestRepository
-
-    constructor(protected apiRequestRepository: ApiRequestRepository) {
-
-        //this.apiRequestRepository = new ApiRequestRepository()
-    }
+    constructor(protected apiRequestRepository: ApiRequestRepository) {}
 
     async createApiRequest(apiRequest: ApiRequestType) {
 
@@ -36,23 +28,23 @@ export class ApiRequestService {
     }
 }
 
-export const apiRequestService = {
-
-    async createApiRequest(apiRequest: ApiRequestType) {
-        await apiRequestRepository.insertApiRequest(apiRequest)
-    },
-
-    async getAllApiRequestsByUri(apiRequest: ApiRequestType) {
-        return apiRequestRepository.getAllApiRequestsByUri(apiRequest)
-    },
-
-    async getAllApiRequests() {
-        return apiRequestRepository.getAllApiRequests()
-    },
-
-    async getCountOfApiRequests(limit: number, apiRequest: ApiRequestType) {
-        const countOfRequest = await apiRequestRepository.getCountOfApiRequests(apiRequest)
-
-        return countOfRequest.length > limit
-    }
-}
+// export const apiRequestService = {
+//
+//     async createApiRequest(apiRequest: ApiRequestType) {
+//         await apiRequestRepository.insertApiRequest(apiRequest)
+//     },
+//
+//     async getAllApiRequestsByUri(apiRequest: ApiRequestType) {
+//         return apiRequestRepository.getAllApiRequestsByUri(apiRequest)
+//     },
+//
+//     async getAllApiRequests() {
+//         return apiRequestRepository.getAllApiRequests()
+//     },
+//
+//     async getCountOfApiRequests(limit: number, apiRequest: ApiRequestType) {
+//         const countOfRequest = await apiRequestRepository.getCountOfApiRequests(apiRequest)
+//
+//         return countOfRequest.length > limit
+//     }
+// }

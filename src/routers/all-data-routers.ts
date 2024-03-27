@@ -32,7 +32,9 @@ export class DeleteAllController {
     }
 }
 
-dellAllRouter.delete('/', deleteAllController.deleteAll.bind(deleteAllController))
+// dellAllRouter.delete('/', deleteAllController.deleteAll.bind(deleteAllController))
+
+
 
 // dellAllRouter.delete('/', async function (req: Request, res: Response) {
 //

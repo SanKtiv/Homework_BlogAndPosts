@@ -58,22 +58,23 @@ export class UsersController {
     }
 }
 
-//const usersController = new UsersController()
+// userRouter.post('/',
+//     authorizationMiddleware.basic.bind(authorizationMiddleware),
+//     ...userInputValid,
+//     errorMiddleware.error.bind(errorMiddleware),
+//     usersController.createSuperUser.bind(usersController))
+//
+// userRouter.get('/',
+//     authorizationMiddleware.basic.bind(authorizationMiddleware),
+//     usersPaginatorDefault,
+//     usersController.getUsersPaging.bind(usersController))
+//
+// userRouter.delete('/:id',
+//     authorizationMiddleware.basic.bind(authorizationMiddleware),
+//     usersController.deleteUserById.bind(usersController))
 
-userRouter.post('/',
-    authorizationMiddleware.basic.bind(authorizationMiddleware),
-    ...userInputValid,
-    errorMiddleware.error.bind(errorMiddleware),
-    usersController.createSuperUser.bind(usersController))
 
-userRouter.get('/',
-    authorizationMiddleware.basic.bind(authorizationMiddleware),
-    usersPaginatorDefault,
-    usersController.getUsersPaging.bind(usersController))
 
-userRouter.delete('/:id',
-    authorizationMiddleware.basic.bind(authorizationMiddleware),
-    usersController.deleteUserById.bind(usersController))
 // userRouter.post('/', basicAuth,
 //     ...userInputValid,
 //     errorsOfValidate,

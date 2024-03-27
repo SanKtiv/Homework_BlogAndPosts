@@ -68,4 +68,4 @@ export class UsersRepository {
     }
 }
 
-export const usersRepository = new UsersRepository()
+// export const usersRepository = new UsersRepository()

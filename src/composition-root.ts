@@ -1,6 +1,5 @@
 import {BlogsRepository} from "./repositories/mongodb-repository/blogs-mongodb/blogs-command-mongodb";
 import {BlogsService} from "./services/blogs-service";
-import {BlogsController} from "./routers/blogs/blogs-routers";
 import {PostsRepository} from "./repositories/mongodb-repository/posts-mongodb/posts-command-mongodb";
 import {BlogsQueryRepository} from "./repositories/mongodb-repository/blogs-mongodb/blogs-query-mongodb";
 import {PostsQueryRepository} from "./repositories/mongodb-repository/posts-mongodb/posts-query-mongodb";
@@ -20,7 +19,6 @@ import {DeviceSessionService} from "./services/device-session-service";
 import {JwtService} from "./applications/jwt-service";
 import {BlogsHandler} from "./routers/blogs/blog-handlers";
 import {PostsHandler} from "./routers/posts/post-handler";
-import {PostsController} from "./routers/posts/posts-routers";
 import {CommentsHandler} from "./routers/comments/comments-handlers";
 import {UsersHandler} from "./routers/users/users-handlers";
 import {UsersController} from "./routers/users/users-routers";
@@ -34,6 +32,8 @@ import {AuthValidation} from "./validations/recovery-password-validators";
 import {SecurityDevicesController} from "./routers/security/security-router";
 import {SecurityHandler} from "./routers/security/security-handler";
 import {CountRequestsMiddleware} from "./middlewares/count-api-request-middleware";
+import {BlogsController} from "./routers/blogs/blogs-controller";
+import {PostsController} from "./routers/posts/posts-controller";
 
 const blogsRepository = new BlogsRepository()
 const blogsRepositoryQuery = new BlogsQueryRepository()

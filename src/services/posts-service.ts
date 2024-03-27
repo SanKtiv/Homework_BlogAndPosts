@@ -8,12 +8,7 @@ import {PostsRepository} from "../repositories/mongodb-repository/posts-mongodb/
 
 export class PostsService {
 
-    //private postsRepository: PostsRepository
-
-    constructor(protected postsRepository: PostsRepository) {
-
-        //this.postsRepository = new PostsRepository()
-    }
+    constructor(protected postsRepository: PostsRepository) {}
 
     async createPost(body: InputPostModelType,
                      blogName: string): Promise<PostDBType> {

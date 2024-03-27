@@ -78,28 +78,30 @@ export class CommentsController {
     }
 }
 
-commentRouter.get('/:id',
-    commentsValidation.id.bind(commentsValidation),
-    commentsController.getCommentById.bind(commentsController))
+// commentRouter.get('/:id',
+//     commentsValidation.id.bind(commentsValidation),
+//     commentsController.getCommentById.bind(commentsController))
+//
+// commentRouter.put('/:commentId',
+//     authorizationMiddleware.accessToken.bind(authorizationMiddleware),
+//     commentsValidation.commentId.bind(commentsValidation),
+//     errorMiddleware.error.bind(errorMiddleware),
+//     commentsMiddleware.commentOwner.bind(commentsMiddleware),
+//     commentsController.updateCommentById.bind(commentsController))
+//
+// commentRouter.put('/:commentId/like-status',
+//     authorizationMiddleware.accessToken.bind(authorizationMiddleware),
+//     commentsMiddleware.commentId.bind(commentsMiddleware),
+//     likeStatusValidation.likeStatus.bind(likeStatusValidation),
+//     errorMiddleware.error.bind(errorMiddleware),
+//     commentsController.updateCommentLikeStatusById.bind(commentsController))
+//
+// commentRouter.delete('/:commentId',
+//     authorizationMiddleware.accessToken.bind(authorizationMiddleware),
+//     commentsMiddleware.commentOwner.bind(commentsMiddleware),
+//     commentsController.deleteCommentById.bind(commentsController))
 
-commentRouter.put('/:commentId',
-    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
-    commentsValidation.commentId.bind(commentsValidation),
-    errorMiddleware.error.bind(errorMiddleware),
-    commentsMiddleware.commentOwner.bind(commentsMiddleware),
-    commentsController.updateCommentById.bind(commentsController))
 
-commentRouter.put('/:commentId/like-status',
-    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
-    commentsMiddleware.commentId.bind(commentsMiddleware),
-    likeStatusValidation.likeStatus.bind(likeStatusValidation),
-    errorMiddleware.error.bind(errorMiddleware),
-    commentsController.updateCommentLikeStatusById.bind(commentsController))
-
-commentRouter.delete('/:commentId',
-    authorizationMiddleware.accessToken.bind(authorizationMiddleware),
-    commentsMiddleware.commentOwner.bind(commentsMiddleware),
-    commentsController.deleteCommentById.bind(commentsController))
 
 // commentRouter.get('/:id', checkId, async (req: Request, res: Response) => {
 //
