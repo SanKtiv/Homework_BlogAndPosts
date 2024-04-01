@@ -1,19 +1,19 @@
 import {CommentDBType, CommentType, LikesInfoType} from "../../../types/comments-types";
-import {CommentModel} from "../db";
+import {CommentsModel} from "../db";
 import {ObjectId} from "mongodb";
 
 export class CommentsRepository {
 
     async insertComment(comment: CommentType): Promise<CommentDBType> {
 
-        const commentDB = await CommentModel.create(comment)
+        const commentDB = await CommentsModel.create(comment)
 
         return commentDB as CommentDBType
     }
 
     async updateCommentContentById(id: string, content: string): Promise<void> {
 
-        await CommentModel.findOneAndUpdate({_id: new ObjectId(id)}, {$set: {content: content}})
+        await CommentsModel.findOneAndUpdate({_id: new ObjectId(id)}, {$set: {content: content}})
     }
 
     async updateCommentAddNewUserLikeStatus(commentId: string,
@@ -21,7 +21,7 @@ export class CommentsRepository {
                                             status: string,
                                             likesInfo: LikesInfoType): Promise<void> {
 
-        await CommentModel.updateOne({_id: new ObjectId(commentId)},
+        await CommentsModel.updateOne({_id: new ObjectId(commentId)},
             {
                 $set: {
                     'likesInfo.likesCount': likesInfo.likesCount,
@@ -36,7 +36,7 @@ export class CommentsRepository {
                                             status: string,
                                             likesInfo: LikesInfoType): Promise<void> {
 
-        await CommentModel
+        await CommentsModel
             .findOneAndUpdate({_id: new ObjectId(commentId), 'usersLikeStatuses.userId': userId},
                 {
                     $set: {
@@ -49,11 +49,11 @@ export class CommentsRepository {
 
     async deleteCommentById(id: string): Promise<void> {
 
-        await CommentModel.deleteOne({_id: new ObjectId(id)})
+        await CommentsModel.deleteOne({_id: new ObjectId(id)})
     }
 
     async deleteAll(): Promise<void> {
 
-        await CommentModel.deleteMany({})
+        await CommentsModel.deleteMany({})
     }
 }

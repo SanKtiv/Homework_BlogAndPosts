@@ -7,6 +7,7 @@ import {BlogType} from "../../types/blogs-types";
 import {UserSessionType} from "../../types/security-device-types";
 import {ApiRequestType} from "../../types/count-request-types";
 import mongoose from 'mongoose'
+import {BlogSchema, CommentSchema} from "./schemas-mongoose";
 
 dotenv.config()
 
@@ -24,30 +25,30 @@ const commentsCollection: string = 'comments'
 const securityCollection: string = 'users-sessions'
 const countReqCollection: string = 'requests'
 
-export const BlogSchema = new mongoose.Schema<BlogType>({
-    //id: { type: String, require: true },
-    name: {type: String, require: true},
-    description: {type: String, require: true},
-    websiteUrl: String,
-    createdAt: String,
-    isMembership: Boolean,
-    //versionKey: false
-}, {versionKey: false})
+// export const BlogSchema = new mongoose.Schema<BlogType>({
+//     //id: { type: String, require: true },
+//     name: {type: String, require: true},
+//     description: {type: String, require: true},
+//     websiteUrl: String,
+//     createdAt: String,
+//     isMembership: Boolean,
+//     //versionKey: false
+// }, {versionKey: false})
 
-const CommentSchema = new mongoose.Schema<CommentDBType>({
-    content: {type: String, require: true},
-    commentatorInfo: {
-        userId: {type: String, require: true},
-        userLogin: {type: String, require: true},
-    },
-    createdAt: {type: String, require: true},
-    postId: {type: String, require: true},
-    likesInfo: {likesCount: Number, dislikesCount: Number,},
-    usersLikeStatuses: [{userId: String, userStatus: String,}]
-},{versionKey: false})
+// const CommentSchema = new mongoose.Schema<CommentDBType>({
+//     content: {type: String, require: true},
+//     commentatorInfo: {
+//         userId: {type: String, require: true},
+//         userLogin: {type: String, require: true},
+//     },
+//     createdAt: {type: String, require: true},
+//     postId: {type: String, require: true},
+//     likesInfo: {likesCount: Number, dislikesCount: Number,},
+//     usersLikeStatuses: [{userId: String, userStatus: String,}]
+// },{versionKey: false})
 
-export const BlogModel = mongoose.model('blogs1', BlogSchema)
-export const CommentModel = mongoose.model('comments', CommentSchema)
+export const BlogsModel = mongoose.model(blogsCollection, BlogSchema)
+export const CommentsModel = mongoose.model('comments', CommentSchema)
 
 export const dbBlogsCollection = client.db(db).collection<BlogType>(blogsCollection)
 export const dbPostsCollection = client.db(db).collection<PostType>(postsCollection)

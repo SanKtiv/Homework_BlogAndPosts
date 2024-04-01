@@ -1,4 +1,4 @@
-import {dbBlogsCollection, dbPostsCollection} from "../db";
+import {BlogsModel, dbBlogsCollection, dbPostsCollection} from "../db";
 import {InputPostsPagingType, PostDBType} from "../../../types/posts-types";
 import {BlogDBType, InputBlogsPagingType} from "../../../types/blogs-types";
 import {ObjectId} from "mongodb";
@@ -8,7 +8,7 @@ export class BlogsQueryRepository {
     async getBlogById(id: string): Promise<BlogDBType | null> {
 
         try {
-            return dbBlogsCollection.findOne({_id: new ObjectId(id)})
+            return BlogsModel.findOne({_id: new ObjectId(id)})
 
         } catch (error) {
             return null
@@ -17,12 +17,12 @@ export class BlogsQueryRepository {
 
     async getTotalBlogs() {
 
-        return dbBlogsCollection.countDocuments()
+        return BlogsModel.countDocuments()
     }
 
     async getTotalBlogsByName(name: string) {
 
-        return dbBlogsCollection
+        return BlogsModel
             .countDocuments({name: {$regex: name, $options: 'i'}})
     }
 
@@ -30,20 +30,20 @@ export class BlogsQueryRepository {
 
         if (query.searchNameTerm) {
 
-            return dbBlogsCollection
+            return BlogsModel
                 .find({name: {$regex: query.searchNameTerm, $options: 'i'}})
                 .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
-                .toArray()
+                //.toArray()
         }
 
-        return dbBlogsCollection
+        return BlogsModel
             .find()
             .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
-            .toArray()
+            //.toArray()
     }
 
     async getPostsByBlogId(blogId: string, query: InputPostsPagingType): Promise<PostDBType[]> {
