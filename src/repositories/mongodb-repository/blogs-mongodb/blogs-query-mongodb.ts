@@ -1,4 +1,4 @@
-import {BlogsModel, dbBlogsCollection, dbPostsCollection} from "../db";
+import {BlogsModel, dbBlogsCollection, dbPostsCollection, PostsModel} from "../db";
 import {InputPostsPagingType, PostDBType} from "../../../types/posts-types";
 import {BlogDBType, InputBlogsPagingType} from "../../../types/blogs-types";
 import {ObjectId} from "mongodb";
@@ -48,11 +48,11 @@ export class BlogsQueryRepository {
 
     async getPostsByBlogId(blogId: string, query: InputPostsPagingType): Promise<PostDBType[]> {
 
-        return dbPostsCollection
+        return PostsModel
             .find({blogId: blogId})
             .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
-            .toArray()
+            //.toArray()
     }
 }

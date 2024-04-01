@@ -1,19 +1,19 @@
 import {PostType, InputPostModelType, PostDBType, ExtendedLikesInfoType, UserLikesInfoType} from "../../../types/posts-types";
-import {dbPostsCollection} from "../db";
+import {dbPostsCollection, PostsModel} from "../db";
 import {ObjectId} from "mongodb";
 
 export class PostsRepository {
 
     async insertPostToDB(post: PostType): Promise<PostDBType> {
 
-        await dbPostsCollection.insertOne(post)
+        const postDB = await PostsModel.create(post)
 
-        return post as PostDBType
+        return postDB as PostDBType
     }
 
     async updatePost(id: string, body: InputPostModelType): Promise<Boolean> {
 
-        const foundPost = await dbPostsCollection.updateOne({_id: new ObjectId(id)}, {
+        const resultUpdate = await PostsModel.updateOne({_id: new ObjectId(id)}, {
             $set: {
                 title: body.title,
                 shortDescription: body.shortDescription,
@@ -22,21 +22,21 @@ export class PostsRepository {
             }
         })
 
-        return foundPost.matchedCount === 1
+        return resultUpdate.modifiedCount === 1
     }
 
     async updatePostAddLikesInfo(id: string,
                                  likesInfo: ExtendedLikesInfoType,
                                  userLikesInfo: UserLikesInfoType): Promise<Boolean> {
 
-        const updateResult = await dbPostsCollection
+        const resultUpdate = await PostsModel
             .updateOne({_id: new ObjectId(id)},
                 {
                     $set: {extendedLikesInfo: likesInfo},
                     $push: {userLikesInfo: userLikesInfo}
                 })
 
-        return updateResult.matchedCount === 1
+        return resultUpdate.modifiedCount === 1
     }
 
     async updatePostChangeLikesInfo(id: string,
@@ -44,7 +44,7 @@ export class PostsRepository {
                                     likesInfo: ExtendedLikesInfoType,
                                     userLikesInfo: UserLikesInfoType): Promise<Boolean> {
 
-        const updateResult = await dbPostsCollection
+        const resultUpdate = await PostsModel
             .updateOne({_id: new ObjectId(id), 'userLikesInfo.userId': userId},
                 {
                     $set: {
@@ -53,32 +53,32 @@ export class PostsRepository {
                     }
                 })
 
-        return updateResult.matchedCount === 1
+        return resultUpdate.modifiedCount === 1
     }
 
     async updatePostRemoveUserLikeStatus(id: string,
                                          userId: string,
                                          likesInfo: ExtendedLikesInfoType): Promise<Boolean> {
 
-        const updateResult = await dbPostsCollection
+        const resultUpdate = await PostsModel
             .updateOne({_id: new ObjectId(id)},
                 {
                     $set: {extendedLikesInfo: likesInfo},
                     $pull: {userLikesInfo: {userId: userId}}
                 })
 
-        return updateResult.matchedCount === 1
+        return resultUpdate.modifiedCount === 1
     }
 
     async deletePostById(id: string): Promise<Boolean> {
 
-        const deletePost = await dbPostsCollection.deleteOne({_id: new ObjectId(id)})
+        const resultDelete = await PostsModel.deleteOne({_id: new ObjectId(id)})
 
-        return deletePost.deletedCount === 1
+        return resultDelete.deletedCount === 1
     }
 
     async deleteAll(): Promise<void> {
 
-        await dbPostsCollection.deleteMany({})
+        await PostsModel.deleteMany({})
     }
 }

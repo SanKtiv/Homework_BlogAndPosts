@@ -1,4 +1,4 @@
-import {dbPostsCollection} from "../db";
+import {dbPostsCollection, PostsModel} from "../db";
 import {ObjectId} from "mongodb";
 import {PostDBType} from "../../../types/posts-types";
 
@@ -6,27 +6,27 @@ export class PostsQueryRepository {
 
     async getPostsTotalCount(): Promise<number> {
 
-        return dbPostsCollection.countDocuments()
+        return PostsModel.countDocuments()
     }
 
     async getCountPostsByBlogId(blogId: string): Promise<number> {
 
-        return dbPostsCollection.countDocuments({blogId: blogId})
+        return PostsModel.countDocuments({blogId: blogId})
     }
 
     async getPostsWithPaging(query: any): Promise<PostDBType[]> {
 
-        return dbPostsCollection
+        return PostsModel
             .find()
             .sort({createdAt: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
-            .toArray()
+            //.toArray()
     }
 
     async getPostById(id: string): Promise<PostDBType | null> {
 
-        try {return dbPostsCollection.findOne({_id: new ObjectId(id)})}
+        try {return PostsModel.findOne({_id: new ObjectId(id)})}
 
         catch (error) {return null}
     }
@@ -34,7 +34,7 @@ export class PostsQueryRepository {
     async getLikesInfoByPostId(id: string): Promise<PostDBType | null> {
 
         try {
-            return dbPostsCollection
+            return PostsModel
                 .findOne({_id: new ObjectId(id)},
                     {projection: {_id: 0, extendedLikesInfo: 1}})
         }
@@ -44,11 +44,10 @@ export class PostsQueryRepository {
     async getPostUserLikeStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {
 
         try {
-            return dbPostsCollection.findOne({
+            return PostsModel.findOne({
                     _id: new ObjectId(postId),
                     'userLikesInfo.userId': userId
-                },
-                {
+                }, {
                     projection: {
                         _id: 0,
                         'userLikesInfo.$': 1
