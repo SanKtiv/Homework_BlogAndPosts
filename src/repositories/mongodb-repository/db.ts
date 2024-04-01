@@ -47,7 +47,7 @@ const countReqCollection: string = 'requests'
 //     usersLikeStatuses: [{userId: String, userStatus: String,}]
 // },{versionKey: false})
 
-export const BlogsModel = mongoose.model(blogsCollection, BlogSchema)
+export const BlogsModel = mongoose.model('blogs', BlogSchema)
 export const CommentsModel = mongoose.model('comments', CommentSchema)
 
 export const dbBlogsCollection = client.db(db).collection<BlogType>(blogsCollection)

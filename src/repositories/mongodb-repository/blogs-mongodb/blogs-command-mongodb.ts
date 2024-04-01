@@ -11,27 +11,42 @@ export class BlogsRepository {
         return blogDB as BlogDBType
     }
 
-    async updateBlog(id: string, body: InputBlogModelType): Promise<Boolean> {
+    async updateBlog(id: string, body: InputBlogModelType): Promise<boolean> {
 
-        const foundBlog = await BlogsModel.updateOne({_id: new ObjectId(id)}, {
-            $set: {
-                name: body.name,
-                description: body.description,
-                websiteUrl: body.websiteUrl
-            }
-        })
-        return foundBlog.nM=== 1
+        try {
+
+            const resultUpdate = await BlogsModel.updateOne({_id: new ObjectId(id)}, {
+                $set: {
+                    name: body.name,
+                    description: body.description,
+                    websiteUrl: body.websiteUrl
+                }
+            })
+
+            return resultUpdate.modifiedCount === 1
+        }
+
+        catch (e) {
+            return false
+        }
     }
 
-    async deleteBlogById(id: string): Promise<Boolean> {
+    async deleteBlogById(id: string): Promise<boolean> {
 
-        const result = await BlogsModel.deleteOne({_id: new ObjectId(id)})
+        try {
 
-        return result.deletedCount === 1
+            const resultDelete = await BlogsModel.deleteOne({_id: new ObjectId(id)})
+
+            return resultDelete.deletedCount === 1
+        }
+
+        catch (e) {
+            return false
+        }
     }
 
     async deleteAll(): Promise<void> {
 
-        await dbBlogsCollection.deleteMany({})
+        await BlogsModel.deleteMany({})
     }
 }
