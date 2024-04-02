@@ -8,7 +8,7 @@ export class BlogsQueryRepository {
     async getBlogById(id: string): Promise<BlogDBType | null> {
 
         try {
-            return BlogsModel.findOne({_id: new ObjectId(id)})
+            return BlogsModel.findOne({_id: new ObjectId(id)}).lean()
 
         } catch (error) {
             return null
@@ -35,7 +35,7 @@ export class BlogsQueryRepository {
                 .sort({[query.sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
-                //.toArray()
+                .lean()
         }
 
         return BlogsModel
@@ -43,7 +43,7 @@ export class BlogsQueryRepository {
             .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
-            //.toArray()
+            .lean()
     }
 
     async getPostsByBlogId(blogId: string, query: InputPostsPagingType): Promise<PostDBType[]> {
@@ -53,6 +53,6 @@ export class BlogsQueryRepository {
             .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
-            //.toArray()
+            .lean()
     }
 }
