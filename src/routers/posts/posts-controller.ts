@@ -145,7 +145,7 @@ export class PostsController {
         }
 
         const likesInfo = await this.postsQueryRepository.getLikesInfoByPostId(dataBody.id)
-
+console.log('likesInfo =', likesInfo)
         if (!likesInfo) return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
 
         const userLikeStatus = await this.postsQueryRepository

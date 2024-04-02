@@ -25,28 +25,6 @@ const commentsCollection: string = 'comments'
 const securityCollection: string = 'users-sessions'
 const countReqCollection: string = 'requests'
 
-// export const BlogSchema = new mongoose.Schema<BlogType>({
-//     //id: { type: String, require: true },
-//     name: {type: String, require: true},
-//     description: {type: String, require: true},
-//     websiteUrl: String,
-//     createdAt: String,
-//     isMembership: Boolean,
-//     //versionKey: false
-// }, {versionKey: false})
-
-// const CommentSchema = new mongoose.Schema<CommentDBType>({
-//     content: {type: String, require: true},
-//     commentatorInfo: {
-//         userId: {type: String, require: true},
-//         userLogin: {type: String, require: true},
-//     },
-//     createdAt: {type: String, require: true},
-//     postId: {type: String, require: true},
-//     likesInfo: {likesCount: Number, dislikesCount: Number,},
-//     usersLikeStatuses: [{userId: String, userStatus: String,}]
-// },{versionKey: false})
-
 export const BlogsModel = mongoose.model('blogs', BlogSchema)
 export const PostsModel = mongoose.model(postsCollection, PostsSchema)
 export const CommentsModel = mongoose.model('comments', CommentSchema)

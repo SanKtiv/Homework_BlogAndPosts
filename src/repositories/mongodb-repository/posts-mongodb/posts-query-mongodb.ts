@@ -26,7 +26,9 @@ export class PostsQueryRepository {
 
     async getPostById(id: string): Promise<PostDBType | null> {
 
-        try {return PostsModel.findOne({_id: new ObjectId(id)})}
+        try {
+            return await PostsModel.findOne({_id: new ObjectId(id)})
+        }
 
         catch (error) {return null}
     }
@@ -34,9 +36,11 @@ export class PostsQueryRepository {
     async getLikesInfoByPostId(id: string): Promise<PostDBType | null> {
 
         try {
-            return PostsModel
+            //await required before return
+            return await PostsModel
                 .findOne({_id: new ObjectId(id)},
                     {projection: {_id: 0, extendedLikesInfo: 1}})
+                .lean()
         }
         catch (error) {return null}
     }
@@ -44,7 +48,8 @@ export class PostsQueryRepository {
     async getPostUserLikeStatusByPostId(postId: string, userId: string): Promise<PostDBType | null> {
 
         try {
-            return PostsModel.findOne({
+            return await PostsModel
+                .findOne({
                     _id: new ObjectId(postId),
                     'userLikesInfo.userId': userId
                 }, {
@@ -53,6 +58,7 @@ export class PostsQueryRepository {
                         'userLikesInfo.$': 1
                     }
                 })
+                .lean()
         }
         catch (error) {return null}
     }

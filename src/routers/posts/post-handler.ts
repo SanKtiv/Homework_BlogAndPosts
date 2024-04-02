@@ -9,7 +9,7 @@ export class PostsHandler {
 
     createPostViewModel(postFromDB: PostDBType, userId?: string): ViewPostModelType {
 
-        const {_id, userLikesInfo, extendedLikesInfo, ...postViewModelWithoutId} = postFromDB
+        const {userLikesInfo, extendedLikesInfo} = postFromDB
 
         let myStatus = 'None'
 
@@ -28,7 +28,12 @@ export class PostsHandler {
 
         return  {
             id: postFromDB._id.toString(),
-            ...postViewModelWithoutId,
+            title: postFromDB.title,
+            shortDescription: postFromDB.shortDescription,
+            content: postFromDB.content,
+            blogId: postFromDB.blogId,
+            blogName: postFromDB.blogName,
+            createdAt: postFromDB.createdAt,
             extendedLikesInfo: {
                 ...extendedLikesInfo,
                 myStatus: myStatus,
