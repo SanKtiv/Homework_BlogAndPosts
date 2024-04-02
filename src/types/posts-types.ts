@@ -1,4 +1,4 @@
-import {WithId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 
 export class PostType {
     constructor(public title: string,
@@ -8,7 +8,7 @@ export class PostType {
                 public blogName: string,
                 public createdAt: string,
                 public extendedLikesInfo: ExtendedLikesInfoType,
-                public userLikesInfo: UserLikesInfoType[]) {
+                public userLikesInfo: WithId<UserLikesInfoType>[]) {
     }
 }
 

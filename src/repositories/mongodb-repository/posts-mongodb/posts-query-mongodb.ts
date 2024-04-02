@@ -30,7 +30,7 @@ export class PostsQueryRepository {
 
             return PostsModel
                 .findById(id)
-                .lean()
+                //.lean()
         } catch (error) {
             return null
         }
@@ -57,7 +57,7 @@ export class PostsQueryRepository {
                     _id: 0,
                     'userLikesInfo.$': 1
                 })
-                .lean()
+                //.lean()
         } catch (error) {
             return null
         }

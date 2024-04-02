@@ -25,6 +25,20 @@ describe('TEST for AUTH', () => {
         await mongoose.disconnect()
     })
 
+    it('-POST /auth/login, should return status 200 and access token', async () => {
+
+        //delete all
+        await getRequest().delete(routePaths.deleteAllData)
+
+        //create user
+        const createdUser = await userActions.createUser(user.sendBody_TRUE(), auth.basic_TRUE)
+
+        //auth login and create access token
+        const result = await userActions.authUser(user.sendBodyAuth_TRUE())
+        console.log('result.body =', result.body)
+        expect(result.statusCode).toBe(200)
+    })
+
     it('-POST /auth/login, should return status 429 if requests more then five per ten sec', async () => {
         await userActions.createUser(user.sendBody_TRUE(), auth.basic_TRUE)
 

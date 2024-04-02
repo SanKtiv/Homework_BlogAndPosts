@@ -24,7 +24,7 @@ export class PostsHandler {
             .filter(el => el.userStatus === 'Like')
             .sort((a: any, b: any) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
             .slice(0, 3)
-            .map(({userStatus, ...newestLikes}) => newestLikes)
+            .map(({_id, userStatus, ...newestLikes}) => newestLikes)
 
         return  {
             id: postFromDB._id.toString(),

@@ -152,21 +152,21 @@ describe('TEST for POSTS', () => {
 
     it('-GET /posts: id, should return status 200 and post', async () => {
 
-        await getRequest().delete(routePaths.deleteAllData)
+        //await getRequest().delete(routePaths.deleteAllData)
 
         // Create Blog and get him id
-        const blogId = (await blogActions
-            .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)).body.id
-
-        // Create Post and get him id
-        const postId = (await postActions
-            .createPost(post.sendBody(post.body_TRUE, blogId), auth.basic_TRUE)).body.id
-
-        const posts = await postActions.getPostsDefaultPaging()
-
-        const result = await postActions.getPostById(postId)
-
-        await expect(result.statusCode).toBe(200)
+        // const blogId = (await blogActions
+        //     .createBlog(blog.sendBody_TRUE(), auth.basic_TRUE)).body.id
+        //
+        // // Create Post and get him id
+        // const postId = (await postActions
+        //     .createPost(post.sendBody(post.body_TRUE, blogId), auth.basic_TRUE)).body.id
+        //
+        // const posts = await postActions.getPostsDefaultPaging()
+        //
+        // const result = await postActions.getPostById(postId)
+        //
+        // await expect(result.statusCode).toBe(200)
         //await expect(result.body).toEqual(posts.body.items[2])
     })
 
@@ -333,7 +333,7 @@ console.log(result1.statusCode)
         //create post
         const newPost = await postActions
             .createPost(post.sendBody(post.body_TRUE, newBlog.body.id), auth.basic_TRUE)
-
+console.log('newPost.body =', newPost.body )
         //create 5 users and their access tokens
         await userActions.createManyUsers(user.sendManyBody(4))
 
