@@ -30,7 +30,7 @@ export class PostsQueryRepository {
 
             return PostsModel
                 .findById(id)
-                //.lean()
+                .lean()
         } catch (error) {
             return null
         }
@@ -41,6 +41,7 @@ export class PostsQueryRepository {
         try {
             return PostsModel
                 .findById(id, {_id: 0, extendedLikesInfo: 1})
+                .lean()
         } catch (error) {
             return null
         }
@@ -57,7 +58,7 @@ export class PostsQueryRepository {
                     _id: 0,
                     'userLikesInfo.$': 1
                 })
-                //.lean()
+                .lean()
         } catch (error) {
             return null
         }
