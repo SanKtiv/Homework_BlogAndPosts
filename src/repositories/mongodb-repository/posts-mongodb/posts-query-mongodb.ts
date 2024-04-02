@@ -21,7 +21,7 @@ export class PostsQueryRepository {
             .sort({createdAt: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
-        //.toArray()
+            .lean()
     }
 
     async getPostById(id: string): Promise<PostDBType | null> {
