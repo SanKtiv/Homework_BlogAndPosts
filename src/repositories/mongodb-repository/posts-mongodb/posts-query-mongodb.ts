@@ -27,7 +27,10 @@ export class PostsQueryRepository {
     async getPostById(id: string): Promise<PostDBType | null> {
 
         try {
-            return await PostsModel.findOne({_id: new ObjectId(id)}).lean()
+
+            return PostsModel
+                .findById(id)
+                .lean()
         } catch (error) {
             return null
         }
@@ -54,6 +57,7 @@ export class PostsQueryRepository {
                     _id: 0,
                     'userLikesInfo.$': 1
                 })
+                .lean()
         } catch (error) {
             return null
         }

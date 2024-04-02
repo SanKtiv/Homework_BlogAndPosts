@@ -35,7 +35,8 @@ export class PostsHandler {
             blogName: postFromDB.blogName,
             createdAt: postFromDB.createdAt,
             extendedLikesInfo: {
-                ...extendedLikesInfo,
+                likesCount: extendedLikesInfo.likesCount,
+                dislikesCount: extendedLikesInfo.dislikesCount,
                 myStatus: myStatus,
                 newestLikes: newestLikes
             }
