@@ -1,5 +1,5 @@
 import {PostType, InputPostModelType, PostDBType, ExtendedLikesInfoType, UserLikesInfoType} from "../../../types/posts-types";
-import {dbPostsCollection, PostsModel} from "../db";
+import {PostsModel} from "../db";
 import {ObjectId} from "mongodb";
 
 export class PostsRepository {
