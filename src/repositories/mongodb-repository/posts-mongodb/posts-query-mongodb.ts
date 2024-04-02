@@ -27,7 +27,7 @@ export class PostsQueryRepository {
     async getPostById(id: string): Promise<PostDBType | null> {
 
         try {
-            return await PostsModel.findOne({_id: new ObjectId(id)})
+            return await PostsModel.findOne({_id: new ObjectId(id)}).lean()
         } catch (error) {
             return null
         }
