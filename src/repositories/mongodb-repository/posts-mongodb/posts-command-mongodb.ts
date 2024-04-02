@@ -35,7 +35,7 @@ export class PostsRepository {
                     $set: {extendedLikesInfo: likesInfo},
                     $push: {userLikesInfo: userLikesInfo}
                 })
-console.log('resultUpdate =', resultUpdate)
+
         return resultUpdate.modifiedCount === 1
     }
 
