@@ -19,8 +19,8 @@ type AccountDataType = {
 }
 
 type EmailConfirmationType = {
-    confirmationCode: any
-    expirationDate: any
+    confirmationCode: string
+    expirationDate: Date
     isConfirmed: boolean
 }
 

@@ -1,5 +1,5 @@
 import {InputBlogModelType, BlogDBType, BlogType} from "../../../types/blogs-types";
-import {BlogsModel, dbBlogsCollection} from "../db";
+import {BlogsModel} from "../db";
 import {ObjectId} from "mongodb";
 
 export class BlogsRepository {

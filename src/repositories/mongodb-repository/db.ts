@@ -7,7 +7,7 @@ import {BlogType} from "../../types/blogs-types";
 import {UserSessionType} from "../../types/security-device-types";
 import {ApiRequestType} from "../../types/count-request-types";
 import mongoose from 'mongoose'
-import {BlogSchema, CommentSchema, PostsSchema} from "./schemas-mongoose";
+import {BlogSchema, CommentSchema, PostsSchema, UsersSchema} from "./schemas-mongoose";
 
 dotenv.config()
 
@@ -25,9 +25,10 @@ const commentsCollection: string = 'comments'
 const securityCollection: string = 'users-sessions'
 const countReqCollection: string = 'requests'
 
-export const BlogsModel = mongoose.model('blogs', BlogSchema)
+export const BlogsModel = mongoose.model(blogsCollection, BlogSchema)
 export const PostsModel = mongoose.model(postsCollection, PostsSchema)
-export const CommentsModel = mongoose.model('comments', CommentSchema)
+export const CommentsModel = mongoose.model(commentsCollection, CommentSchema)
+export const UsersModel = mongoose.model(usersCollection, UsersSchema)
 
 export const dbBlogsCollection = client.db(db).collection<BlogType>(blogsCollection)
 export const dbPostsCollection = client.db(db).collection<PostType>(postsCollection)

@@ -1,6 +1,5 @@
 import {UserDBType} from "../../../types/users-types";
-import {dbUsersCollection} from "../db";
-import {ObjectId} from "mongodb";
+import {UsersModel} from "../db";
 
 export class UsersQueryRepository {
 
@@ -14,20 +13,20 @@ export class UsersQueryRepository {
 
         if (login && email) {
 
-            return dbUsersCollection
+            return UsersModel
                 .find({$or: filter})
                 .sort({[sortBy]: query.sortDirection})
                 .skip((+query.pageNumber - 1) * +query.pageSize)
                 .limit(+query.pageSize)
-                .toArray()
+                .lean()
 
         }
-        return dbUsersCollection
+        return UsersModel
             .find(filter[0])
             .sort({[query.sortBy]: query.sortDirection})
             .skip((+query.pageNumber - 1) * +query.pageSize)
             .limit(+query.pageSize)
-            .toArray()
+            .lean()
     }
 
     // async getAllUsers(query: any): Promise<ViewUsersPagingType> {
@@ -58,29 +57,39 @@ export class UsersQueryRepository {
 
         const newFilter = filter.length > 1 ? {$or: filter}: filter[0]
 
-        return dbUsersCollection.countDocuments(newFilter)
+        return UsersModel.countDocuments(newFilter)
     }
 
     async getUserByUserId(userId: string): Promise<UserDBType | null> {
-        return  dbUsersCollection.findOne({_id: new ObjectId(userId)})
+
+        return UsersModel.findById(userId).lean()
     }
 
     async getUserByLoginOrEmail(loginOrEmail: string): Promise<UserDBType | null> {
-        return dbUsersCollection
-            .findOne({$or: [{'accountData.login': loginOrEmail}, {'accountData.email': loginOrEmail}]})
+
+        return UsersModel
+            .findOne({
+                $or: [
+                    {'accountData.login': loginOrEmail},
+                    {'accountData.email': loginOrEmail}
+                ]
+            })
+            .lean()
     }
 
     async getUserByConfirmationCode(code: string): Promise<UserDBType | null> {
-        return dbUsersCollection.findOne({'emailConfirmation.confirmationCode': code})
+
+        return UsersModel
+            .findOne({'emailConfirmation.confirmationCode': code})
+            .lean()
     }
 
     async getUserByRecoveryCode(recoveryCode: string): Promise<UserDBType | null> {
-        const user = await dbUsersCollection
-            .findOne({'passwordRecovery.recoveryCode': recoveryCode})
 
         try {
-            if (!user) return null
-            return user
+            return UsersModel
+                .findOne({'passwordRecovery.recoveryCode': recoveryCode})
+                .lean()
         }
         catch (e) {
             throw new Error('ExpDateOfRecoveryCode is not read')
