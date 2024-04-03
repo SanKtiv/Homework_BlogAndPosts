@@ -30,9 +30,7 @@ export class UsersService {
             }
         }
 
-        await this.usersRepository.insertUserToDB(user)
-
-        return user as UserDBType
+        return this.usersRepository.insertUserToDB(user)
     }
 
     async createSuperUser(body: InputUserModelType): Promise<UserDBType> {
